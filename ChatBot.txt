@@ -1,0 +1,11 @@
+ChatBot
+
+Floating Chat Chatbot
+<script async data-id="3952243728" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
+
+Inline Chat Chatbot
+<div id="chatling-inline-bot" style="width: 100%; height: 500px;"></div>
+<script async data-id="3952243728" data-display="page_inline" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
+
+Fullscreen ChatBot
+<script async data-id="3952243728" id="chatling-embed-script" data-display="fullscreen" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
