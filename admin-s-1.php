@@ -17,32 +17,6 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin_id'])) {
     exit;
 }
 
-// Ensure the selected person information is available
-if (!isset($_POST['person_id']) || !isset($_POST['person_type'])) {
-    // Redirect or handle the case where no person is selected
-    header('Location: admin-p-list.php');
-    exit;
-}
-
-$person_id = $_POST['person_id'];
-$person_type = $_POST['person_type'];
-
-// Fetch the name of the selected personnel (teacher or guard)
-$sql_person = "";
-if ($person_type === 'teacher') {
-    $sql_person = "SELECT * FROM teachers WHERE id = $person_id";
-} elseif ($person_type === 'guard') {
-    $sql_person = "SELECT * FROM guards WHERE id = $person_id";
-}
-
-$result_person = $conn->query($sql_person);
-if ($result_person->num_rows > 0) {
-    $person = $result_person->fetch_assoc();
-    $person_name = $person['first_name'] . " " . $person['last_name'];
-} else {
-    $person_name = "Unknown";
-}
-
 // Fetch all students with their related section and grade
 $sql_students = "SELECT s.id, s.first_name, s.last_name, sec.section_name, g.grade_name
                  FROM students s
@@ -66,12 +40,12 @@ include "admin-header.php";
 
 <div class="container-fluid mt-2 mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg">
-        <div class="row pt-3">
+    <div class="row pt-3">
             <div class="col-md-6">
                 <div class="container-fluid p-2">
-                    <h5 class="p-3"><b>
-                            Victim of <span class="text-danger"><?php echo ucwords($person_name); ?> </span></b>
-                    </h5>
+                    <h3 class="p-3"><b>
+                            Complain a Student</b>
+                    </h3>
                 </div>
             </div>
             <div class="col-md-6">
@@ -84,7 +58,7 @@ include "admin-header.php";
         <table class="table text-center table-hover ">
             <thead class="bg-dark text-white">
                 <tr>
-                    <th style="width: 40%;">Full Name</th>
+                    <th style="width: 40%;">Name</th>
                     <th style="width: 25%;">Grade</th>
                     <th style="width: 25%;">Section</th>
                     <th style="width: 10%;">Select</th>
@@ -98,12 +72,10 @@ include "admin-header.php";
                             <td><?php echo ucwords($student['grade_name']); ?></td>
                             <td><?php echo ucwords($student['section_name']); ?></td>
                             <td>
-                                <form action="admin-p-3.php" method="get">
+                                <form action="admin-s-2.php" method="get">
                                     <input type="hidden" name="student_id" value="<?php echo $student['id']; ?>">
-                                    <input type="hidden" name="person_id" value="<?php echo $person_id; ?>">
-                                    <input type="hidden" name="person_type" value="<?php echo $person_type; ?>">
-                                    <button type="submit" class="btn btn-success btn-block mt-3">
-                                    Select                                    </button>                                </form>
+                                    <button type="submit" class="btn btn-success mt-3 btn-block">
+                                    Next                                    </button>                                </form>
 
                             </td>
                         </tr>

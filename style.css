@@ -16,7 +16,9 @@
 .nav-link {
     font-weight: bold;
 }
-
+.search{
+    width: 100%;
+}
 .logo-srcs {
     height: 23px;
     width: 97px;

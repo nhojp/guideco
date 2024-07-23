@@ -80,7 +80,6 @@ if (isset($_SESSION['loggedin'])) {
                 <div class="header-btn-lg pr-0">
                     <div class="widget-content p-0">
                         <div class="widget-content-wrapper">
-
                             <div class="widget-content-left">
                                 <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
                                     <div class="widget-content-left  ml-3 header-user-info">
@@ -95,9 +94,6 @@ if (isset($_SESSION['loggedin'])) {
                                 <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" href="credentials.php">
                                         <i class="fa fa-user-circle mr-2"></i> My Account
-                                    </a>
-                                    <a class="dropdown-item" href="admin-users.php">
-                                        <i class="fa fa-user-circle mr-2"></i> Users
                                     </a>
                                     <div tabindex="-1" class="dropdown-divider"></div>
                                     <a class="dropdown-item text-danger" href="logout.php">
@@ -435,37 +431,18 @@ if (isset($_SESSION['loggedin'])) {
                         <li class="app-sidebar__heading">Dashboards</li>
                         <li>
                             <a href="admin-index.php">
-                                <i class="metismenu-icon fas fa-tachometer-alt"></i>
+                                <i class="metismenu-icon fas fa-chart-line"></i>
                                 Incidents
                             </a>
 
                         </li>
-                        <li class="app-sidebar__heading">Complaint</li>
+                        <li class="app-sidebar__heading">Data</li>
                         <li>
-                            <a href="#">
-                                <i class="metismenu-icon fas fa-edit"></i>
-                                Create Complaints
-                                <i class="metismenu-state-icon fas fa-caret-down"></i>
-                            </a>
 
-                            <ul>
-                                <li>
-                                    <a href="admin-p-1.php">
-                                        <i class="metismenu-icon"></i>
-                                        Against School Personnel
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="admin-student.php">
-                                        <i class="metismenu-icon">
-                                        </i>Against Student
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                         <li>
                             <a href="#">
-                                <i class="metismenu-icon fas fa-list-alt"></i>
+                                <i class="metismenu-icon fas fa-file-alt"></i>
                                 Complaints List
                                 <i class="metismenu-state-icon fas fa-caret-down"></i>
                             </a>
@@ -485,39 +462,62 @@ if (isset($_SESSION['loggedin'])) {
                                 </li>
                             </ul>
                         </li>
-
-                        <li class="app-sidebar__heading">TBA</li>
-                        <li>
-                            <a href="admin-violations.php">
-                                <i class="metismenu-icon fas fa-exclamation-triangle"></i>
-                                Violation List
-                            </a>
-                            <a href="admin-addstudent.php">
-                                <i class="metismenu-icon fas fa-exclamation-circle"></i>
-                                Student List
-                            </a>
-
-                        </li>
-                        <li class="app-sidebar__heading">Management</li>
                         <li>
                             <a href="#">
-                                <i class="metismenu-icon fas fa-edit"></i>
-                                Settings <i class="metismenu-state-icon fas fa-caret-down"></i>
+                                <i class="metismenu-icon fas fa-user-friends"></i>
+                                Violation List<i class="metismenu-state-icon fas fa-caret-down"></i>
+                            </a>
+
+                            <ul>
+                                <li>
+                                    <a href="admin-violations.php">
+                                        <i class="metismenu-icon"></i>
+                                        Violators </a>
+                                </li>
+                                <li>
+                                    <a href="admin-violations-list.php">
+                                        <i class="metismenu-icon">
+                                        </i>Violations
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="metismenu-icon fas fa-user-friends"></i>
+                                User List<i class="metismenu-state-icon fas fa-caret-down"></i>
                             </a>
 
                             <ul>
                                 <li>
                                     <a href="admin-users.php">
                                         <i class="metismenu-icon"></i>
-                                        Users </a>
+                                        School Personnel </a>
                                 </li>
                                 <li>
                                     <a href="admin-section.php">
                                         <i class="metismenu-icon">
-                                        </i>Section List
+                                        </i>Section
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="admin-addstudent.php">
+                                        <i class="metismenu-icon fas fa-exclamation-circle"></i>
+                                        Student
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="app-sidebar__heading">Account</li>
+                        <li>
+                            <a href="credentials.php">
+                                <i class="metismenu-icon fas fa-user-cog"></i>
+                                My Account </a>
+                        </li>
+                        <li>
+                            <a href="logout.php" class="text-danger">
+                                <i class="metismenu-icon fas fa-sign-out-alt"></i>
+                                Logout </a>
                         </li>
 
                     </ul>

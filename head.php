@@ -16,7 +16,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="bg.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="loading.css">
     <title>GuideCo</title>
+    
 </head>
 
 <body>

@@ -150,19 +150,19 @@ if ($role == 'admin') {
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="first_name">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" required>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo ucwords($user['first_name']); ?>" required>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="middle_name">Middle Name</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo $user['middle_name']; ?>">
+                            <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo ucwords( $user['middle_name']); ?>">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="last_name">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" required>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo ucwords($user['last_name']); ?>" required>
                         </div>
                     </div>
                 </div>
@@ -177,7 +177,7 @@ if ($role == 'admin') {
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="position">Position</label>
-                            <input type="text" class="form-control" id="position" name="position" value="<?php echo $user['position']; ?>" readonly>
+                            <input type="text" class="form-control" id="position" name="position" value="<?php echo ucwords($user['position']); ?>" readonly>
                         </div>
                     </div>
                 </div>
@@ -212,7 +212,7 @@ if ($role == 'admin') {
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($user['address']); ?>">
+                            <input type="text" class="form-control" id="address" name="address" value="<?php echo ucwords(htmlspecialchars($user['address'])); ?>">
                         </div>
                     </div>
                 </div>

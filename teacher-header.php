@@ -525,7 +525,10 @@ if (isset($_SESSION['loggedin'])) {
                         </li>
                         <li class="app-sidebar__heading">Account Management</li>
                         
-                        <li>
+                        <li><a href="teacher-section.php">
+                                <i class="metismenu-icon fa fa-user-circle"></i>
+                                My Section
+                            </a>
                             <a href="credentials.php">
                                 <i class="metismenu-icon fa fa-user-circle"></i>
                                 My Account

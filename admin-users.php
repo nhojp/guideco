@@ -107,9 +107,28 @@ $personnelData = getAllPersonnelData($conn);
 ?>
 
 <style>
+    .btn-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #28a745;
+        /* Green color */
+        color: white;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-circle:hover {
+        background-color: #218838;
+    }
+
     .modal-custom {
         margin-top: 100px;
-        margin-left: 350px;
     }
 
     @media (max-width: 767.98px) {
@@ -118,154 +137,153 @@ $personnelData = getAllPersonnelData($conn);
             max-width: 90%;
         }
     }
+
+    .search {
+        width: 100%;
+        padding: 15px;
+        border-radius: 60px;
+        margin-top: 5px;
+        border: none;
+        background-color: lightgray;
+    }
 </style>
 
 <div class="container-fluid mt-2 mb-5">
-    <div class="container-fluid bg-white pt-4 rounded-lg">
-        <div class="row">
-            <div class="col-md-4">
-                <h2 class="mb-4 font-weight-bold">Users</h2>
-            </div>
-            <div class="col-md-8">
-                <div class="search-wrapper float-right">
-                    <div class="input-holder">
-                        <input type="text" class="search-input" id="searchInput" placeholder="Type to search">
-                        <button class="search-icon"><span></span></button>
-                    </div>
-                    <button class="close"></button>
+    <div class="container-fluid bg-white mt-2 rounded-lg pb-2">
+        <div class="row pt-3">
+            <div class="col-md-5">
+                <div class="container-fluid p-2">
+                    <h3 class="p-2"><b>
+                            School Personnels</b>
+                    </h3>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <?php if ($deleteSuccess || $addGuardSuccess || $addTeacherSuccess || !empty($errorMessage)) : ?>
-        <div class="alert <?php echo $deleteSuccess || $addGuardSuccess || $addTeacherSuccess ? 'alert-success' : 'alert-danger'; ?> mt-4" role="alert">
-            <?php
-            if ($deleteSuccess) {
-                echo 'Record deleted successfully';
-            } elseif ($addGuardSuccess) {
-                echo 'Guard added successfully';
-            } elseif ($addTeacherSuccess) {
-                echo 'Teacher added successfully';
-            } elseif (!empty($errorMessage)) {
-                echo $errorMessage;
-            }
-            ?>
-        </div>
-        <script>
-            // Check if the page has already been reloaded
-            if (!localStorage.getItem('reloaded')) {
-                localStorage.setItem('reloaded', 'true'); // Set the flag
-                setTimeout(function() {
-                    window.location.reload();
-                }, 1000); // 1000 milliseconds = 1 second
-            }
-        </script>
-    <?php endif; ?>
-
-
-    <div class="container-fluid bg-white p-4 rounded-lg mt-2">
-
-        <div class="row ">
-            <div class="col-md-6 ">
-                <button type="button" class="btn btn-success btn-block mb-2 p-4" data-toggle="modal" data-target="#addGuardModal">
-                    <i class="fas fa-plus"></i> Add Security Guard
+            <div class="col-md-1">
+                <button type="button" class="btn btn-circle mt-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    +
                 </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" data-toggle="modal" data-target="#addGuardModal" onclick="showLoading('#addGuardModal')">Add a Security Guard</a>
+                    <a class="dropdown-item" data-toggle="modal" data-target="#addTeacherModal" onclick="showLoading('#addTeacherModal')">Add a Teacher</a>
+
+                </div>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-success btn-block p-4" data-toggle="modal" data-target="#addTeacherModal">
-                    <i class="fas fa-plus"></i> Add Teacher
-                </button>
+                <div class="container-fluid p-2 rounded-lg">
+                    <input class="search" type="text" id="searchInput" placeholder="Search a name or position...">
+                </div>
             </div>
         </div>
+        <div id="loadingScreen" class="loading-screen">
+            <div class="spinner"></div>
+        </div>
 
-        <div class="row ">
+        <?php if ($deleteSuccess || $addGuardSuccess || $addTeacherSuccess || !empty($errorMessage)) : ?>
+            <div class="alert <?php echo $deleteSuccess || $addGuardSuccess || $addTeacherSuccess ? 'alert-success' : 'alert-danger'; ?> mt-4" role="alert">
+                <?php
+                if ($deleteSuccess) {
+                    echo 'Record deleted successfully';
+                } elseif ($addGuardSuccess) {
+                    echo 'Guard added successfully';
+                } elseif ($addTeacherSuccess) {
+                    echo 'Teacher added successfully';
+                } elseif (!empty($errorMessage)) {
+                    echo $errorMessage;
+                }
+                ?>
+            </div>
 
-            <!-- Add Guard Modal -->
-            <div class="modal fade" id="addGuardModal" tabindex="-1" role="dialog" aria-labelledby="addGuardModalLabel" aria-hidden="true" data-backdrop="false">
-                <div class="modal-dialog modal-custom" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addGuardModalLabel">Add Security Guard</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Form for adding a guard -->
-                            <form method="POST" action="">
-                                <div class="form-group">
-                                    <label for="guardFirstName">First Name</label>
-                                    <input type="text" class="form-control" id="guardFirstName" name="guard_first_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="guardLastName">Last Name</label>
-                                    <input type="text" class="form-control" id="guardLastName" name="guard_last_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="guardUsername">Username</label>
-                                    <input type="text" class="form-control" id="guardUsername" name="guard_username" value="guard" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="guardPassword">Password</label>
-                                    <input type="password" class="form-control" id="guardPassword" name="guard_password" value="guard" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Add Security Guard</button>
-                            </form>
+        <?php endif; ?>
+
+
+        <div class="container-fluid bg-white p-4 rounded-lg mt-2">
+
+            <div class="row ">
+
+                <!-- Add Guard Modal -->
+                <div class="modal fade" id="addGuardModal" tabindex="-1" role="dialog" aria-labelledby="addGuardModalLabel" aria-hidden="true" data-backdrop="false">
+                    <div class="modal-dialog modal-custom" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addGuardModalLabel">Add Security Guard</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Form for adding a guard -->
+                                <form method="POST" action="">
+                                    <div class="form-group">
+                                        <label for="guardFirstName">First Name</label>
+                                        <input type="text" class="form-control" id="guardFirstName" name="guard_first_name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="guardLastName">Last Name</label>
+                                        <input type="text" class="form-control" id="guardLastName" name="guard_last_name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="guardUsername">Username</label>
+                                        <input type="text" class="form-control" id="guardUsername" name="guard_username" value="guard" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="guardPassword">Password</label>
+                                        <input type="password" class="form-control" id="guardPassword" name="guard_password" value="guard" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Add Security Guard</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Add Teacher Modal -->
-            <div class="modal fade" id="addTeacherModal" tabindex="-1" role="dialog" aria-labelledby="addTeacherModalLabel" aria-hidden="true" data-backdrop="false">
-                <div class="modal-dialog modal-custom" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addTeacherModalLabel">Add Teacher</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Form for adding a teacher -->
-                            <form method="POST" action="">
-                                <div class="form-group">
-                                    <label for="teacherFirstName">First Name</label>
-                                    <input type="text" class="form-control" id="teacherFirstName" name="teacher_first_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="teacherLastName">Last Name</label>
-                                    <input type="text" class="form-control" id="teacherLastName" name="teacher_last_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="teacherUsername">Username</label>
-                                    <input type="text" class="form-control" id="teacherUsername" name="teacher_username" value="teacher" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="teacherPassword">Password</label>
-                                    <input type="password" class="form-control" id="teacherPassword" name="teacher_password" value="teacher" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Add Teacher</button>
-                            </form>
+                <!-- Add Teacher Modal -->
+                <div class="modal fade" id="addTeacherModal" tabindex="-1" role="dialog" aria-labelledby="addTeacherModalLabel" aria-hidden="true" data-backdrop="false">
+                    <div class="modal-dialog modal-custom" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addTeacherModalLabel">Add Teacher</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Form for adding a teacher -->
+                                <form method="POST" action="">
+                                    <div class="form-group">
+                                        <label for="teacherFirstName">First Name</label>
+                                        <input type="text" class="form-control" id="teacherFirstName" name="teacher_first_name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacherLastName">Last Name</label>
+                                        <input type="text" class="form-control" id="teacherLastName" name="teacher_last_name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacherUsername">Username</label>
+                                        <input type="text" class="form-control" id="teacherUsername" name="teacher_username" value="teacher" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacherPassword">Password</label>
+                                        <input type="password" class="form-control" id="teacherPassword" name="teacher_password" value="teacher" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Add Teacher</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-12">
-                <table class="table table-bordered text-center">
-                    <thead>
+                <table class="table text-center table-hover">
+                    <thead class="bg-dark text-white">
                         <tr>
-                            <th style="width: 48%;">Full Name</th>
-                            <th style="width: 48%;">
+                            <th style="width: 45%;">Full Name</th>
+                            <th style="width: 45%;">
                                 <select class="form-control" id="positionFilter" name="position_filter">
                                     <option value="">All Positions</option>
                                     <option value="Teacher">Teacher</option>
                                     <option value="Guard">Guard</option>
                                 </select>
                             </th>
-                            <th style="width: 4%;">Delete</th>
+                            <th style="width: 10%;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -275,8 +293,8 @@ $personnelData = getAllPersonnelData($conn);
                                 <td><?php echo ucwords(strtolower($person['position'])); ?></td>
 
                                 <td>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal<?php echo $person['id']; ?>">
-                                        Delete
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo $person['id']; ?>">
+                                    <i class="fas fa-trash-alt"></i>
                                     </button>
                                     <!-- Delete Modal -->
                                     <div class="modal fade" id="deleteModal<?php echo $person['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel<?php echo $person['id']; ?>" aria-hidden="true" data-backdrop="false">

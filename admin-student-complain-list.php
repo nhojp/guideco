@@ -1,168 +1,200 @@
-<?php
-include "conn.php";
-// Start session
-session_start();
+    <?php
+    include "conn.php";
+    // Start session
+    session_start();
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin'])) {
-    header('Location: index.php'); // Redirect if not logged in or not admin
-    exit;
-}
-
-include "head.php";
-include "admin-header.php";
-
-$sql = "SELECT 
-            id,
-            victimFirstName,
-            victimMiddleName,
-            victimLastName,
-            victimDOB,
-            victimAge,
-            victimSex,
-            victimGrade,
-            victimSection,
-            victimAdviser,
-            victimContact,
-            victimAddress,
-            motherName,
-            motherOccupation,
-            motherAddress,
-            motherContact,
-            fatherName,
-            fatherOccupation,
-            fatherAddress,
-            fatherContact,
-            complainantFirstName,
-            complainantMiddleName,
-            complainantLastName,
-            relationshipToVictim,
-            complainantContact,
-            complainantAddress,
-            complainedFirstName,
-            complainedMiddleName,
-            complainedLastName,
-            complainedDOB,
-            complainedAge,
-            complainedSex,
-            complainedGrade,
-            complainedSection,
-            complainedAdviser,
-            complainedContact,
-            complainedAddress,
-            complainedMotherName,
-            complainedMotherOccupation,
-            complainedMotherAddress,
-            complainedMotherContact,
-            complainedFatherName,
-            complainedFatherOccupation,
-            complainedFatherAddress,
-            complainedFatherContact,
-            caseDetails,
-            actionTaken,
-            recommendations
-        FROM complaints_student";
-
-$result = $conn->query($sql);
-
-$successMessage = '';
-$errorMessage = '';
-$deleteSuccess = false; // Flag to indicate success
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
-    $id = mysqli_real_escape_string($conn, $_POST['delete_id']);
-    $query = "DELETE FROM complaints_student WHERE id = $id";
-    if (mysqli_query($conn, $query)) {
-        $deleteSuccess = true; // Set the success flag
-    } else {
-        $errorMessage = 'Error deleting record: ' . mysqli_error($conn);
-    }
-}
-?>
-
-<style>
-    .modal-custom {
-        margin-top: 100px;
-        margin-left: 350px;
+    // Check if user is logged in and is an admin
+    if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin'])) {
+        header('Location: index.php'); // Redirect if not logged in or not admin
+        exit;
     }
 
-    @media (max-width: 767.98px) {
-        .modal-custom {
-            margin: 100px auto;
-            max-width: 90%;
+    include "head.php";
+    include "admin-header.php";
+
+    $sql = "SELECT 
+                id,
+                victimFirstName,
+                victimMiddleName,
+                victimLastName,
+                victimDOB,
+                victimAge,
+                victimSex,
+                victimGrade,
+                victimSection,
+                victimAdviser,
+                victimContact,
+                victimAddress,
+                motherName,
+                motherOccupation,
+                motherAddress,
+                motherContact,
+                fatherName,
+                fatherOccupation,
+                fatherAddress,
+                fatherContact,
+                complainantFirstName,
+                complainantMiddleName,
+                complainantLastName,
+                relationshipToVictim,
+                complainantContact,
+                complainantAddress,
+                complainedFirstName,
+                complainedMiddleName,
+                complainedLastName,
+                complainedDOB,
+                complainedAge,
+                complainedSex,
+                complainedGrade,
+                complainedSection,
+                complainedAdviser,
+                complainedContact,
+                complainedAddress,
+                complainedMotherName,
+                complainedMotherOccupation,
+                complainedMotherAddress,
+                complainedMotherContact,
+                complainedFatherName,
+                complainedFatherOccupation,
+                complainedFatherAddress,
+                complainedFatherContact,
+                caseDetails,
+                actionTaken,
+                recommendations
+            FROM complaints_student";
+
+    $result = $conn->query($sql);
+
+    $successMessage = '';
+    $errorMessage = '';
+    $deleteSuccess = false; // Flag to indicate success
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
+        $id = mysqli_real_escape_string($conn, $_POST['delete_id']);
+        $query = "DELETE FROM complaints_student WHERE id = $id";
+        if (mysqli_query($conn, $query)) {
+            $deleteSuccess = true; // Set the success flag
+        } else {
+            $errorMessage = 'Error deleting record: ' . mysqli_error($conn);
         }
     }
-</style>
-<div class="container-fluid mt-2 mb-5">
-    <div class="container-fluid bg-white pt-4 rounded-lg">
-        <div class="row">
-            <div class="col-md-4">
-                <h2 class="mb-4 font-weight-bold">Complaints List</h2>
-            </div>
-            <div class="col-md-8">
-                <div class="search-wrapper float-right">
-                    <div class="input-holder">
-                        <input type="text" class="search-input" id="searchInput" placeholder="Type to search">
-                        <button class="search-icon"><span></span></button>
+    ?>
+
+    <style>
+        .btn-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #28a745;
+            /* Green color */
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-circle:hover {
+            background-color: #218838;
+        }
+
+        .modal-custom {
+            margin-top: 100px;
+        }
+
+        @media (max-width: 767.98px) {
+            .modal-custom {
+                margin: 100px auto;
+                max-width: 90%;
+            }
+        }
+
+        .search {
+            width: 100%;
+            padding: 15px;
+            border-radius: 60px;
+            margin-top: 5px;
+            border: none;
+            background-color: lightgray;
+        }
+    </style>
+    <div class="container-fluid mt-2 mb-5">
+        <div class="container-fluid bg-white mt-2 rounded-lg pb-2">
+            <div class="row pt-3">
+                <div class="col-md-5">
+                    <div class="container-fluid p-2">
+                        <h3 class="p-3"><b>
+                                Student Complaints</b>
+                        </h3>
                     </div>
-                    <button class="close"></button>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-circle mt-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        +
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="admin-s-1.php" onclick="showLoading('admin-p-1.php')">Complain a Student</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="container-fluid p-2 rounded-lg">
+                        <input class="search" type="text" id="searchInput" placeholder="Search a name or position...">
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <div id="loadingScreen" class="loading-screen">
+                <div class="spinner"></div>
+            </div>
+            <?php if ($deleteSuccess) : ?>
+                <div class="alert alert-success mt-4" role="alert">
+                    Record deleted successfully
+                </div>
+                <script>
+                    // Check if the page has already been reloaded
+                    if (!localStorage.getItem('reloaded')) {
+                        localStorage.setItem('reloaded', 'true'); // Set the flag
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1000); // 1000 milliseconds = 1 second
+                    } else {
+                        localStorage.removeItem('reloaded'); // Clear the flag
+                    }
+                </script>
+            <?php elseif (!empty($errorMessage)) : ?>
+                <div class="alert alert-danger mt-4" role="alert">
+                    <?php echo $errorMessage; ?>
+                </div>
+            <?php endif; ?>
 
-    <?php if ($deleteSuccess) : ?>
-        <div class="alert alert-success mt-4" role="alert">
-            Record deleted successfully
-        </div>
-        <script>
-            // Check if the page has already been reloaded
-            if (!localStorage.getItem('reloaded')) {
-                localStorage.setItem('reloaded', 'true'); // Set the flag
-                setTimeout(function() {
-                    window.location.reload();
-                }, 1000); // 1000 milliseconds = 1 second
-            } else {
-                localStorage.removeItem('reloaded'); // Clear the flag
-            }
-        </script>
-    <?php elseif (!empty($errorMessage)) : ?>
-        <div class="alert alert-danger mt-4" role="alert">
-            <?php echo $errorMessage; ?>
-        </div>
-    <?php endif; ?>
-
-    <div class="container-fluid bg-white p-4 rounded-lg mt-2">
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead>
+            <table class="table text-center table-hover">
+                <thead class="bg-dark text-white">
                     <tr>
-                        <th>Victim Name</th>
-                        <th>Complained Person</th>
-                        <th>View</th>
-                        <th>Delete</th>
-
+                        <th style="width:40%;">Victim Name</th>
+                        <th style="width:40%;">Complained Person</th>
+                        <th style="width:20%;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if ($result->num_rows > 0) : ?>
                         <?php while ($row = $result->fetch_assoc()) : ?>
                             <tr>
-                                <td style="width: 44%;"><?php echo $row['victimFirstName'] . ' ' . $row['victimMiddleName'] . ' ' . $row['victimLastName']; ?></td>
-                                <td style="width: 44%;"><?php echo $row['complainedFirstName'] . ' ' . $row['complainedMiddleName'] . ' ' . $row['complainedLastName']; ?></td>
-                                <td style="width: 6%;" class="text-center">
+                                <td><?php echo ucwords($row['victimFirstName']) . ' ' . ucwords($row['victimMiddleName']) . ' ' . ucwords($row['victimLastName']); ?></td>
+                                <td><?php echo ucwords($row['complainedFirstName']) . ' ' . ucwords($row['complainedMiddleName']) . ' ' . ucwords($row['complainedLastName']); ?></td>
+                                <td class="text-center">
                                     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#viewModal<?php echo $row['id']; ?>">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                </td>
-                                <td style="width: 6%;" class="text-center">
+
                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo $row['id']; ?>">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
                             </tr>
 
-                            
+
 
                             <!-- Delete Modal -->
                             <div class="modal fade" id="deleteModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel<?php echo $row['id']; ?>" aria-hidden="true" data-backdrop="false">
@@ -306,31 +338,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
         </div>
 
     </div>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const searchInput = document.getElementById('searchInput');
-        const rows = document.querySelectorAll("tbody tr");
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        searchInput.addEventListener("input", function() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchInput = document.getElementById('searchInput');
+            const rows = document.querySelectorAll("tbody tr");
 
-            rows.forEach(row => {
-                const victimName = row.querySelector("td:nth-child(1)").textContent.toLowerCase();
-                const complainedPerson = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+            searchInput.addEventListener("input", function() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
 
-                if (victimName.includes(searchTerm) || complainedPerson.includes(searchTerm)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
+                rows.forEach(row => {
+                    const victimName = row.querySelector("td:nth-child(1)").textContent.toLowerCase();
+                    const complainedPerson = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+
+                    if (victimName.includes(searchTerm) || complainedPerson.includes(searchTerm)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
             });
         });
-    });
-</script>
-
-<?php include "admin-footer.php";
-include "footer.php" ?>
-<?php
-$conn->close();
-?>
+    </script>
+    <script src="loading.js"></script>
+    <?php include "admin-footer.php";
+    include "footer.php" ?>
+    <?php
+    $conn->close();
+    ?>

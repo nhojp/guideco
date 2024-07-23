@@ -103,9 +103,28 @@ $grades = getAllGradeNames($conn);
 $teachers = getAllTeachers($conn);
 ?>
 <style>
+    .btn-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #28a745;
+        /* Green color */
+        color: white;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-circle:hover {
+        background-color: #218838;
+    }
+
     .modal-custom {
         margin-top: 100px;
-        margin-left: 350px;
     }
 
     @media (max-width: 767.98px) {
@@ -114,58 +133,62 @@ $teachers = getAllTeachers($conn);
             max-width: 90%;
         }
     }
+
+    .search {
+        width: 100%;
+        padding: 15px;
+        border-radius: 60px;
+        margin-top: 5px;
+        border: none;
+        background-color: lightgray;
+    }
 </style>
 <div class="container-fluid mt-2 mb-5">
-    <div class="container-fluid bg-white pt-4 rounded-lg">
-        <div class="row">
-            <div class="col-md-4">
-                <h2 class="mb-4 font-weight-bold">Sections</h2>
-            </div>
-            <div class="col-md-8">
-                <div class="search-wrapper float-right">
-                    <div class="input-holder">
-                        <input type="text" class="search-input" id="searchInput" placeholder="Type to search">
-                        <button class="search-icon"><span></span></button>
+    <div class="container-fluid bg-white mt-2 rounded-lg pb-2">
+        <div class="row pt-3">
+            <div class="col-md-5">
+                <div class="container-fluid p-2">
+                    <div class="row">
+                        <h3 class="p-3"><b>
+                                Section List</b>
+                        </h3>
                     </div>
-                    <button class="close"></button>
+                </div>
+            </div>
+            <div class="col-md-1">
+            <button type="button" class="btn btn-circle mt-3" data-toggle="modal" data-target="#addSectionModal">
+                            +
+                        </button>
+            </div>
+            <div class="col-md-6">
+                <div class="container-fluid p-2 rounded-lg">
+                    <input class="search" type="text" id="searchInput" placeholder="Search a name or position...">
                 </div>
             </div>
         </div>
-    </div>
 
-    <?php if ($editSuccess || $addSuccess || !empty($errorMessage)) : ?>
-        <div class="alert <?php echo $editSuccess || $addSuccess ? 'alert-success' : 'alert-danger'; ?> mt-4" role="alert">
-            <?php
-            if ($editSuccess) {
-                echo 'Section updated successfully';
-            } elseif ($addSuccess) {
-                echo 'Section added successfully';
-            } elseif (!empty($errorMessage)) {
-                echo $errorMessage;
-            }
-            ?>
-        </div>
-        <script>
-            // Check if the page has already been reloaded
-            if (!localStorage.getItem('reloaded')) {
-                localStorage.setItem('reloaded', 'true'); // Set the flag
-                setTimeout(function() {
-                    window.location.reload();
-                }, 1000); // 1000 milliseconds = 1 second
-            }
-        </script>
-    <?php endif; ?>
-
-    <div class="container-fluid bg-white p-4 rounded-lg mt-2">
-        <div class="row">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-success btn-block p-4 mb-2" data-toggle="modal" data-target="#addSectionModal">
-                    <i class="fas fa-plus"></i> Add Section
-                </button>
+        <?php if ($editSuccess || $addSuccess || !empty($errorMessage)) : ?>
+            <div class="alert <?php echo $editSuccess || $addSuccess ? 'alert-success' : 'alert-danger'; ?> mt-4" role="alert">
+                <?php
+                if ($editSuccess) {
+                    echo 'Section updated successfully';
+                } elseif ($addSuccess) {
+                    echo 'Section added successfully';
+                } elseif (!empty($errorMessage)) {
+                    echo $errorMessage;
+                }
+                ?>
             </div>
-        </div>
-
-        <!-- Modal for adding a section -->
+            <script>
+                // Check if the page has already been reloaded
+                if (!localStorage.getItem('reloaded')) {
+                    localStorage.setItem('reloaded', 'true'); // Set the flag
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000); // 1000 milliseconds = 1 second
+                }
+            </script>
+        <?php endif; ?>
         <div class="modal fade modal-custom" id="addSectionModal" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel" aria-hidden="true" data-backdrop="false">
             <div class="modal-dialog modal-custom" role="document">
                 <div class="modal-content">
@@ -191,7 +214,6 @@ $teachers = getAllTeachers($conn);
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-
                             <div class="form-group">
                                 <label for="teacherSelect">Select Adviser</label>
                                 <select class="form-control" id="teacherSelect" name="teacher_id" required>
@@ -208,87 +230,85 @@ $teachers = getAllTeachers($conn);
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-bordered text-center">
-                    <thead>
-                        <tr>
-                            <th style="width: 60%;">Section Name</th>
-                            <th style="width: 20%;">
-                                <select class="form-control" id="gradeFilterTable">
-                                    <option value="">All Grades</option>
-                                    <?php foreach ($grades as $grade) : ?>
-                                        <option value="<?php echo $grade['id']; ?>"><?php echo $grade['grade_name']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </th>
-                            <th style="width: 20%;">Teacher (Adviser)</th>
-                            <th style="width: 10%;">Edit</th>
+        <table class="table text-center table-hover">
+            <thead class="bg-dark text-white">
+                <tr>
+                    <th style="width: 30%;">Section Name</th>
+                    <th style="width: 20%;">
+                        <select class="form-control" id="gradeFilterTable">
+                            <option value="">All Grades</option>
+                            <?php foreach ($grades as $grade) : ?>
+                                <option value="<?php echo $grade['id']; ?>"><?php echo $grade['grade_name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </th>
+                    <th style="width: 40%;">Adviser</th>
+                    <th style="width: 10%;">Action</th>
 
-                        </tr>
-                    </thead>
-                    <tbody class="text-center" id="sectionsTableBody">
-                        <?php foreach ($sectionsData as $section) : ?>
-                            <tr class="grade-<?php echo $section['grade_id']; ?>">
-                                <td><?php echo ucfirst($section['section_name']); ?></td>
-                                <td><?php echo ucfirst($section['grade_name']); ?></td>
-                                <td>
-                                    <?php
-                                    if (!empty($section['teacher_first_name']) && !empty($section['teacher_last_name'])) {
-                                        echo ucfirst($section['teacher_first_name']) . ' ' . ucfirst($section['teacher_last_name']);
-                                    } else {
-                                        echo 'Not Assigned';
-                                    }
-                                    ?>
-                                </td>
-                                <td>
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editSectionModal<?php echo $section['id']; ?>">
-                                        Edit
-                                    </button>
+                </tr>
+            </thead>
+            <tbody class="text-center" id="sectionsTableBody">
+                <?php foreach ($sectionsData as $section) : ?>
+                    <tr class="grade-<?php echo $section['grade_id']; ?>">
+                        <td><?php echo ucwords($section['section_name']); ?></td>
+                        <td><?php echo ucwords($section['grade_name']); ?></td>
+                        <td>
+                            <?php
+                            if (!empty($section['teacher_first_name']) && !empty($section['teacher_last_name'])) {
+                                echo ucwords($section['teacher_first_name']) . ' ' . ucwords($section['teacher_last_name']);
+                            } else {
+                                echo 'Not Assigned';
+                            }
+                            ?>
+                        </td>
+                        <td>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editSectionModal<?php echo $section['id']; ?>">
+                                <i class="fas fa-edit"></i>
 
-                                    <!-- Modal for editing a section -->
-                                    <div class="modal fade modal-custom" id="editSectionModal<?php echo $section['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="editSectionModalLabel" aria-hidden="true" data-backdrop="false">
-                                        <div class="modal-dialog modal-custom" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="editSectionModalLabel">Edit Section</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                            </button>
+
+                            <!-- Modal for editing a section -->
+                            <div class="modal fade modal-custom" id="editSectionModal<?php echo $section['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="editSectionModalLabel" aria-hidden="true" data-backdrop="false">
+                                <div class="modal-dialog modal-custom" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editSectionModalLabel">Edit Section</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Form for editing a section -->
+                                            <form method="POST" action="">
+                                                <input type="hidden" name="edit_section_id" value="<?php echo $section['id']; ?>">
+                                                <div class="form-group">
+                                                    <label for="editSectionName">Section Name</label>
+                                                    <input type="text" class="form-control" id="editSectionName" name="edit_section_name" value="<?php echo $section['section_name']; ?>" required>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <!-- Form for editing a section -->
-                                                    <form method="POST" action="">
-                                                        <input type="hidden" name="edit_section_id" value="<?php echo $section['id']; ?>">
-                                                        <div class="form-group">
-                                                            <label for="editSectionName">Section Name</label>
-                                                            <input type="text" class="form-control" id="editSectionName" name="edit_section_name" value="<?php echo $section['section_name']; ?>" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="editTeacherSelect">Select Adviser</label>
-                                                            <select class="form-control" id="editTeacherSelect" name="edit_teacher_id" required>
-                                                                <option value="">Select Teacher</option>
-                                                                <?php foreach ($teachers as $teacher) : ?>
-                                                                    <option value="<?php echo $teacher['id']; ?>" <?php echo ($teacher['id'] == $section['teacher_id']) ? 'selected' : ''; ?>>
-                                                                        <?php echo $teacher['first_name'] . ' ' . $teacher['last_name']; ?>
-                                                                    </option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                        </div>
-                                                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                                                    </form>
+                                                <div class="form-group">
+                                                    <label for="editTeacherSelect">Select Adviser</label>
+                                                    <select class="form-control" id="editTeacherSelect" name="edit_teacher_id" required>
+                                                        <option value="">Select Teacher</option>
+                                                        <?php foreach ($teachers as $teacher) : ?>
+                                                            <option value="<?php echo $teacher['id']; ?>" <?php echo ($teacher['id'] == $section['teacher_id']) ? 'selected' : ''; ?>>
+                                                                <?php echo $teacher['first_name'] . ' ' . $teacher['last_name']; ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
                                                 </div>
-                                            </div>
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            </form>
                                         </div>
                                     </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        </>
     </div>
 </div>
 

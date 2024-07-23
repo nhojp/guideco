@@ -13,71 +13,84 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['user_id'])) {
     exit;
 }
 
-if (isset($_SESSION['loggedin'])) {
-    $student_id = $_SESSION['user_id'] ?? null;
+// Initialize variables
+$first_name = "Student"; 
+$last_name = ""; 
+$grade = "Unknown"; 
+$section = "Unknown"; 
+$violation_count = 0; // Initialize violation count
 
-    // Check if admin ID is set in session
-    if ($student_id) {
-        // Include database connection
+$student_id = $_SESSION['user_id'] ?? null;
 
-        // Fetch admin data based on admin_id
-        $sql = "SELECT 
-        s.id AS student_id, 
+if ($student_id) {
+    // Fetch student data based on student_id
+    $sql = "SELECT 
         s.first_name, 
-        s.middle_name, 
         s.last_name, 
         sec.section_name, 
         g.grade_name 
     FROM students s
     JOIN sections sec ON s.section_id = sec.id
     JOIN grades g ON sec.grade_id = g.id
-    WHERE s.id = $student_id";
-        $result = $conn->query($sql);
+    WHERE s.id = ?";
+    
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $student_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         if ($result && $result->num_rows == 1) {
-            // Fetch admin details
+            // Fetch student details
             $row = $result->fetch_assoc();
             $first_name = $row['first_name'];
             $last_name = $row['last_name'];
             $grade = $row['grade_name'];
             $section = $row['section_name'];
-        } else {
-            // Handle case where admin data is not found
-            // You may set default values or handle this situation accordingly
-            $first_name = "Student"; // Example default value
-            $last_name = "";
         }
 
-        // Fetch violation count for the student
-        $violation_count = 0; // Initialize violation count
-        $sql_violations = "SELECT COUNT(*) AS violation_count FROM violations WHERE student_id = $student_id";
-        $result_violations = $conn->query($sql_violations);
+        $stmt->close();
+    } else {
+        // Handle query preparation error
+        echo "Error preparing the student data query.";
+    }
+
+    // Fetch violation count for the student
+    $sql_violations = "SELECT COUNT(*) AS violation_count FROM violations WHERE student_id = ?";
+
+    if ($stmt = $conn->prepare($sql_violations)) {
+        $stmt->bind_param("i", $student_id);
+        $stmt->execute();
+        $result_violations = $stmt->get_result();
 
         if ($result_violations && $result_violations->num_rows == 1) {
             $row_violations = $result_violations->fetch_assoc();
             $violation_count = $row_violations['violation_count'];
         }
 
-        // Close database connection
+        $stmt->close();
     } else {
-        // Handle case where admin ID is not set in session
-        echo "Teacher ID not set in session.";
+        // Handle query preparation error
+        echo "Error preparing the violation count query.";
     }
 } else {
-    // Handle case where user/admin is not logged in
-    echo "User ID not set in session.";
+    // Handle case where student ID is not set in session
+    echo "Student ID not set in session.";
 }
+
 include 'head.php';
 ?>
 <style>
-  /* Adjust font size for smaller screens */
-  @media (max-width: 768px) {
-    .welcome-message {
-        font-size: 1.5rem; /* Adjust the font size as needed */
+    /* Adjust font size for smaller screens */
+    @media (max-width: 768px) {
+        .welcome-message {
+            font-size: 1.5rem;
+            /* Adjust the font size as needed */
+        }
     }
-}
+    
 </style>
-<div class="container-fluid mt-4">
+<body class="bg">
+<div class="container-fluid mt-4 bg">
     <div class="container-fluid pt-4 rounded-lg pl-4" id="animate-area">
         <div class="row float-right mr-4">
             <form action="logout.php">
@@ -89,7 +102,7 @@ include 'head.php';
         <div class="row justify-content-between">
             <div class="col-md-12">
                 <h2 class="font-weight-bold welcome-message">
-                    Welcome, <b><?php echo ucwords($first_name . ' ' . $last_name . '!'); ?></b>
+                    <b><?php echo ucwords($first_name . ' ' . $last_name); ?></b>
                 </h2>
                 <b><?php echo ucwords($grade . ' - ' . $section); ?></b><br>
                 <p class="pt-2"><b>
@@ -112,7 +125,7 @@ include 'head.php';
         <div class="row ">
             <div class="container-fluid">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item w-30">
+                    <li class="nav-item w-30 ">
                         <a class="nav-link active font-weight-bold text-dark" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
                             Home
                         </a>
@@ -125,15 +138,11 @@ include 'head.php';
                     </li>
                 </ul>
             </div>
-
-
         </div>
     </div>
 
-
     <div class="container-fluid bg-white rounded-lg">
         <div class="tab-content" id="myTabContent">
-
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div class="container-fluid bg-light pt-4 rounded-lg">
                     <h1>Welcome to GuideCo!</h1>
@@ -141,9 +150,8 @@ include 'head.php';
                 </div>
             </div>
 
-
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <?php include "student-credentials.php" ?>
+                <?php include "student-profile.php" ?>
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <h3>Recommender</h3>
@@ -152,7 +160,6 @@ include 'head.php';
         </div>
     </div>
 </div>
-
 
 <div class="container">
     <!-- ChatLing Widget Integration -->
