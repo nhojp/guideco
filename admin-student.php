@@ -213,8 +213,8 @@ $grades = fetchGrades($conn);
             </div>
         <?php endif; ?>
 
-        <div class="row pt-2 pb-2">
-            <div class="col-md-6">
+        <div class="form-row pt-2 pb-2">
+            <div class="col-md-5">
                 <label for="gradeFilter">Filter by Grade:</label>
                 <select id="gradeFilter" class="form-control">
                     <option value="">All Grades</option>
@@ -223,7 +223,7 @@ $grades = fetchGrades($conn);
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <label for="sectionFilter">Filter by Section:</label>
                 <select id="sectionFilter" class="form-control">
                     <option value="">All Sections</option>
@@ -232,49 +232,69 @@ $grades = fetchGrades($conn);
                     <?php endforeach; ?>
                 </select>
             </div>
+            <div class="col-md-2">
+                <label for="printSection">Print List:</label>
+                <div class="input-group">
+                    <select id="printSection" class="form-control">
+                        <option value="">All Sections</option>
+                        <?php foreach ($sections as $section) : ?>
+                            <option value="<?php echo htmlspecialchars($section['id']); ?>">
+                                <?php echo ucwords(htmlspecialchars($section['section_name'])); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="input-group-append">
+                        <button id="printButton" class="btn btn-primary">
+                            <i class="fas fa-print"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
-
-        <table class="table table-hover mt-4 border">
-            <thead class="thead-dark">
-                <tr>
-                    <th style="width:30%;">Full Name</th>
-                    <th style="width:25%;">
-                        Grade
-                    </th>
-                    <th style="width:25%;">
-                        Section
-                    </th>
-                    <th class="text-center" style="width:20%;">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="studentTableBody">
-                <?php if (count($students) > 0) : ?>
-                    <?php foreach ($students as $student) : ?>
-                        <tr>
-                            <td><?php echo ucwords(htmlspecialchars($student['first_name'])) . ' ' . ucwords(htmlspecialchars($student['last_name'])); ?></td>
-                            <td><?php echo ucwords(htmlspecialchars($student['grade_name'])); ?></td>
-                            <td><?php echo ucwords(htmlspecialchars($student['section_name'])); ?></td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal<?php echo urlencode($student['id']); ?>">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <a href="admin-student-profile.php?id=<?php echo htmlspecialchars($student['id']); ?>" class="btn btn-info"><i class="fas fa-eye"></i></a>
-
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo htmlspecialchars($student['id']); ?>">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
+        <div class="table-responsive">
+            <table class="table table-hover mt-4 border">
+                <thead class="thead-dark">
                     <tr>
-                        <td colspan="4">No students found.</td>
+                        <th style="width:30%;">Full Name</th>
+                        <th style="width:25%;">
+                            Grade
+                        </th>
+                        <th style="width:25%;">
+                            Section
+                        </th>
+                        <th class="text-center" style="width:20%;">Actions</th>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="studentTableBody">
+                    <?php if (count($students) > 0) : ?>
+                        <?php foreach ($students as $student) : ?>
+                            <tr>
+                                <td><?php echo ucwords(htmlspecialchars($student['first_name'])) . ' ' . ucwords(htmlspecialchars($student['last_name'])); ?></td>
+                                <td><?php echo ucwords(htmlspecialchars($student['grade_name'])); ?></td>
+                                <td><?php echo ucwords(htmlspecialchars($student['section_name'])); ?></td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal<?php echo urlencode($student['id']); ?>">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <a href="admin-student-profile.php?id=<?php echo htmlspecialchars($student['id']); ?>" class="btn btn-info"><i class="fas fa-eye"></i></a>
 
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo htmlspecialchars($student['id']); ?>">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="4">No students found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
 
         <!-- Modal for Adding a Student -->
         <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true">
@@ -444,5 +464,12 @@ $grades = fetchGrades($conn);
                 document.getElementById('delete_id').value = id;
             });
         });
+
+        document.getElementById('printButton').addEventListener('click', function() {
+            var sectionId = document.getElementById('printSection').value;
+            var url = 'admin-student-print.php?section_id=' + encodeURIComponent(sectionId);
+            window.location.href = url;
+        });
+
     });
 </script>

@@ -125,14 +125,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
                         </h3>
                     </div>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2 text-right">
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStudentModal">
                         +
                     </button>
+                    <button id="printButton" type="button" class="btn btn-primary">
+                        <i class="fas fa-print"></i>
+                    </button>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
                 </div>
+
             </div>
 
             <div class="table-responsive">
@@ -199,8 +203,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
 <div class="modal fade modal-custom" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-        <div class="modal-header bg-guideco text-white">
-        <h5 class="modal-title" id="reportModalLabel">Report Violation</h5>
+            <div class="modal-header bg-guideco text-white">
+                <h5 class="modal-title" id="reportModalLabel">Report Violation</h5>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
             </div>
             <form action="" method="POST">
@@ -234,7 +238,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
 </div>
 
 <?php include 'footer.php'; ?>
-
 
 <script>
     $('#reportModal').on('show.bs.modal', function(event) {
@@ -275,6 +278,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
                     row.style.display = "none";
                 }
             });
+        });
+    });
+
+    document.getElementById('printButton').addEventListener('click', function() {
+        const sectionId = document.getElementById('printSection').value;
+        let url = 'admin-student-print.php'; // Default URL
+
+        if (sectionId) {
+            url += '?section_id=' + sectionId;
+        }
+
+        window.open(url, '_blank');
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const printButton = document.getElementById('printButton');
+
+        printButton.addEventListener('click', function() {
+            const sectionId = <?php echo json_encode($section_data['section_id']); ?>;
+            let url = 'teacher-student-print.php'; // Default URL
+
+            if (sectionId) {
+                url += '?section_id=' + sectionId;
+            }
+
+            window.open(url, '_blank');
         });
     });
 </script>
