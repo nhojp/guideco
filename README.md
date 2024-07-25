@@ -12,15 +12,12 @@ Development of Guidance and Counseling Information Management System for Nasugbu
 - Printing Good Moral Template
 - Printing Annex A Template
 - Fill up form
-- Security Guards Reporting (On going)
-- Teachers Reporting (On going)
-- Email Verification for Reset Password (On going)
-- SMS Functionality (On going)
+- Security Guards Reporting
+- Teachers Reporting
+- Email
 - Calendar Scheduling
 - Chatbot (GuideBot)
 - Recommender (Analytics)
-## Flow of Requirements
-- TBA
 ## Technolody Used
 - ChatGPT API
 ## How to run?
@@ -29,4 +26,3 @@ Development of Guidance and Counseling Information Management System for Nasugbu
 - import the database to your phpmyadmin
 - move this folder to the htdocs
 - open this http://localhost/guideco/index.php
-- username: admin && password: admin (to log in to guidance counselor)
