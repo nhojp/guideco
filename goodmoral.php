@@ -21,7 +21,7 @@ if (isset($_GET['id'])) {
 $query_admin = "SELECT first_name, middle_name, last_name, position FROM admin LIMIT 1";
 $result_admin = $conn->query($query_admin);
 $admin_details = $result_admin->fetch_assoc();
-$admin_full_name = $admin_details['first_name'] .' ' . $admin_details['last_name'];
+$admin_full_name = ucwords($admin_details['first_name']) .' ' . ucwords($admin_details['last_name']);
 
 
 // Get the current date
@@ -95,7 +95,7 @@ $current_date = date('jS \d\a\y \o\f F Y');
                 </tr>
                 <tr>
                     <td class="pt-5 pl-5 pr-5 certify-text">
-                        This is to certify that <u><?php echo htmlspecialchars($student_details['first_name'] . ' ' . $student_details['middle_name'] . ' ' . $student_details['last_name']); ?></u> is a bonafide student of <b>Nasugbu
+                        This is to certify that <u><?php echo ucwords(htmlspecialchars($student_details['first_name']) . ' ' . ucwords($student_details['middle_name']) . ' ' . ucwords($student_details['last_name'])); ?></u> is a bonafide student of <b>Nasugbu
                             East Senior High School</b> during the School Year _______.
                     </td>
                 </tr>

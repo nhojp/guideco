@@ -1,8 +1,4 @@
 <?php
-// Start the session if it's not already started
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
 
 // Check if user is logged in
 if (!isset($_SESSION['loggedin'])) {
@@ -26,10 +22,6 @@ if (isset($_SESSION['admin'])) {
     exit;
 }
 
-// Include database connection
-include "conn.php";
-
-// Fetch user data based on role and role_id
 if ($role && $role_id) {
     $table_name = ($role == 'admin') ? 'admin' : (($role == 'teacher') ? 'teachers' : 'guards');
     $sql = "SELECT * FROM $table_name WHERE id = $role_id";
@@ -92,142 +84,123 @@ if ($role && $role_id) {
 }
 
 
-// Include header and other necessary files based on role
-include "head.php";
-if ($role == 'admin') {
-    include "admin-header.php";
-} elseif ($role == 'teacher') {
-    include "teacher-header.php";
-} elseif ($role == 'guard') {
-    include "guard-header.php";
-}
 ?>
 
-<div class="container mt-2 mb-5">
-    <div class="container bg-white pt-4 rounded-lg">
-        <h2 class="pb-4 font-weight-bold">Edit <?php echo ucfirst($role); ?> Credentials</h2>
-    </div>
+<div class="container-fluid mb-5">
+    <div class="container-fluid bg-white mt-2 rounded-lg border">
+        <div class="row pt-3">
+            <div class="col-md-6">
+                <div class="container-fluid p-2">
+                    <h3><strong>Edit <?php echo ucfirst($role); ?> Credentials</strong></h3>
+                </div>
+            </div>
 
-    <div class="container bg-white p-4 rounded-lg mt-2">
-        <?php
-        // Display error or success messages
-        if (!empty($error_message)) {
-            echo '<div class="alert alert-danger">' . $error_message . '</div>';
-        }
-        if (!empty($success_message)) {
-            echo '<div class="alert alert-success">' . $success_message . '</div>';
-        }
+            <div class="container bg-white p-4 rounded-lg">
+                <?php
+                // Display error or success messages
+                if (!empty($error_message)) {
+                    echo '<div class="alert alert-danger">' . $error_message . '</div>';
+                }
+                if (!empty($success_message)) {
+                    echo '<div class="alert alert-success">' . $success_message . '</div>';
+                }
 
-        // Display user details in editable form
-        if (isset($_SESSION['edit_user'])) {
-            $user = $_SESSION['edit_user'];
-        ?>
-            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="password" name="password" value="<?php echo $user['password']; ?>" required>
-                                <div class="input-group-append">
-                                    <span class="input-group-text" onclick="togglePassword()">
-                                        <i class="fa fa-eye" id="eye-icon"></i>
-                                    </span>
+                // Display user details in editable form
+                if (isset($_SESSION['edit_user'])) {
+                    $user = $_SESSION['edit_user'];
+                ?>
+                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                        <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="username"><strong>Username</strong></label>
+                                    <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="password"><strong>Password</strong></label>
+                                    <input type="password" class="form-control" id="password" name="password" value="<?php echo $user['password']; ?>" required>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="first_name">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" required>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="middle_name">Middle Name</label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo $user['middle_name']; ?>">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="last_name">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="position">Position</label>
-                            <input type="text" class="form-control" id="position" name="position" value="<?php echo $user['position']; ?>" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="birthdate">Birthdate</label>
-                            <input type="date" class="form-control" id="birthdate" name="birthdate" value="<?php echo htmlspecialchars($user['birthdate']); ?>" required>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="first_name"><strong>First Name</strong></label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo ucwords($user['first_name']); ?>" required>
+                                </div>
                             </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="sex">Sex</label>
-                            <div class="form-group">
-    <select class="form-control" id="sex" name="sex">
-        <option value="Male" <?php if ($user['sex'] == 'Male') echo 'selected'; ?>>Male</option>
-        <option value="Female" <?php if ($user['sex'] == 'Female') echo 'selected'; ?>>Female</option>
-    </select>
-</div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="middle_name"><strong>Middle Name</strong></label>
+                                    <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo ucwords($user['middle_name']); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="last_name"><strong>Last Name</strong></label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo ucwords($user['last_name']); ?>" required>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="contact_number">Contact Number</label>
-                            <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($user['contact_number']); ?>" required>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email"><strong>Email</strong></label>
+                                    <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="position"><strong>Position</strong></label>
+                                    <input type="text" class="form-control" id="position" name="position" value="<?php echo ucwords($user['position']); ?>" readonly>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="address">Address</label>
-                            <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($user['address']); ?>">
+
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="birthdate"><strong>Birthdate</strong></label>
+                                    <input type="date" class="form-control" id="birthdate" name="birthdate" value="<?php echo htmlspecialchars($user['birthdate']); ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sex"><strong>Sex</strong></label>
+                                    <div class="form-group">
+                                        <select class="form-control" id="sex" name="sex">
+                                            <option value="Male" <?php if ($user['sex'] == 'Male') echo 'selected'; ?>>Male</option>
+                                            <option value="Female" <?php if ($user['sex'] == 'Female') echo 'selected'; ?>>Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="contact_number"><strong>Contact Number</strong></label>
+                                    <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($user['contact_number']); ?>" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="address"><strong>Address</strong></label>
+                                    <input type="text" class="form-control" id="address" name="address" value="<?php echo ucwords(htmlspecialchars($user['address'])); ?>">
+                                </div>
+                            </div>
+                        </div>
 
-                <button type="submit" class="btn btn-primary" name="update">Update</button>
-            </form>
-        <?php } ?>
-
+                        <button type="submit" class="btn btn-success" name="update">Save</button>
+                    </form>
+                <?php } ?>
+            </div>
+        </div>
     </div>
 </div>
-
-<?php
-// Include footer and other necessary files based on role
-include "admin-footer.php";
-
-include "footer.php";
-?>

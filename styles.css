@@ -1,0 +1,32 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
+.bg-guideco{
+    background-color: rgb(55, 150, 52);
+}
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.main-content {
+    flex: 1;
+}
+
+footer {
+    background-color: #f8f9fa; /* Replace with your footer background color */
+    width: 100%;
+    padding: 10px 0; /* Adjust padding as needed */
+}
+.scrollable-content {
+    max-height: 100px; /* Adjust the height as needed */
+    overflow-y: auto;
+}
+
+  

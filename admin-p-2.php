@@ -1,18 +1,13 @@
 <?php
-// Include the database connection
 include "conn.php";
-
-// Include the header
 include "head.php";
 
-// Start the session if it's not already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
 // Check if user is logged in
 if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin_id'])) {
-    // Redirect if not logged in
     header('Location: index.php');
     exit;
 }
@@ -50,68 +45,86 @@ $sql_students = "SELECT s.id, s.first_name, s.last_name, sec.section_name, g.gra
                  INNER JOIN grades g ON sec.grade_id = g.id";
 $result_students = $conn->query($sql_students);
 
-include "admin-header.php";
+include "admin-nav.php";
 ?>
 
-
-
-<div class="container-fluid mt-2 mb-5">
-    <div class="container-fluid bg-white pt-4 rounded-lg">
-        <div class="row">
-            <div class="col-md-8">
-                <h2 class="mb-4 font-weight-bold">Choose Victim of <?php echo ucwords($person_name); ?></h2>
-            </div>
-
-            <div class="col-md-4">
-                <div class="search-wrapper float-right">
-                    <div class="input-holder">
-                        <input type="text" class="search-input" id="searchInput" placeholder="Type to search">
-                        <button class="search-icon"><span></span></button>
+<main class="flex-fill mt-5">
+    <div class="container mt-4">
+        <div class="container-fluid mb-5">
+            <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
+                <div class="row pt-3">
+                    <div class="col-md-6">
+                        <div class="container-fluid p-2">
+                            <h4>
+                                <strong>Victim of <span class="text-danger"><?php echo ucwords($person_name); ?></span></strong>
+                            </h4>
+                        </div>
                     </div>
-                    <button class="close"></button>
+                    <div class="col-md-6">
+                        <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                    </div>
                 </div>
+
+                <table class="table table-hover mt-4 border">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th style="width: 40%;">Full Name</th>
+                            <th style="width: 25%;">Grade</th>
+                            <th style="width: 25%;">Section</th>
+                            <th style="width: 10%;">Select</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personnelTable">
+                        <?php if ($result_students->num_rows > 0) : ?>
+                            <?php while ($student = $result_students->fetch_assoc()) : ?>
+                                <tr>
+                                    <td><?php echo ucwords($student['first_name']) . " " . ucwords($student['last_name']); ?></td>
+                                    <td><?php echo ucwords($student['grade_name']); ?></td>
+                                    <td><?php echo ucwords($student['section_name']); ?></td>
+                                    <td>
+                                        <form action="admin-p-3.php" method="get">
+                                            <input type="hidden" name="student_id" value="<?php echo $student['id']; ?>">
+                                            <input type="hidden" name="person_id" value="<?php echo $person_id; ?>">
+                                            <input type="hidden" name="person_type" value="<?php echo $person_type; ?>">
+                                            <button type="submit" class="btn btn-success btn-block">Select</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="4">No students found</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
+</main>
 
-    <table class="table table-borderless text-center table-hover ">
-    <thead>
-                <tr>
-                    <th style="width: 50%;">Full Name</th>
-                    <th style="width: 20%;">Grade</th>
-                    <th style="width: 20%;">Section</th>
-                    <th style="width: 10%;">Select</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($result_students->num_rows > 0) : ?>
-                    <?php while ($student = $result_students->fetch_assoc()) : ?>
-                        <tr>
-                            <td><?php echo ucwords($student['first_name']) . " " . ucwords($student['last_name']); ?></td>
-                            <td><?php echo ucwords($student['grade_name']); ?></td>
-                            <td><?php echo ucwords($student['section_name']); ?></td>
-                            <td>
-                                <form action="admin-p-3.php" method="get">
-                                    <input type="hidden" name="student_id" value="<?php echo $student['id']; ?>">
-                                    <input type="hidden" name="person_id" value="<?php echo $person_id; ?>">
-                                    <input type="hidden" name="person_type" value="<?php echo $person_type; ?>">
-                                    <button type="submit" class="btn btn-success btn-lg btn-block">Select</button>
-                                </form>
-
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else : ?>
-                    <tr>
-                        <td colspan="4">No students found</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
 <?php
 // Include footer
-include "admin-footer.php";
+include "footer.php";
 ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var rows = document.querySelectorAll('#personnelTable tr');
+
+            rows.forEach(function(row) {
+                var name = row.cells[0].innerText.toLowerCase();
+                var grade = row.cells[1].innerText.toLowerCase();
+                var section = row.cells[2].innerText.toLowerCase();
+
+                if (name.includes(input) || grade.includes(input) || section.includes(input)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>

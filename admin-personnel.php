@@ -1,301 +1,329 @@
-<?php include "conn.php";
-include "head.php";
-// Start session
-session_start();
+<?php
 
-// Check if user is logged in and is an admin
+include "conn.php";
+include "head.php";
+
 if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin'])) {
     header('Location: index.php'); // Redirect if not logged in or not admin
     exit;
 }
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get form data using mysqli_real_escape_string for basic input sanitization
-    // Assuming $_POST values are set properly, adjust as per your form structure
-    $victimFirstName = isset($_POST['victimFirstName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['victimFirstName']))) : '';
-    $victimMiddleName = isset($_POST['victimMiddleName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['victimMiddleName']))) : '';
-    $victimLastName = isset($_POST['victimLastName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['victimLastName']))) : '';
-    $victimDOB = isset($_POST['victimDOB']) ? mysqli_real_escape_string($conn, $_POST['victimDOB']) : '';
-    $victimAge = isset($_POST['victimAge']) ? mysqli_real_escape_string($conn, $_POST['victimAge']) : '';
-    $victimSex = isset($_POST['victimSex']) ? mysqli_real_escape_string($conn, $_POST['victimSex']) : '';
-    $victimGrade = isset($_POST['victimGrade']) ? mysqli_real_escape_string($conn, $_POST['victimGrade']) : '';
-    $victimSection = isset($_POST['victimSection']) ? mysqli_real_escape_string($conn, $_POST['victimSection']) : '';
-    $victimAdviser = isset($_POST['victimAdviser']) ? mysqli_real_escape_string($conn, $_POST['victimAdviser']) : '';
 
-    $motherName = isset($_POST['motherName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['motherName']))) : '';
-    $motherOccupation = isset($_POST['motherOccupation']) ? mysqli_real_escape_string($conn, $_POST['motherOccupation']) : '';
-    $motherAddress = isset($_POST['motherAddress']) ? mysqli_real_escape_string($conn, $_POST['motherAddress']) : '';
-    $motherContact = isset($_POST['motherContact']) ? mysqli_real_escape_string($conn, $_POST['motherContact']) : '';
+// Function to fetch all personnel data
+function getAllPersonnelData($conn)
+{
+    $sql = "SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, 'Teacher' AS position FROM teachers
+            UNION ALL
+            SELECT id, CONCAT(first_name, '  ', last_name) AS full_name, 'Guard' AS position FROM guards";
+    $result = mysqli_query($conn, $sql);
+    $personnelData = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $personnelData[] = $row;
+    }
+    return $personnelData;
+}
 
-    $fatherName = isset($_POST['fatherName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['fatherName']))) : '';
-    $fatherOccupation = isset($_POST['fatherOccupation']) ? mysqli_real_escape_string($conn, $_POST['fatherOccupation']) : '';
-    $fatherAddress = isset($_POST['fatherAddress']) ? mysqli_real_escape_string($conn, $_POST['fatherAddress']) : '';
-    $fatherContact = isset($_POST['fatherContact']) ? mysqli_real_escape_string($conn, $_POST['fatherContact']) : '';
+$deleteSuccess = false; // Flag to indicate success
+$addGuardSuccess = isset($_SESSION['add_guard_success']) ? $_SESSION['add_guard_success'] : false;
+$addTeacherSuccess = isset($_SESSION['add_teacher_success']) ? $_SESSION['add_teacher_success'] : false;
+$errorMessage = '';
 
-    $complainantFirstName = isset($_POST['complainantFirstName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['complainantFirstName']))) : '';
-    $complainantMiddleName = isset($_POST['complainantMiddleName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['complainantMiddleName']))) : '';
-    $complainantLastName = isset($_POST['complainantLastName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['complainantLastName']))) : '';
-    $relationshipToVictim = isset($_POST['relationshipToVictim']) ? mysqli_real_escape_string($conn, $_POST['relationshipToVictim']) : '';
-    $complainantContact = isset($_POST['complainantContact']) ? mysqli_real_escape_string($conn, $_POST['complainantContact']) : '';
-    $complainantAddress = isset($_POST['complainantAddress']) ? mysqli_real_escape_string($conn, $_POST['complainantAddress']) : '';
-
-    $complainedFirstName = isset($_POST['complainedFirstName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['complainedFirstName']))) : '';
-    $complainedMiddleName = isset($_POST['complainedMiddleName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['complainedMiddleName']))) : '';
-    $complainedLastName = isset($_POST['complainedLastName']) ? mysqli_real_escape_string($conn, ucwords(strtolower($_POST['complainedLastName']))) : '';
-    $complainedDOB = isset($_POST['complainedDOB']) ? mysqli_real_escape_string($conn, $_POST['complainedDOB']) : '';
-    $complainedAge = isset($_POST['complainedAge']) ? mysqli_real_escape_string($conn, $_POST['complainedAge']) : '';
-    $complainedSex = isset($_POST['complainedSex']) ? mysqli_real_escape_string($conn, $_POST['complainedSex']) : '';
-    $complainedDesignation = isset($_POST['complainedDesignation']) ? mysqli_real_escape_string($conn, $_POST['complainedDesignation']) : '';
-    $complainedContact = isset($_POST['complainedContact']) ? mysqli_real_escape_string($conn, $_POST['complainedContact']) : '';
-    $complainedAddress = isset($_POST['complainedAddress']) ? mysqli_real_escape_string($conn, $_POST['complainedAddress']) : '';
-
-    $caseDetails = isset($_POST['caseDetails']) ? mysqli_real_escape_string($conn, $_POST['caseDetails']) : '';
-    $actionTaken = isset($_POST['actionTaken']) ? mysqli_real_escape_string($conn, $_POST['actionTaken']) : '';
-    $recommendations = isset($_POST['recommendations']) ? mysqli_real_escape_string($conn, $_POST['recommendations']) : '';
-
-
-    // Insert data into database
-    $sql = "INSERT INTO complaints 
-            (victimFirstName, victimMiddleName, victimLastName, victimDOB, victimAge, victimSex, victimGrade, victimSection, victimAdviser, 
-            motherName, motherOccupation, motherAddress, motherContact, 
-            fatherName, fatherOccupation, fatherAddress, fatherContact, 
-            complainantFirstName, complainantMiddleName, complainantLastName, relationshipToVictim, complainantContact, complainantAddress,
-            complainedFirstName, complainedMiddleName, complainedLastName, complainedDOB, complainedAge, complainedSex, complainedDesignation, complainedContact, complainedAddress,
-            caseDetails, actionTaken, recommendations) 
-            VALUES 
-            ('$victimFirstName', '$victimMiddleName', '$victimLastName', '$victimDOB', '$victimAge', '$victimSex', '$victimGrade', '$victimSection', '$victimAdviser', 
-            '$motherName', '$motherOccupation', '$motherAddress', '$motherContact', 
-            '$fatherName', '$fatherOccupation', '$fatherAddress', '$fatherContact', 
-            '$complainantFirstName', '$complainantMiddleName', '$complainantLastName', '$relationshipToVictim', '$complainantContact', '$complainantAddress',
-            '$complainedFirstName', '$complainedMiddleName', '$complainedLastName', '$complainedDOB', '$complainedAge', '$complainedSex', '$complainedDesignation', '$complainedContact', '$complainedAddress',
-            '$caseDetails', '$actionTaken', '$recommendations')";
-
-    if ($conn->query($sql) === TRUE) {
-        $successMessage = "New record created successfully";
+// Delete functionality
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_personnel'])) {
+    $personnelId = $_POST['delete_personnel'];
+    $deleteSql = "DELETE FROM ";
+    if ($_POST['position'] == 'Teacher') {
+        $deleteSql .= "teachers";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        $deleteSql .= "guards";
+    }
+    $deleteSql .= " WHERE id = $personnelId";
+
+    if (mysqli_query($conn, $deleteSql)) {
+        $deleteSuccess = true;
+    } else {
+        $errorMessage = 'Error deleting personnel record: ' . mysqli_error($conn);
     }
 }
 
-include "admin-header.php"
+// Add Guard functionality
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['guard_first_name']) && isset($_POST['guard_last_name'])) {
+    $guardFirstName = $_POST['guard_first_name'];
+    $guardLastName = $_POST['guard_last_name'];
+    $guardUsername = $_POST['guard_username'];
+    $guardPassword = $_POST['guard_password'];
+
+    // Check if username already exists
+    $checkUsernameSql = "SELECT id FROM guards WHERE username = '$guardUsername'";
+    $result = mysqli_query($conn, $checkUsernameSql);
+    if (mysqli_num_rows($result) > 0) {
+        $errorMessage = 'Error adding guard: Username already exists.';
+    } else {
+        $addGuardSql = "INSERT INTO guards (first_name, last_name, username, position, password)
+                        VALUES ('$guardFirstName', '$guardLastName', '$guardUsername','Guard', '$guardPassword')";
+
+        if (mysqli_query($conn, $addGuardSql)) {
+            $_SESSION['add_guard_success'] = true;
+            $addGuardSuccess = true;
+        } else {
+            $errorMessage = 'Error adding guard: ' . mysqli_error($conn);
+        }
+    }
+}
+
+// Add Teacher functionality
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['teacher_first_name']) && isset($_POST['teacher_last_name'])) {
+    $teacherFirstName = $_POST['teacher_first_name'];
+    $teacherLastName = $_POST['teacher_last_name'];
+    $teacherUsername = $_POST['teacher_username'];
+    $teacherPassword = $_POST['teacher_password'];
+
+    // Check if username already exists
+    $checkUsernameSql = "SELECT id FROM teachers WHERE username = '$teacherUsername'";
+    $result = mysqli_query($conn, $checkUsernameSql);
+    if (mysqli_num_rows($result) > 0) {
+        $errorMessage = 'Error adding teacher: Username already exists.';
+    } else {
+        $addTeacherSql = "INSERT INTO teachers (first_name, last_name, username, password, position)
+                        VALUES ('$teacherFirstName', '$teacherLastName', '$teacherUsername', '$teacherPassword','Teacher')";
+
+        if (mysqli_query($conn, $addTeacherSql)) {
+            $_SESSION['add_teacher_success'] = true;
+            $addTeacherSuccess = true;
+        } else {
+            $errorMessage = 'Error adding teacher: ' . mysqli_error($conn);
+        }
+    }
+}
+
+// Clear session variables after displaying messages
+unset($_SESSION['add_guard_success']);
+unset($_SESSION['add_teacher_success']);
+
+// Fetching data
+$personnelData = getAllPersonnelData($conn);
 ?>
 
+<style>
+    .btn-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #28a745;
+        /* Green color */
+        color: white;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-<div class="container-fluid mt-2 mb-5">
-    <div class="container-fluid bg-white pt-4 rounded-lg">
-        <h2 class="pb-4 font-weight-bold">Complaint Form Against School Personnel</h2>
+    .btn-circle:hover {
+        background-color: #218838;
+    }
+
+    .modal-custom {
+        margin-top: 100px;
+    }
+
+    @media (max-width: 767.98px) {
+        .modal-custom {
+            margin: 100px auto;
+            max-width: 90%;
+        }
+    }
+
+    .search {
+        width: 100%;
+        padding: 15px;
+        border-radius: 60px;
+        margin-top: 5px;
+        border: none;
+        background-color: lightgray;
+    }
+</style>
+
+<div class="container-fluid mb-5">
+    <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
+        <div class="row pt-3">
+            <div class="col-md-6">
+                <div class="container-fluid p-2">
+                    <h3><strong>School Personnels</strong></h3>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false">
+                        +
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" data-toggle="modal" data-target="#addGuardModal">Add a Security Guard</a></li>
+                        <li><a class="dropdown-item" data-toggle="modal" data-target="#addTeacherModal">Add a Teacher</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+            </div>
+        </div>
+
+        <?php if ($deleteSuccess || $addGuardSuccess || $addTeacherSuccess || !empty($errorMessage)) : ?>
+            <div class="alert <?php echo $deleteSuccess || $addGuardSuccess || $addTeacherSuccess ? 'alert-success' : 'alert-danger'; ?> mt-4" role="alert">
+                <?php
+                if ($deleteSuccess) {
+                    echo 'Record deleted successfully';
+                } elseif ($addGuardSuccess) {
+                    echo 'Guard added successfully';
+                } elseif ($addTeacherSuccess) {
+                    echo 'Teacher added successfully';
+                } elseif (!empty($errorMessage)) {
+                    echo $errorMessage;
+                }
+                ?>
+            </div>
+        <?php endif; ?>
+
+        <table class="table table-hover mt-4 border">
+            <thead class="thead-dark">
+                <tr>
+                    <th style="width:45%;">Full Name</th>
+                    <th style="width:45%;">
+                        <select class="form-control" id="positionFilter" name="position_filter">
+                            <option value="">All Positions</option>
+                            <option value="Teacher">Teacher</option>
+                            <option value="Guard">Guard</option>
+                        </select>
+                    </th>
+                    <th style="width:10%;" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($personnelData as $person) : ?>
+                    <tr>
+                        <td><?php echo ucwords(strtolower($person['full_name'])); ?></td>
+                        <td><?php echo ucwords(strtolower($person['position'])); ?></td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo $person['id']; ?>">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal<?php echo $person['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel<?php echo $person['id']; ?>" aria-hidden="true">
+                                <div class="modal-dialog modal-custom" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-guideco text-white">
+                                            <h5 class="modal-title" id="deleteModalLabel<?php echo $person['id']; ?>">Delete Record</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this record?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form method="POST" action="">
+                                                <input type="hidden" name="delete_personnel" value="<?php echo $person['id']; ?>">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <!-- Add Guard Modal -->
+        <div class="modal fade" id="addGuardModal" tabindex="-1" role="dialog" aria-labelledby="addGuardModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-custom" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-guideco text-white">
+                        <h5 class="modal-title" id="addGuardModalLabel">Add Security Guard</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="">
+                            <div class="form-group">
+                                <label for="guardFirstName">First Name:</label>
+                                <input type="text" id="guardFirstName" name="guard_first_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="guardLastName">Last Name:</label>
+                                <input type="text" id="guardLastName" name="guard_last_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="guardUsername">Username:</label>
+                                <input type="text" id="guardUsername" name="guard_username" class="form-control" value="guard" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="guardPassword">Password:</label>
+                                <input type="password" id="guardPassword" name="guard_password" class="form-control" value="guard" required>
+                            </div>
+                            <button type="submit" class="btn btn-success">Add Security Guard</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Teacher Modal -->
+        <div class="modal fade" id="addTeacherModal" tabindex="-1" role="dialog" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-custom" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-guideco text-white">
+                        <h5 class="modal-title" id="addTeacherModalLabel">Add Teacher</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="">
+                            <div class="form-group">
+                                <label for="teacherFirstName">First Name:</label>
+                                <input type="text" id="teacherFirstName" name="teacher_first_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherLastName">Last Name:</label>
+                                <input type="text" id="teacherLastName" name="teacher_last_name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherUsername">Username:</label>
+                                <input type="text" id="teacherUsername" name="teacher_username" class="form-control" value="teacher" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherPassword">Password:</label>
+                                <input type="password" id="teacherPassword" name="teacher_password" class="form-control" value="teacher" required>
+                            </div>
+                            <button type="submit" class="btn btn-success">Add Teacher</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <?php if (!empty($successMessage)) : ?>
-        <div class="alert alert-success mt-4" role="alert">
-            <?php echo $successMessage; ?>
-        </div>
-    <?php endif; ?>
-    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-        <!-- Victim Section -->
-        <div class="container-fluid bg-white p-4 rounded-lg mt-2">
-            <h4>A. Victim</h4>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="victimFirstName">First Name:</label>
-                    <input type="text" class="form-control" id="victimFirstName" name="victimFirstName">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="victimMiddleName">Middle Name:</label>
-                    <input type="text" class="form-control" id="victimMiddleName" name="victimMiddleName">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="victimLastName">Last Name:</label>
-                    <input type="text" class="form-control" id="victimLastName" name="victimLastName">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="victimDOB">Date of Birth:</label>
-                    <input type="date" class="form-control" id="victimDOB" name="victimDOB">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="victimAge">Age:</label>
-                    <input type="number" class="form-control" id="victimAge" name="victimAge">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="victimSex">Sex:</label>
-                    <select class="form-control" id="victimSex" name="victimSex">
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="victimGrade">Grade/Yr.:</label>
-                    <input type="text" class="form-control" id="victimGrade" name="victimGrade">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="victimSection">Section:</label>
-                    <input type="text" class="form-control" id="victimSection" name="victimSection">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="victimAdviser">Adviser:</label>
-                <input type="text" class="form-control" id="victimAdviser" name="victimAdviser">
-            </div>
-        </div>
-
-        <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-
-            <h5>Parents:</h5>
-            <div class="form-row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="motherName">Mother:</label>
-                        <input type="text" class="form-control" id="motherName" name="motherName">
-                    </div>
-                    <div class="form-group">
-                        <label for="motherOccupation">Occupation:</label>
-                        <input type="text" class="form-control" id="motherOccupation" name="motherOccupation">
-                    </div>
-                    <div class="form-group">
-                        <label for="motherAddress">Address:</label>
-                        <input type="text" class="form-control" id="motherAddress" name="motherAddress">
-                    </div>
-                    <div class="form-group">
-                        <label for="motherContact">Contact Number:</label>
-                        <input type="text" class="form-control" id="motherContact" name="motherContact">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="fatherName">Father:</label>
-                        <input type="text" class="form-control" id="fatherName" name="fatherName">
-                    </div>
-                    <div class="form-group">
-                        <label for="fatherOccupation">Occupation:</label>
-                        <input type="text" class="form-control" id="fatherOccupation" name="fatherOccupation">
-                    </div>
-                    <div class="form-group">
-                        <label for="fatherAddress">Address:</label>
-                        <input type="text" class="form-control" id="fatherAddress" name="fatherAddress">
-                    </div>
-                    <div class="form-group">
-                        <label for="fatherContact">Contact Number:</label>
-                        <input type="text" class="form-control" id="fatherContact" name="fatherContact">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-
-            <!-- Complainant Section -->
-            <h4>B. Complainant</h4>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="complainantFirstName">First Name:</label>
-                    <input type="text" class="form-control" id="complainantFirstName" name="complainantFirstName">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="complainantMiddleName">Middle Name:</label>
-                    <input type="text" class="form-control" id="complainantMiddleName" name="complainantMiddleName">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="complainantLastName">Last Name:</label>
-                    <input type="text" class="form-control" id="complainantLastName" name="complainantLastName">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="relationshipToVictim">Relationship to Victim:</label>
-                <input type="text" class="form-control" id="relationshipToVictim" name="relationshipToVictim">
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="complainantContact">Contact Number:</label>
-                    <input type="text" class="form-control" id="complainantContact" name="complainantContact">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="complainantAddress">Address:</label>
-                    <input type="text" class="form-control" id="complainantAddress" name="complainantAddress">
-                </div>
-            </div>
-        </div>
-
-        <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-
-            <!-- Person Complained Of Section -->
-            <h4>C. School Personnel Complained Of</h4>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="complainedFirstName">First Name:</label>
-                    <input type="text" class="form-control" id="complainedFirstName" name="complainedFirstName">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="complainedMiddleName">Middle Name:</label>
-                    <input type="text" class="form-control" id="complainedMiddleName" name="complainedMiddleName">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="complainedLastName">Last Name:</label>
-                    <input type="text" class="form-control" id="complainedLastName" name="complainedLastName">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="complainedDOB">Date of Birth:</label>
-                    <input type="date" class="form-control" id="complainedDOB" name="complainedDOB">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="complainedAge">Age:</label>
-                    <input type="number" class="form-control" id="complainedAge" name="complainedAge">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="complainedSex">Sex:</label>
-                    <select class="form-control" id="complainedSex" name="complainedSex">
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="complainedDesignation">Designation/Position:</label>
-                <input type="text" class="form-control" id="complainedDesignation" name="complainedDesignation">
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="complainedContact">Contact Number:</label>
-                    <input type="text" class="form-control" id="complainedContact" name="complainedContact">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="complainedAddress">Address:</label>
-                    <input type="text" class="form-control" id="complainedAddress" name="complainedAddress">
-                </div>
-            </div>
-        </div>
-
-        <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-
-            <!-- Details of the Case Section -->
-            <h4>II. Details of the Case</h4>
-            <div class="form-group">
-                <label for="caseDetails">Details of the Case:</label>
-                <textarea class="form-control" id="caseDetails" name="caseDetails" rows="5"></textarea>
-            </div>
-
-            <!-- Action Taken Section -->
-            <h4>III. Action Taken</h4>
-            <div class="form-group">
-                <label for="actionTaken">Action Taken:</label>
-                <textarea class="form-control" id="actionTaken" name="actionTaken" rows="5"></textarea>
-            </div>
-
-            <!-- Recommendations Section -->
-            <h4>IV. Recommendations</h4>
-            <div class="form-group">
-                <label for="recommendations">Recommendations:</label>
-                <textarea class="form-control" id="recommendations" name="recommendations" rows="5"></textarea>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-lg mt-4">Submit</button>
-    </form>
 </div>
 
-<?php include "admin-footer.php"; include "footer.php"?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var positionFilter = document.getElementById('positionFilter');
+        var rows = document.querySelectorAll('tbody tr');
+
+        positionFilter.addEventListener('change', function() {
+            var selectedPosition = positionFilter.value;
+            rows.forEach(function(row) {
+                var positionCell = row.querySelector('td:nth-child(2)'); // Assuming position is in the second column
+                if (selectedPosition === '' || positionCell.textContent.trim() === selectedPosition) {
+                    row.style.display = ''; // Show row if filter is empty or matches selected position
+                } else {
+                    row.style.display = 'none'; // Hide row if position does not match selected filter
+                }
+            });
+        });
+    });
+</script>
