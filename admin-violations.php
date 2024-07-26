@@ -96,7 +96,7 @@ while ($row = mysqli_fetch_assoc($complaints_result)) {
         </div>
 
         <div class="row pt-2 pb-2 filter-container">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-2 mb-3">
                 <label for="filter_grade">Filter by Grade:</label>
                 <select class="form-control" id="filter_grade">
                     <option value="">All Grades</option>
@@ -155,43 +155,49 @@ while ($row = mysqli_fetch_assoc($complaints_result)) {
                     ?>
                 </select>
             </div>
+            <div class="col-md-1 mb-3">
+            <label for="">Print:</label>
+                <a href="admin-violators-print.php" class="btn btn-success">
+                    <i class="fas fa-print fa-fw"></i>
+                </a>
+            </div>
         </div>
-<div class="table-responsive">
-        <table id="violations_table" class="table table-hover mt-4 border">
-            <thead class="thead-dark">
-                <tr>
-                    <th style="width:20%;">Name</th>
-                    <th style="width:20%;">Grade</th>
-                    <th style="width:15%;">Violation</th>
-                    <th style="width:15%;">Reported by</th>
-                    <th style="width:15%;">Reported at</th>
-                    <th class="text-center" style="width:15%">Action</th>
-                    <th style="display:none;">Reported by Type</th> <!-- Hidden column for filter -->
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($combined_data as $row) : ?>
-                    <tr data-grade="<?php echo htmlspecialchars(strtolower($row['grade_name'] ?? $row['grade'])); ?>" data-section="<?php echo htmlspecialchars(strtolower($row['section_name'] ?? $row['section'])); ?>" data-reported-by-type="<?php echo htmlspecialchars(strtolower($row['reported_by_type'] ?? '')); ?>" data-violation="<?php echo htmlspecialchars(strtolower($row['violation'])); ?>">
-                        <td><?php echo isset($row['first_name']) && isset($row['last_name']) ? ucwords(htmlspecialchars($row['first_name'] . ' ' . $row['last_name'])) : ucwords(htmlspecialchars($row['complainedName'])); ?></td>
-                        <td><?php echo isset($row['grade_name']) && isset($row['section_name']) ? ucwords(htmlspecialchars($row['grade_name'] . ' - ' . $row['section_name'])) : ucwords(htmlspecialchars($row['grade'] . ' - ' . $row['section'])); ?></td>
-                        <td><?php echo ucwords(htmlspecialchars($row['violation'])); ?></td>
-                        <td><?php echo ucwords(htmlspecialchars($row['reported_by_name'] ?? $row['reportedByName'])); ?></td>
-                        <td><?php echo htmlspecialchars($row['reportedAt']); ?></td>
-                        <td class="text-center">
-                            <a href="admin-student-profile.php?id=<?php echo htmlspecialchars($row['student_id'] ?? ''); ?>" type="button" class="btn btn-info">
-                                <i class="fas fa-eye fa-fw"></i>
-                            </a>
-                            <?php if (isset($row['id'])) : ?>
-                                <button type="button" class="btn btn-danger" data-id="<?php echo htmlspecialchars($row['id']); ?>">
-                                    <i class="fas fa-trash-alt fa-fw"></i>
-                                </button>
-                            <?php endif; ?>
-                        </td>
-                        <td style="display:none;"><?php echo ucwords(htmlspecialchars($row['reported_by_type'] ?? '')); ?></td>
+        <div class="table-responsive">
+            <table id="violations_table" class="table table-hover mt-4 border">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width:20%;">Name</th>
+                        <th style="width:20%;">Grade</th>
+                        <th style="width:15%;">Violation</th>
+                        <th style="width:15%;">Reported by</th>
+                        <th style="width:15%;">Reported at</th>
+                        <th class="text-center" style="width:15%">Action</th>
+                        <th style="display:none;">Reported by Type</th> <!-- Hidden column for filter -->
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($combined_data as $row) : ?>
+                        <tr data-grade="<?php echo htmlspecialchars(strtolower($row['grade_name'] ?? $row['grade'])); ?>" data-section="<?php echo htmlspecialchars(strtolower($row['section_name'] ?? $row['section'])); ?>" data-reported-by-type="<?php echo htmlspecialchars(strtolower($row['reported_by_type'] ?? '')); ?>" data-violation="<?php echo htmlspecialchars(strtolower($row['violation'])); ?>">
+                            <td><?php echo isset($row['first_name']) && isset($row['last_name']) ? ucwords(htmlspecialchars($row['first_name'] . ' ' . $row['last_name'])) : ucwords(htmlspecialchars($row['complainedName'])); ?></td>
+                            <td><?php echo isset($row['grade_name']) && isset($row['section_name']) ? ucwords(htmlspecialchars($row['grade_name'] . ' - ' . $row['section_name'])) : ucwords(htmlspecialchars($row['grade'] . ' - ' . $row['section'])); ?></td>
+                            <td><?php echo ucwords(htmlspecialchars($row['violation'])); ?></td>
+                            <td><?php echo ucwords(htmlspecialchars($row['reported_by_name'] ?? $row['reportedByName'])); ?></td>
+                            <td><?php echo htmlspecialchars($row['reportedAt']); ?></td>
+                            <td class="text-center">
+                                <a href="admin-student-profile.php?id=<?php echo htmlspecialchars($row['student_id'] ?? ''); ?>" type="button" class="btn btn-info">
+                                    <i class="fas fa-eye fa-fw"></i>
+                                </a>
+                                <?php if (isset($row['id'])) : ?>
+                                    <button type="button" class="btn btn-danger" data-id="<?php echo htmlspecialchars($row['id']); ?>">
+                                        <i class="fas fa-trash-alt fa-fw"></i>
+                                    </button>
+                                <?php endif; ?>
+                            </td>
+                            <td style="display:none;"><?php echo ucwords(htmlspecialchars($row['reported_by_type'] ?? '')); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
