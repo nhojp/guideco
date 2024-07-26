@@ -156,7 +156,7 @@ while ($row = mysqli_fetch_assoc($complaints_result)) {
                 </select>
             </div>
         </div>
-
+<div class="table-responsive">
         <table id="violations_table" class="table table-hover mt-4 border">
             <thead class="thead-dark">
                 <tr>
@@ -192,9 +192,9 @@ while ($row = mysqli_fetch_assoc($complaints_result)) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const searchInput = document.getElementById('searchInput');

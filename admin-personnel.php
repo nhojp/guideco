@@ -27,23 +27,37 @@ $addGuardSuccess = isset($_SESSION['add_guard_success']) ? $_SESSION['add_guard_
 $addTeacherSuccess = isset($_SESSION['add_teacher_success']) ? $_SESSION['add_teacher_success'] : false;
 $errorMessage = '';
 
-// Delete functionality
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_personnel'])) {
-    $personnelId = $_POST['delete_personnel'];
-    $deleteSql = "DELETE FROM ";
-    if ($_POST['position'] == 'Teacher') {
-        $deleteSql .= "teachers";
-    } else {
-        $deleteSql .= "guards";
-    }
-    $deleteSql .= " WHERE id = $personnelId";
+    $personnelId = intval($_POST['delete_personnel']);
+    $position = isset($_POST['position']) ? $_POST['position'] : '';
 
-    if (mysqli_query($conn, $deleteSql)) {
-        $deleteSuccess = true;
+    if ($position == 'Teacher') {
+        $deleteSql = "DELETE FROM teachers WHERE id = ?";
+    } elseif ($position == 'Guard') {
+        $deleteSql = "DELETE FROM guards WHERE id = ?";
     } else {
-        $errorMessage = 'Error deleting personnel record: ' . mysqli_error($conn);
+        $errorMessage = 'Invalid position specified.';
+        // Handle the error appropriately
+        return;
+    }
+
+    $stmt = mysqli_prepare($conn, $deleteSql);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'i', $personnelId);
+        $success = mysqli_stmt_execute($stmt);
+
+        if ($success) {
+            $deleteSuccess = true;
+        } else {
+            $errorMessage = 'Error deleting personnel record: ' . mysqli_stmt_error($stmt);
+        }
+        mysqli_stmt_close($stmt);
+    } else {
+        $errorMessage = 'Error preparing delete statement: ' . mysqli_error($conn);
     }
 }
+
+
 
 // Add Guard functionality
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['guard_first_name']) && isset($_POST['guard_last_name'])) {
@@ -103,48 +117,6 @@ unset($_SESSION['add_teacher_success']);
 $personnelData = getAllPersonnelData($conn);
 ?>
 
-<style>
-    .btn-circle {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: #28a745;
-        /* Green color */
-        color: white;
-        font-size: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-circle:hover {
-        background-color: #218838;
-    }
-
-    .modal-custom {
-        margin-top: 100px;
-    }
-
-    @media (max-width: 767.98px) {
-        .modal-custom {
-            margin: 100px auto;
-            max-width: 90%;
-        }
-    }
-
-    .search {
-        width: 100%;
-        padding: 15px;
-        border-radius: 60px;
-        margin-top: 5px;
-        border: none;
-        background-color: lightgray;
-    }
-</style>
-
 <div class="container-fluid mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
         <div class="row pt-3">
@@ -199,15 +171,17 @@ $personnelData = getAllPersonnelData($conn);
                     <th style="width:10%;" class="text-center">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="personnelTable">
                 <?php foreach ($personnelData as $person) : ?>
                     <tr>
                         <td><?php echo ucwords(strtolower($person['full_name'])); ?></td>
                         <td><?php echo ucwords(strtolower($person['position'])); ?></td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo $person['id']; ?>">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo $person['id']; ?>" data-position="<?php echo $person['position']; ?>" data-id="<?php echo $person['id']; ?>">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
+
+
                             <!-- Delete Modal -->
                             <div class="modal fade" id="deleteModal<?php echo $person['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel<?php echo $person['id']; ?>" aria-hidden="true">
                                 <div class="modal-dialog modal-custom" role="document">
@@ -224,9 +198,11 @@ $personnelData = getAllPersonnelData($conn);
                                         <div class="modal-footer">
                                             <form method="POST" action="">
                                                 <input type="hidden" name="delete_personnel" value="<?php echo $person['id']; ?>">
+                                                <input type="hidden" name="position" value="<?php echo $person['position']; ?>">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                                 <button type="submit" class="btn btn-danger">Delete</button>
                                             </form>
+
                                         </div>
                                     </div>
                                 </div>
@@ -259,11 +235,11 @@ $personnelData = getAllPersonnelData($conn);
                             </div>
                             <div class="form-group">
                                 <label for="guardUsername">Username:</label>
-                                <input type="text" id="guardUsername" name="guard_username" class="form-control" value="guard" required>
+                                <input type="text" id="guardUsername" name="guard_username" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="guardPassword">Password:</label>
-                                <input type="password" id="guardPassword" name="guard_password" class="form-control" value="guard" required>
+                                <input type="password" id="guardPassword" name="guard_password" class="form-control" required>
                             </div>
                             <button type="submit" class="btn btn-success">Add Security Guard</button>
                         </form>
@@ -294,11 +270,11 @@ $personnelData = getAllPersonnelData($conn);
                             </div>
                             <div class="form-group">
                                 <label for="teacherUsername">Username:</label>
-                                <input type="text" id="teacherUsername" name="teacher_username" class="form-control" value="teacher" required>
+                                <input type="text" id="teacherUsername" name="teacher_username" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="teacherPassword">Password:</label>
-                                <input type="password" id="teacherPassword" name="teacher_password" class="form-control" value="teacher" required>
+                                <input type="password" id="teacherPassword" name="teacher_password" class="form-control" required>
                             </div>
                             <button type="submit" class="btn btn-success">Add Teacher</button>
                         </form>
@@ -322,6 +298,25 @@ $personnelData = getAllPersonnelData($conn);
                     row.style.display = ''; // Show row if filter is empty or matches selected position
                 } else {
                     row.style.display = 'none'; // Hide row if position does not match selected filter
+                }
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var rows = document.querySelectorAll('#personnelTable tr');
+
+            rows.forEach(function(row) {
+                var name = row.cells[0].innerText.toLowerCase();
+                var position = row.cells[1].innerText.toLowerCase();
+
+                if (name.includes(input) || position.includes(input)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
                 }
             });
         });

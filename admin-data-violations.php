@@ -89,7 +89,7 @@ unset($_SESSION['add_success']);
                 </div>
             </div>
             <div class="col-md-5">
-                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                <input class="form-control" type="text" id="searchInput" placeholder="Search a violation...">
             </div>
         </div>
 

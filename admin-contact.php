@@ -42,7 +42,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $student = $result->fetch_assoc();
 
-// Fetch violation details
+// Fetch all violation details
 $violation_query = "SELECT violation_description 
                     FROM violations 
                     JOIN violation_list ON violations.violation_id = violation_list.id
@@ -51,7 +51,12 @@ $violation_stmt = $conn->prepare($violation_query);
 $violation_stmt->bind_param("i", $student_id);
 $violation_stmt->execute();
 $violation_result = $violation_stmt->get_result();
-$violation = $violation_result->fetch_assoc()['violation_description'] ?? 'No violation details available';
+
+$violations = [];
+while ($row = $violation_result->fetch_assoc()) {
+    $violations[] = $row['violation_description'];
+}
+$violation_list = !empty($violations) ? implode(', ', $violations) : 'No violation details available';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -89,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $student_name = ucwords(htmlspecialchars($student['first_name'] . ' ' . $student['last_name']));
             $message_body = "Dear Parents,<br><br>
                             Please meet $salutation $admin_name at Nasugbu East Senior High School on $date.<br><br>
-                            The reason for this meeting is that your child, $student_name, has been reported for the following violation: $violation.<br><br>
+                            The reason for this meeting is that your child, $student_name, has been reported for the following violations: $violation_list.<br><br>
                             Thank you and God bless.<br><br>
                             Sincerely,<br>
                             The Administration";
@@ -99,17 +104,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST['send'])) {
                 $mail->send();
                 $success_message = "Email sent successfully!";
+
+                // Save the schedule to the database
+                $insert_query = "INSERT INTO schedules (admin_id, student_id, date, description, location) VALUES (?, ?, ?, ?, ?)";
+                $insert_stmt = $conn->prepare($insert_query);
+                $description = "Meeting with parents of $student_name";
+                $location = "Nasugbu East Senior High School"; // Optional, you can change or make it dynamic
+                $insert_stmt->bind_param("iisss", $admin_id, $student_id, $date, $description, $location);
+                $insert_stmt->execute();
             } elseif (isset($_POST['preview'])) {
                 $preview_message = $message_body;
             }
-
-            // Save the schedule to the database
-            $insert_query = "INSERT INTO schedules (admin_id, student_id, date, description, location) VALUES (?, ?, ?, ?, ?)";
-            $insert_stmt = $conn->prepare($insert_query);
-            $description = "Meeting with parents of $student_name";
-            $location = "Nasugbu East Senior High School"; // Optional, you can change or make it dynamic
-            $insert_stmt->bind_param("iisss", $admin_id, $student_id, $date, $description, $location);
-            $insert_stmt->execute();
         } catch (Exception $e) {
             $error_message = "Failed to send email. Mailer Error: {$mail->ErrorInfo}";
         }

@@ -104,7 +104,7 @@ $teachers = getAllTeachers($conn);
             </div>
 
             <div class="col-md-5">
-                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                <input class="form-control" type="text" id="searchInput" placeholder="Search a section name...">
             </div>
 
         </div>
@@ -121,15 +121,6 @@ $teachers = getAllTeachers($conn);
                 }
                 ?>
             </div>
-            <script>
-                // Check if the page has already been reloaded
-                if (!localStorage.getItem('reloaded')) {
-                    localStorage.setItem('reloaded', 'true'); // Set the flag
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000); // 1000 milliseconds = 1 second
-                }
-            </script>
         <?php endif; ?>
 
         <!-- Modal for adding a section -->
@@ -162,7 +153,7 @@ $teachers = getAllTeachers($conn);
                                 <select class="form-control" id="teacherSelect" name="teacher_id" required>
                                     <option value="">Select Teacher</option>
                                     <?php foreach ($teachers as $teacher) : ?>
-                                        <option value="<?php echo $teacher['id']; ?>"><?php echo $teacher['first_name'] . ' ' . $teacher['last_name']; ?></option>
+                                        <option value="<?php echo $teacher['id']; ?>"><?php echo ucwords($teacher['first_name'] . ' ' . $teacher['last_name']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -189,7 +180,7 @@ $teachers = getAllTeachers($conn);
                     <th style="width: 10%;">Action</th>
                 </tr>
             </thead>
-            <tbody id="sectionsTableBody">
+            <tbody id="personnelTable">
                 <?php foreach ($sectionsData as $section) : ?>
                     <tr class="grade-<?php echo $section['grade_id']; ?>">
                         <td><?php echo ucwords($section['section_name']); ?></td>
@@ -272,6 +263,25 @@ $teachers = getAllTeachers($conn);
                 $('#teacherSelect option').hide(); // Hide all teachers initially
                 $('#teacherSelect option[data-grade="' + selectedGrade + '"]').show(); // Show teachers for the selected grade
             }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var rows = document.querySelectorAll('#personnelTable tr');
+
+            rows.forEach(function(row) {
+                var name = row.cells[0].innerText.toLowerCase();
+                var position = row.cells[1].innerText.toLowerCase();
+
+                if (name.includes(input) || position.includes(input)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         });
     });
 </script>

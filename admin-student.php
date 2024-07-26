@@ -199,7 +199,7 @@ $grades = fetchGrades($conn);
             </div>
 
             <div class="col-md-5">
-                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                <input class="form-control" type="text" id="searchInput" placeholder="Search a student name...">
             </div>
         </div>
 

@@ -12,12 +12,14 @@
     .navbar-nav .nav-item.active .nav-link {
         font-weight: bold;
     }
-    
+    .small-text {
+        font-size: 0.5em; /* Adjust the size as needed */
+    }
 </style>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-guideco fixed-top">
-    <a class="navbar-brand" href="guard-index.php">GuideCo</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<a class="navbar-brand" href="guard-index.php">
+    <strong>GuideCo<sup class="small-text">Guard</sup></strong>
+</a>    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -34,3 +36,11 @@
         </ul>
     </div>
 </nav>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<!-- Popper.js (needed for Bootstrap dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS (for dropdowns) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

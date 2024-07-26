@@ -4,8 +4,6 @@ include 'head.php';
 include 'admin-nav.php';
 $successMessage = "";
 $errorMessage = "";
-
-// Function to generate a new ID
 function generateId($conn)
 {
     $sql = "SELECT MAX(id) AS max_id FROM admin";
@@ -61,12 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
 // Function to handle editing
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_id'])) {
     $edit_id = $_POST['edit_id'];
-    $email = $_POST['email'];
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
+
     $position = $_POST['position'];
 
-    $sql = "UPDATE admin SET username = '$username', password = '$password', email = '$email', first_name = '$first_name', middle_name = '$middle_name', last_name = '$last_name', position = '$position', picture = '$picture', birthdate = '$birthdate', sex = '$sex', contact_number = '$contact_number', address = '$address' WHERE id = '$edit_id'";
+    $sql = "UPDATE admin SET position = '$position' WHERE id = '$edit_id'";
     if ($conn->query($sql)) {
         $successMessage = "Admin updated successfully.";
     } else {
@@ -100,8 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['edit_id'])) {
         $errorMessage = "Please fill in all required fields.";
     }
 }
-
-
 
 $admins = fetchAdmins($conn);
 ?>
@@ -172,7 +166,6 @@ $admins = fetchAdmins($conn);
                         <?php endif; ?>
                     </tbody>
                 </table>
-
                 <!-- Modal for Adding an Admin -->
                 <div class="modal fade" id="addAdminModal" tabindex="-1" role="dialog" aria-labelledby="addAdminModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -214,9 +207,6 @@ $admins = fetchAdmins($conn);
                         </div>
                     </div>
                 </div>
-
-
-
                 <!-- Modal for Editing Admin -->
                 <?php foreach ($admins as $admin) : ?>
                     <div class="modal fade" id="editModal<?php echo urlencode($admin['id']); ?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<?php echo urlencode($admin['id']); ?>" aria-hidden="true">
@@ -285,5 +275,4 @@ $admins = fetchAdmins($conn);
         });
     });
 </script>
-
 <?php include 'footer.php'; ?>
