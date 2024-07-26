@@ -140,20 +140,20 @@ $teachers = getAllTeachers($conn);
                                 <input type="text" class="form-control" id="sectionName" name="section_name" required>
                             </div>
                             <div class="form-group">
-                                <label for="gradeFilter">Filter by Grade</label>
-                                <select class="form-control" id="gradeFilter" name="grade_id">
-                                    <option value="">All Grades</option>
-                                    <?php foreach ($grades as $grade) : ?>
-                                        <option value="<?php echo $grade['id']; ?>"><?php echo $grade['grade_name']; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
                                 <label for="teacherSelect">Select Adviser</label>
                                 <select class="form-control" id="teacherSelect" name="teacher_id" required>
                                     <option value="">Select Teacher</option>
                                     <?php foreach ($teachers as $teacher) : ?>
                                         <option value="<?php echo $teacher['id']; ?>"><?php echo ucwords($teacher['first_name'] . ' ' . $teacher['last_name']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="gradeFilter">Select by Grade</label>
+                                <select class="form-control" id="gradeFilter" name="grade_id" required>
+                                    <option value="">All Grades</option>
+                                    <?php foreach ($grades as $grade) : ?>
+                                        <option value="<?php echo $grade['id']; ?>"><?php echo $grade['grade_name']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

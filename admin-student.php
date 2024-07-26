@@ -1,4 +1,5 @@
 <?php
+
 include 'conn.php';
 include 'head.php';
 
@@ -73,33 +74,70 @@ function fetchStudents($conn)
     return $students;
 }
 
+
 // Function to handle deletion
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
     $delete_id = $_POST['delete_id'];
 
-    // Start transaction
-    $conn->begin_transaction();
+    // Validate and sanitize delete_id
+    if (!is_numeric($delete_id)) {
+        $errorMessage = "Invalid ID.";
+    } else {
+        // Start transaction
+        $conn->begin_transaction();
 
-    try {
-        // Delete from students table
-        $sql1 = "DELETE FROM students WHERE id = '$delete_id'";
-        if (!$conn->query($sql1)) {
-            throw new Exception("Error deleting from students table: " . $conn->error);
+        try {
+            // Prepare statements for deletion
+            $stmt1 = $conn->prepare("DELETE FROM complaints_student WHERE student_id = ?");
+            $stmt1->bind_param('i', $delete_id);
+            if (!$stmt1->execute()) {
+                throw new Exception("Error deleting from complaints_student table: " . $conn->error);
+            }
+            $stmt1->close();
+
+            $stmt2 = $conn->prepare("DELETE FROM violations WHERE student_id = ?");
+            $stmt2->bind_param('i', $delete_id);
+            if (!$stmt2->execute()) {
+                throw new Exception("Error deleting from violations table: " . $conn->error);
+            }
+            $stmt2->close();
+
+            $stmt3 = $conn->prepare("DELETE FROM fathers WHERE student_id = ?");
+            $stmt3->bind_param('i', $delete_id);
+            if (!$stmt3->execute()) {
+                throw new Exception("Error deleting from fathers table: " . $conn->error);
+            }
+            $stmt3->close();
+
+            $stmt4 = $conn->prepare("DELETE FROM mothers WHERE student_id = ?");
+            $stmt4->bind_param('i', $delete_id);
+            if (!$stmt4->execute()) {
+                throw new Exception("Error deleting from mothers table: " . $conn->error);
+            }
+            $stmt4->close();
+
+            $stmt5 = $conn->prepare("DELETE FROM students WHERE id = ?");
+            $stmt5->bind_param('i', $delete_id);
+            if (!$stmt5->execute()) {
+                throw new Exception("Error deleting from students table: " . $conn->error);
+            }
+            $stmt5->close();
+
+            $stmt6 = $conn->prepare("DELETE FROM users WHERE id = ?");
+            $stmt6->bind_param('i', $delete_id);
+            if (!$stmt6->execute()) {
+                throw new Exception("Error deleting from users table: " . $conn->error);
+            }
+            $stmt6->close();
+
+            // Commit transaction
+            $conn->commit();
+            $successMessage = "Student and related records deleted successfully.";
+        } catch (Exception $e) {
+            // Rollback transaction
+            $conn->rollback();
+            $errorMessage = $e->getMessage();
         }
-
-        // Delete from users table
-        $sql2 = "DELETE FROM users WHERE id = '$delete_id'";
-        if (!$conn->query($sql2)) {
-            throw new Exception("Error deleting from users table: " . $conn->error);
-        }
-
-        // Commit transaction
-        $conn->commit();
-        $successMessage = "Student deleted successfully from both tables.";
-    } catch (Exception $e) {
-        // Rollback transaction
-        $conn->rollback();
-        $errorMessage = $e->getMessage();
     }
 }
 
@@ -119,7 +157,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_id'])) {
     }
 }
 
-// Function to handle adding a student
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['edit_id'])) {
     $first_name = isset($_POST['first_name']) ? $_POST['first_name'] : '';
     $last_name = isset($_POST['last_name']) ? $_POST['last_name'] : '';
@@ -127,31 +164,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['edit_id'])) {
     $username = generateId($conn);  // Generated ID
     $password = $username;  // Placeholder password, replace with actual password logic if needed
 
-    // Check if all required POST variables are set
     if ($first_name && $last_name && $section_id) {
-        // Insert into users table with ID, username, and password
-        $sql1 = "INSERT INTO users (id, username, password) VALUES ('$username', '$username', '$password')";
-        if ($conn->query($sql1)) {
-            // Insert into students table with ID, user_id, first_name, last_name, and section_id
-            $sql2 = "INSERT INTO students (id, user_id, first_name, last_name, section_id) VALUES ('$username', '$username', '$first_name', '$last_name', '$section_id')";
-            if ($conn->query($sql2)) {
-                // Insert into mothers and fathers tables
-                $sql3 = "INSERT INTO mothers (parent_id, student_id) VALUES ('$username', '$username')";
-                $sql4 = "INSERT INTO fathers (parent_id, student_id) VALUES ('$username', '$username')";
+        $stmt1 = $conn->prepare("INSERT INTO users (id, username, password) VALUES (?, ?, ?)");
+        $stmt1->bind_param("sss", $username, $username, $password);
 
-                if ($conn->query($sql3) && $conn->query($sql4)) {
+        if ($stmt1->execute()) {
+            $stmt2 = $conn->prepare("INSERT INTO students (id, user_id, first_name, last_name, section_id) VALUES (?, ?, ?, ?, ?)");
+            $stmt2->bind_param("sssss", $username, $username, $first_name, $last_name, $section_id);
+
+            if ($stmt2->execute()) {
+                $stmt3 = $conn->prepare("INSERT INTO mothers (parent_id, student_id) VALUES (?, ?)");
+                $stmt3->bind_param("ss", $username, $username);
+
+                $stmt4 = $conn->prepare("INSERT INTO fathers (parent_id, student_id) VALUES (?, ?)");
+                $stmt4->bind_param("ss", $username, $username);
+
+                if ($stmt3->execute() && $stmt4->execute()) {
                     $successMessage = "Student added successfully.";
                 } else {
-                    $errorMessage = "Error inserting into mothers or fathers table: " . $conn->error;
+                    error_log("Error inserting into mothers or fathers table: " . $conn->error);
+                    $errorMessage = "Error inserting into mothers or fathers table.";
                 }
 
-                // Refresh student list
                 $students = fetchStudents($conn);
             } else {
-                $errorMessage = "Error inserting into students table: " . $conn->error;
+                error_log("Error inserting into students table: " . $stmt2->error);
+                $errorMessage = "Error inserting into students table.";
             }
         } else {
-            $errorMessage = "Error inserting into users table: " . $conn->error;
+            error_log("Error inserting into users table: " . $stmt1->error);
+            $errorMessage = "Error inserting into users table.";
         }
     } else {
         $errorMessage = "Please fill in all required fields.";
