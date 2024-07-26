@@ -12,10 +12,11 @@ Development of Guidance and Counseling Information Management System for Nasugbu
 ## Features 
 - **Dashboard**: Summary report 
 - **Fill up Forms**: Allows admin to auto-fill data needed for the forms
-- **Printing Good Moral Template**: With student data
-- **Printing Annex A Template**: With student data
-- **Security Guards Reporting**: Allows guards to report student violators 
-- **Teachers Reporting**: Allows teachers to report student violators 
+- **Printing Good Moral Template**: based to the student data
+- **Printing Annex A Template**: based to the student data
+- **Security Guards Reporting**: Allows Guards to report student violators 
+- **Teachers Reporting**: Allows Teachers to report student violators
+- **Principal Interface**: Allows the Principal to monitor and view the dashboard.
 - **Email Notifications**: For parents 
 - **Calendar Scheduling**: For counseling 
 - **Chatbot (GuideBot)**: For students
