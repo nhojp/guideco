@@ -10,7 +10,7 @@
 }
 
 .line {
-    border-bottom: 2px solid black; /* Enhanced thickness */
+    border-bottom: 2px solid black; 
 }
 
 .table-form {
@@ -22,22 +22,22 @@
 
 .blackletter {
     font-family: 'Old English Text MT', cursive;
-    font-weight: 700; /* Extra bold effect */
-    color: black; /* Poppin black color */
+    font-weight: 700; 
+    color: black; 
 }
 
 .serif {
     font-family: 'Times New Roman', serif;
-    font-weight: 700; /* Extra bold effect */
-    color: black; /* Poppin black color */
+    font-weight: 700; 
+    color: black; 
 }
 
 .text-left-custom {
     text-align: left;
     padding-top: 16px;
-    color: black; /* Ensuring text is in bold black */
-    font-family: 'Montserrat', sans-serif; /* Use Montserrat for consistency */
-    font-weight: 700; /* Extra bold effect */
+    color: black; 
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: 700; 
 }
 
 .certify-text {
@@ -46,7 +46,7 @@
     padding: 10px;
     overflow-wrap: break-word;
     word-wrap: break-word;
-    font-family: 'Montserrat', sans-serif; /* Use Montserrat for consistency */
-    font-weight: 700; /* Extra bold effect */
-    color: black; /* Poppin black color */
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: 700; 
+    color: black; 
 }
