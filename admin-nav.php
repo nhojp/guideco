@@ -4,23 +4,23 @@
 /* Custom CSS for the navbar */
 .navbar {
     padding: 10px 20px;
-    background-color: white; /* White background */
-    border-bottom: 2px solid #1D5B1B; /* Green border line at the bottom */
-    font-family: 'Montserrat', sans-serif; /* Montserrat font applied */
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1); /* Added shadow */
+    background-color: white; 
+    border-bottom: 2px solid #1D5B1B; 
+    font-family: 'Montserrat', sans-serif; 
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .navbar-brand {
-    font-weight: 900; /* Montserrat Black for the brand */
-    font-size: 24px; /* Adjust font size as needed */
+    font-weight: 900; 
+    font-size: 24px; 
 }
 
 .navbar-brand .guide {
-    color: #1D5B1B; /* Green color for "Guide" */
+    color: #1D5B1B; 
 }
 
 .navbar-brand .co {
-    color: #8B4513; /* Brown color for "Co" */
+    color: #8B4513; 
 }
 
 .navbar-nav {
@@ -28,22 +28,22 @@
     margin-right: auto;
     font-weight: 700;
     font-size: 15px;
-    font-family: 'Montserrat', sans-serif; /* Montserrat applied to nav items */
+    font-family: 'Montserrat', sans-serif; 
     display: flex;
-    justify-content: center; /* Center the items */
+    justify-content: center; 
 }
 
 .navbar-nav .nav-item {
-    margin: 0 15px; /* Add space between nav items */
+    margin: 0 15px; 
 }
 
 .navbar-nav .nav-link {
-    color: #1F5F1E !important; /* Dark Green color for nav items */
+    color: #1F5F1E !important; 
     padding: 5px 10px;
-    border-bottom: 2px solid transparent; /* Hidden border to reveal on hover */
-    text-decoration: none; /* Remove default underline */
+    border-bottom: 2px solid transparent; 
+    text-decoration: none; 
     position: relative;
-    transition: color 0.3s ease; /* Color change transition */
+    transition: color 0.3s ease; 
 }
 
 .navbar-nav .nav-link::before {
@@ -53,35 +53,35 @@
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: #1D5B1B; /* Green underline */
+    background-color: #1D5B1B; 
     visibility: hidden;
     transition: all 0.3s ease-in-out;
 }
 
 .navbar-nav .nav-link:hover::before {
     visibility: visible;
-    width: 100%; /* Full underline on hover */
+    width: 100%; 
 }
 
 .navbar-nav .nav-item.active .nav-link {
     font-weight: bold;
-    color: #1F5F1E !important; /* Dark Green color for active nav items */
+    color: #1F5F1E !important; 
 }
 
 .dropdown-menu {
-    font-family: 'Montserrat', sans-serif; /* Montserrat applied to dropdown items */
-    background-color: #f8f9fa; /* Light gray background for dropdown menu */
-    border: 1px solid #ddd; /* Light border around dropdown menu */
+    font-family: 'Montserrat', sans-serif; 
+    background-color: #f8f9fa; 
+    border: 1px solid #ddd; 
 }
 
 .dropdown-item {
-    color: #1F5F1E; /* Dark Green text color for dropdown items */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */
+    color: #1F5F1E; 
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropdown-item:hover {
-    background-color: #1D5B1B; /* Dark Green background on hover */
-    color: white; /* White text color on hover */
+    background-color: #1D5B1B; 
+    color: white; 
 }
 
 
