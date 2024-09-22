@@ -360,28 +360,27 @@ if (isset($_SESSION['loggedin'])) {
 
     @media (max-width: 720px) {
         body {
-            background: #1F5F1E; /* Green background color */
+            background: #1F5F1E; 
         }
         .login-form {
-            padding: 20px; /* Adjusted padding for smaller screens */
+            padding: 20px; 
         }
 
         .form-group {
-            margin-bottom: 10px; /* Reduced margin bottom for smaller screens */
+            margin-bottom: 10px; 
         }
 
         .login-form h2 {
-            margin-bottom: 20px; /* Adjusted margin bottom for smaller screens */
+            margin-bottom: 20px; 
         }
 
         .white-section {
-            padding: 40px 20px; /* Adjusted padding for smaller screens */
-            margin: 0; /* Remove margin for smaller screens */
+            padding: 40px 20px; 
+            margin: 0; 
         }
 
         .green-section {
-            display: none; /* Hide green-section on smaller screens */
-        }
+            display: none; 
     }
 </style>
 
