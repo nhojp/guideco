@@ -86,8 +86,8 @@ while ($row = mysqli_fetch_assoc($complaints_result)) {
     .table-scroll {
         max-height: 400px; 
         overflow-y: auto; 
-        border: 1px solid #ddd; /* Optional: Add a border */
-        border-radius: 5px; /* Optional: Add rounded corners */
+        border: 1px solid #ddd;
+        border-radius: 5px; 
     }
 
     .thead-custom {
