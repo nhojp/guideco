@@ -117,6 +117,45 @@ unset($_SESSION['add_teacher_success']);
 $personnelData = getAllPersonnelData($conn);
 ?>
 
+<style>
+        
+        .btn-custom {
+            background-color: #1F5F1E; 
+            color: white; 
+            border: none; 
+        }
+
+        .btn-custom:hover {
+            background-color: #389434; 
+            color: white; 
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            box-shadow: none; 
+            outline: none; 
+        }
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+        .btn-circle {
+            width: 35px;   
+            height: 35px;  
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;      
+            padding: 0;
+        }
+        
+
+        
+
+      
+    </style>
+
 <div class="container-fluid mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
         <div class="row pt-3">
@@ -125,10 +164,13 @@ $personnelData = getAllPersonnelData($conn);
                     <h3><strong>School Personnels</strong></h3>
                 </div>
             </div>
+            <div class="col-md-5">
+                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+            </div>
             <div class="col-md-1">
                 <div class="btn-group">
                     <button type="button" class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false">
-                        +
+                        Add
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" data-toggle="modal" data-target="#addGuardModal">Add a Security Guard</a></li>
@@ -136,9 +178,7 @@ $personnelData = getAllPersonnelData($conn);
                     </ul>
                 </div>
             </div>
-            <div class="col-md-5">
-                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
-            </div>
+            
         </div>
 
         <?php if ($deleteSuccess || $addGuardSuccess || $addTeacherSuccess || !empty($errorMessage)) : ?>

@@ -134,7 +134,7 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
                     <form id="filterForm" class="mb-4">
                         <div class="form-row p-2 rounded border">
                             <div class="form-group" style="width:100%">
-                                <label for="violationType">Violation Type</label>
+                                <label for="violationType">Types of Violation</label>
                                 <select class="form-control" id="violationType" name="violationType">
                                     <option value="">All</option>
                                     <?php foreach ($violationList as $violation) : ?>
@@ -205,13 +205,13 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
 
                     <div class="row mb-4">
                         <div class="col-md-8">
-                            <h4>Violations by Type</h4>
+                            <h4>Types of Violation</h4>
                             <div class="container p-2 rounded border">
                                 <canvas id="violationsBarChart"></canvas>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <h4>Gender of Violators</h4>
+                            <h4>Violator by Sex</h4>
                             <div class="container p-2 rounded border">
                                 <canvas id="violationsPieChart"></canvas>
                             </div>

@@ -298,6 +298,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include "admin-nav.php";
 ?>
+
+<style> 
+    .bg-custom {
+            background-color: #0C2D0B;
+            color: #fff; 
+        }
+
+        
+</style>
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -314,7 +323,7 @@ include "admin-nav.php";
 
             <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
                 <form action="" method="post">
-                    <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Victim Details</b></h5>
+                    <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Victim Details</b></h5>
                     <?php if ($result_student_teacher->num_rows > 0) : ?>
                         <?php $row = $result_student_teacher->fetch_assoc(); ?>
                         <div class="form-row mt-3">
@@ -405,7 +414,7 @@ include "admin-nav.php";
             </div>
 
             <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Offender Details</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Offender Details</b></h5>
                 <?php if (isset($person)) : ?>
 
                     <div class="form-row mt-3">
@@ -454,7 +463,7 @@ include "admin-nav.php";
 
             </div>
             <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Complainant Details</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Complainant Details</b></h5>
                 <div class="form-row mt-3">
                     <div class="form-group col-md-4">
                         <label for="complainantFirstName"><strong>First Name:</strong></label>
@@ -486,23 +495,23 @@ include "admin-nav.php";
             </div>
 
             <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Details of the Case</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Details of the Case</b></h5>
 
                 <div class="form-group">
                     <textarea class="form-control" id="caseDetails" name="caseDetails" rows="5" placeholder="Enter the Details of the case..."></textarea>
                 </div>
 
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Action Taken</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Action Taken</b></h5>
                 <div class="form-group">
                     <textarea class="form-control" id="actionTaken" name="actionTaken" rows="5" placeholder="Enter the Details of the action taken by the school..."></textarea>
                 </div>
 
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Recommendations</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Recommendations</b></h5>
                 <div class="form-group">
                     <textarea class="form-control" id="recommendations" name="recommendations" rows="5" placeholder="Enter the recommendation of the school..."></textarea>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success">Finish</button>
+            <button type="submit" class="btn btn-success" style="width: 100%; margin: 5px">Finish</button>
 
             </form>
         </div>

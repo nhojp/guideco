@@ -52,6 +52,15 @@ if ($result_all_students === false) {
 include "admin-nav.php";
 ?>
 
+<style> 
+    .thead-custom {
+            background-color: #0C2D0B;
+            color: #fff; 
+        }
+
+        
+</style>
+
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -72,7 +81,7 @@ include "admin-nav.php";
                 </div>
 
                 <table class="table table-hover mt-4 border">
-                    <thead class="thead-dark">
+                    <thead class="thead-custom">
                         <tr>
                             <th style="width: 50%;">Full Name</th>
                             <th style="width: 20%;">Grade</th>

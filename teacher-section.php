@@ -112,6 +112,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
     $stmt->close();
 }
 ?>
+<style>
+        
+        .btn-custom {
+            background-color: #1F5F1E; 
+            color: white; 
+            border: none; 
+        }
+
+        .btn-custom:hover {
+            background-color: #389434; 
+            color: white; 
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            box-shadow: none; 
+            outline: none; 
+        }
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+        .btn-circle {
+            width: 35px;   
+            height: 35px;  
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;      
+            padding: 0;
+        }
+
+        .table-container {
+        max-height: 400px; 
+        overflow-y: auto; 
+        }
+        
+
+        
+
+      
+    </style>
+
+
 
 <main class="flex-fill mt-5 mb-5">
     <div class="container mt-4">
@@ -125,23 +170,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
                         </h3>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                </div>
                 <div class="col-md-2 text-right">
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStudentModal">
-                        +
+                        Add
                     </button>
                     <button id="printButton" type="button" class="btn btn-primary">
                         <i class="fas fa-print"></i>
                     </button>
                 </div>
-                <div class="col-md-4">
-                    <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
-                </div>
+                
 
             </div>
-
+        <div class="table-container">
             <div class="table-responsive">
                 <table class="table text-center table-hover" style="width: 100%;">
-                    <thead class="bg-dark text-white">
+                    <thead class="thead-custom">
                         <tr>
                             <th style="width:40%;">Full Name</th>
                             <th style="width:25%;">Grade</th>
@@ -203,9 +249,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
 <div class="modal fade modal-custom" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-guideco text-white">
+            <div class="modal-header text-white" style="background-color: #1F5F1E;">
                 <h5 class="modal-title" id="reportModalLabel">Report Violation</h5>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
+                <button type="button" class="btn btn-danger btn btn btn-circle" data-bs-dismiss="modal" aria-label="Close">x</button>
             </div>
             <form action="" method="POST">
                 <div class="modal-body">
@@ -230,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Send Report</button>
+                    <button type="submit" class="btn btn-success" style="width: 100%;">Send Report</button>
                 </div>
             </form>
         </div>

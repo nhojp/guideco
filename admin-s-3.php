@@ -208,6 +208,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['caseDetails'])) {
 
 include "admin-nav.php";
 ?>
+
+<style> 
+    .bg-custom {
+            background-color: #0C2D0B;
+            color: #fff; 
+        }
+
+        
+</style>
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -223,7 +232,7 @@ include "admin-nav.php";
 
                 <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
                     <form action="" method="post">
-                        <h5 class="text-center bg-dark text-white p-2"><b>Victim Details</b></h5>
+                        <h5 class="text-center bg-custom text-white p-2"><b>Victim Details</b></h5>
                         <input type="hidden" name="reportedAt" value="<?php echo date('Y-m-d H:i:s'); ?>">
 
                         <div class="row mt-3">
@@ -313,7 +322,7 @@ include "admin-nav.php";
 
                 <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
                     <form action="" method="post">
-                        <h5 class="text-center bg-dark text-white p-2"><b>Offender Details</b></h5>
+                        <h5 class="text-center bg-custom text-white p-2"><b>Offender Details</b></h5>
                         <div class="row mt-3">
                             <div class="col-md-4">
                                 <strong>First Name:</strong>
@@ -402,7 +411,7 @@ include "admin-nav.php";
                 </div>
 
                 <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Complainant Details</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Complainant Details</b></h5>
                 <div class="form-row mt-3">
 
                         <div class="form-group col-md-4">
@@ -436,24 +445,24 @@ include "admin-nav.php";
                 <div class="container-fluid bg-white p-4 rounded-lg mt-4">
 
                     <!-- Details of the Case Section -->
-                    <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Details of the Case</b></h5>
+                    <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Details of the Case</b></h5>
                     <div class="form-group">
                         <textarea class="form-control" id="caseDetails" name="caseDetails" rows="5"></textarea>
                     </div>
 
                     <!-- Action Taken Section -->
-                    <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Action Taken</b></h5>
+                    <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Action Taken</b></h5>
                     <div class="form-group">
                         <textarea class="form-control" id="actionTaken" name="actionTaken" rows="5"></textarea>
                     </div>
 
                     <!-- Recommendations Section -->
-                    <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Recommendations</b></h5>
+                    <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Recommendations</b></h5>
                     <div class="form-group">
                         <textarea class="form-control" id="recommendations" name="recommendations" rows="5"></textarea>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success">Finish</button>
+                <button type="submit" class="btn btn-success" style="width: 100%; margin: 10px">Finish</button>
 
                 </form>
             </div>

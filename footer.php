@@ -1,4 +1,14 @@
-<footer class="bg-guideco text-white text-center py-3" style="width: 100%;">
+<style>
+footer {
+    background-color: #1F5F1E;
+    color: white;
+    text-align: center;
+    padding: 1px 1px;
+    width: 100%;
+}
+</style>
+
+<footer>
     <p>&copy; <?php echo date("Y"); ?> Super I. All rights reserved.</p>
 </footer>
 
@@ -19,3 +29,4 @@
 
 </body>
 </html>
+

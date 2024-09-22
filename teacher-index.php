@@ -91,6 +91,50 @@ mysqli_data_seek($grades_result, 0);
 mysqli_data_seek($violations_result, 0);
 ?>
 
+<style>
+        
+        .btn-custom {
+            background-color: #1F5F1E; 
+            color: white; 
+            border: none; 
+        }
+
+        .btn-custom:hover {
+            background-color: #389434; 
+            color: white; 
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            box-shadow: none; 
+            outline: none; 
+        }
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+        .btn-circle {
+            width: 35px;   
+            height: 35px;  
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;      
+            padding: 0;
+        }
+
+        .table-container {
+        max-height: 400px; 
+        overflow-y: auto; 
+        }
+        
+
+        
+
+      
+    </style>
+
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="row">
@@ -144,9 +188,10 @@ mysqli_data_seek($violations_result, 0);
                         </div>
                     </div>
 
+                <div class="table-container">
                     <div class="table-responsive">
                         <table class="table table-hover mt-4 border">
-                            <thead class="thead-dark">
+                            <thead class="thead-custom">
                                 <tr>
                                     <th style="width:40%;">Full Name</th>
                                     <th style="width:25%;">Grade</th>
@@ -169,14 +214,15 @@ mysqli_data_seek($violations_result, 0);
                         </table>
                     </div>
                 </div>
+            
 
                 <!-- Report Modal -->
                 <div class="modal fade modal-custom" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true" data-backdrop="false">
                     <div class="modal-dialog modal-custom" role="document">
                         <div class="modal-content">
-                            <div class="modal-header bg-guideco text-white">
+                            <div class="modal-header text-white" style="background-color: #1F5F1E;">
                                 <h5 class="modal-title" id="reportModalLabel">Report Violation</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <button type="button" class="btn-danger btn btn btn-circle" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -203,7 +249,7 @@ mysqli_data_seek($violations_result, 0);
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success">Send Report</button>
+                                    <button type="submit" class="btn btn-success" style="width: 100%;">Send Report</button>
                                 </div>
                             </form>
                         </div>

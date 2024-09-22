@@ -20,6 +20,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
 }
 ?>
 
+<style>
+        
+        .btn-custom {
+            background-color: #1F5F1E;
+            color: white; 
+            border: none; 
+        }
+
+        .btn-custom:hover {
+            background-color: #389434; 
+            color: white; 
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            box-shadow: none; 
+            outline: none; 
+        }
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+        .modal-header.bg-guideco {
+            background-color: #1F5F1E; 
+            color: #fff; 
+        }
+
+        .section-header {
+            background-color: #0C2D0B; 
+            color: #fff; 
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-radius: 5px; 
+            text-align: center;
+        }
+
+        .btn-circle {
+            width: 35px;   
+            height: 35px;  
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center;  
+            align-items: center;      
+            padding: 0;
+        }
+
+        .table-container {
+        max-height: 400px; 
+        overflow-y: auto; 
+        }
+        
+
+      
+    </style>
+
 <div class="container-fluid mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
         <div class="row pt-3">
@@ -28,20 +88,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                     <h3><strong>School Personnel Complaints</strong></h3>
                 </div>
             </div>
+            <div class="col-md-5">
+                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+            </div>
 
             <div class="col-md-1">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false">
-                        +
+                    <button type="button" class="btn btn-custom" data-bs-toggle="dropdown" aria-expanded="false">
+                        Add
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="admin-p-1.php">Complain a School Personnel</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="col-md-5">
-                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
-            </div>
+            
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -57,12 +118,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                 <?php endif; ?>
             </div>
         </div>
+
+    <div class="table-container">
         <table class="table table-hover mt-4 border">
-            <thead class="thead-dark">
+            <thead class="thead-custom">
                 <tr>
                     <th style="width:40%;">Victim Name</th>
                     <th style="width:40%;">Complained Person</th>
-                    <th class="text-center" style="width:20%;">Action</th>
+                    <th class="text-center" style="width:20%;">Action</th> 
                 </tr>
             </thead>
             <tbody id="personnelTable">
@@ -104,18 +167,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                                 </div>
                             </div>
                         </div>
-
+                    </div>
                         <!-- View Modal -->
                         <div class="modal fade" id="viewModal<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel<?php echo $row['id']; ?>" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header bg-guideco text-white">
                                         <h5 class="modal-title" id="viewModalLabel<?php echo $row['id']; ?>">Complaint Details</h5>
-                                        <button type="button" class="btn-danger btn" data-bs-dismiss="modal" aria-label="Close">x</button>
+                                        <button type="button" class="btn-danger btn btn btn-circle" data-bs-dismiss="modal" aria-label="Close">x</button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="container">
-                                            <div class="row bg-dark text-light pt-2 rounded">
+                                            <div class="row section-header">
                                                 <div class="col text-center">
                                                     <h5><b>Victim Information</b></h5>
                                                 </div>
@@ -144,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                                                     <p><strong>Address:</strong> <?php echo ucwords($row['fatherAddress']); ?></p>
                                                 </div>
                                             </div>
-                                            <div class="row bg-dark text-light pt-2 rounded">
+                                            <div class="row section-header">
                                                 <div class="col text-center">
                                                     <h5><b>Complainant Information</b></h5>
                                                 </div>
@@ -161,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                                                 </div>
                                             </div>
                                             <!-- Complained Person Information -->
-                                            <div class="row bg-dark text-light pt-2 rounded">
+                                            <div class="row section-header">
                                                 <div class="col text-center">
                                                     <h5><b>Complained Person Information</b></h5>
                                                 </div>
@@ -173,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                                                 </div>
                                             </div>
                                             <!-- Case Details -->
-                                            <div class="row bg-dark text-light pt-2 rounded">
+                                            <div class="row section-header">
                                                 <div class="col text-center">
                                                     <h5><b>Case Details</b></h5>
                                                 </div>
@@ -184,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                                                 </div>
                                             </div>
                                             <!-- Action Taken -->
-                                            <div class="row bg-dark text-light pt-2 rounded">
+                                            <div class="row section-header">
                                                 <div class="col text-center">
                                                     <h5><b>Action Taken</b></h5>
                                                 </div>
@@ -195,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                                                 </div>
                                             </div>
                                             <!-- Recommendation -->
-                                            <div class="row bg-dark text-light pt-2 rounded">
+                                            <div class="row section-header">
                                                 <div class="col text-center">
                                                     <h5><b>Recommendation</b></h5>
                                                 </div>
@@ -208,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                                         </div>
                                     </div>
                                     <div class="modal-footer"> 
-                                    <a href="admin-print-personnel.php?id=<?php echo $row['id']; ?>" class="btn btn-success float-right" target="_blank">Print</a>
+                                    <a href="admin-print-personnel.php?id=<?php echo $row['id']; ?>" class="btn btn-success float-right" target= "_blank" style="width: 100%;">Print</a>
                                     </div>
                                 </div>
                             </div>

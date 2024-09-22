@@ -14,4 +14,4 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body style="background-color: #DBD8AE;">
+<body style="background-color: #F2F2F2;">

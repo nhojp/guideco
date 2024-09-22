@@ -1,9 +1,27 @@
 * {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
-.bg-guideco{
+
+.font-black {
+    font-weight: 900; /* Black weight */
+}
+
+.font-extrabold {
+    font-weight: 800; /* ExtraBold weight */
+}
+
+.font-bold {
+    font-weight: 700; /* Bold weight */
+}
+
+.font-thin {
+    font-weight: 100; /* Thin weight */
+}
+
+.bg-guideco {
     background-color: rgb(55, 150, 52);
 }
+
 html, body {
     height: 100%;
     margin: 0;
@@ -12,7 +30,6 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-
 }
 
 .main-content {
@@ -24,9 +41,8 @@ footer {
     width: 100%;
     padding: 10px 0; /* Adjust padding as needed */
 }
+
 .scrollable-content {
     max-height: 100px; /* Adjust the height as needed */
     overflow-y: auto;
 }
-
-  

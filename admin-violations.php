@@ -82,6 +82,20 @@ while ($row = mysqli_fetch_assoc($complaints_result)) {
 }
 ?>
 
+<style>
+    .table-scroll {
+        max-height: 400px; 
+        overflow-y: auto; 
+        border: 1px solid #ddd; /* Optional: Add a border */
+        border-radius: 5px; /* Optional: Add rounded corners */
+    }
+
+    .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+    }
+</style>
+
 <div class="container-fluid mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
         <div class="row pt-3">
@@ -156,15 +170,16 @@ while ($row = mysqli_fetch_assoc($complaints_result)) {
                 </select>
             </div>
             <div class="col-md-1 mb-3">
-            <label for="">Print:</label>
+                <label for="">Print:</label>
                 <a href="admin-violators-print.php" class="btn btn-success">
                     <i class="fas fa-print fa-fw"></i>
                 </a>
             </div>
         </div>
-        <div class="table-responsive">
+
+        <div class="table-scroll">
             <table id="violations_table" class="table table-hover mt-4 border">
-                <thead class="thead-dark">
+                <thead class="thead-custom">
                     <tr>
                         <th style="width:20%;">Name</th>
                         <th style="width:20%;">Grade</th>
@@ -201,6 +216,7 @@ while ($row = mysqli_fetch_assoc($complaints_result)) {
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const searchInput = document.getElementById('searchInput');

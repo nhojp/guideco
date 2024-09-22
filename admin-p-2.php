@@ -48,6 +48,23 @@ $result_students = $conn->query($sql_students);
 include "admin-nav.php";
 ?>
 
+<style>
+        
+        
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+       
+        
+
+        
+
+      
+    </style>
+
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -61,12 +78,12 @@ include "admin-nav.php";
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                        <input class="form-control" type="text" id="searchInput" placeholder="Search a name or section...">
                     </div>
                 </div>
 
                 <table class="table table-hover mt-4 border">
-                    <thead class="thead-dark">
+                    <thead class="thead-custom">
                         <tr>
                             <th style="width: 40%;">Full Name</th>
                             <th style="width: 25%;">Grade</th>
