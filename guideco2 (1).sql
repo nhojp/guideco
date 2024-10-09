@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2024 at 11:02 AM
+-- Generation Time: Oct 09, 2024 at 06:47 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -107,7 +107,8 @@ CREATE TABLE `complaints` (
 --
 
 INSERT INTO `complaints` (`id`, `victimFirstName`, `victimMiddleName`, `victimLastName`, `victimDOB`, `victimAge`, `victimSex`, `victimGrade`, `victimSection`, `victimAdviser`, `victimContact`, `victimAddress`, `motherName`, `motherOccupation`, `motherAddress`, `motherContact`, `fatherName`, `fatherOccupation`, `fatherAddress`, `fatherContact`, `complainantFirstName`, `complainantMiddleName`, `complainantLastName`, `relationshipToVictim`, `complainantContact`, `complainantAddress`, `complainedFirstName`, `complainedMiddleName`, `complainedLastName`, `complainedDOB`, `complainedAge`, `complainedSex`, `complainedDesignation`, `complainedGrade`, `complainedSection`, `complainedAdviser`, `complainedContact`, `complainedAddress`, `caseDetails`, `actionTaken`, `recommendations`, `teacher_id`) VALUES
-(18, 'John Paulmar', '', 'Manjac', '0000-00-00', 0, 'Male', 'Grade 12', 'Euclid', 'Fritch  Cortez', NULL, NULL, '', '', '', '', '', '', '', '', 'John Paulmar', 'Lontoc ', 'Manjac', 'self', '09304365359', 'sampaga balayan batangas', 'maria an', '', 'busilig', '0000-00-00', 0, '0', '', NULL, NULL, NULL, '', '', 'binato ng eraser, tinamaan sa mata', 'counseling', 'magbait', 36);
+(20, 'john paulmar', 'lontoc', 'manjac', '0000-00-00', 2024, 'Male', '12', 'Drucker', 'maria an busilig', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'fritch', '', 'cortez', '0000-00-00', 0, '0', '', NULL, NULL, NULL, '', '', '', '', '', 46),
+(21, 'john paulmar', 'lontoc', 'manjac', '0000-00-00', 2024, 'Male', '12', 'Drucker', 'maria an busilig', NULL, NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'maria an', '', 'busilig', '0000-00-00', 0, '0', '', NULL, NULL, NULL, '', '', '', '', '', 49);
 
 -- --------------------------------------------------------
 
@@ -168,6 +169,13 @@ CREATE TABLE `complaints_student` (
   `student_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `complaints_student`
+--
+
+INSERT INTO `complaints_student` (`id`, `victimFirstName`, `victimMiddleName`, `victimLastName`, `victimDOB`, `victimAge`, `victimSex`, `victimGrade`, `victimSection`, `victimAdviser`, `victimContact`, `victimAddress`, `motherName`, `motherOccupation`, `motherAddress`, `motherContact`, `fatherName`, `fatherOccupation`, `fatherAddress`, `fatherContact`, `complainantFirstName`, `complainantMiddleName`, `complainantLastName`, `relationshipToVictim`, `complainantContact`, `complainantAddress`, `complainedFirstName`, `complainedMiddleName`, `complainedLastName`, `complainedDOB`, `complainedAge`, `complainedSex`, `complainedGrade`, `complainedSection`, `complainedAdviser`, `complainedContact`, `complainedAddress`, `complainedMotherName`, `complainedMotherOccupation`, `complainedMotherAddress`, `complainedMotherContact`, `complainedFatherName`, `complainedFatherOccupation`, `complainedFatherAddress`, `complainedFatherContact`, `caseDetails`, `actionTaken`, `recommendations`, `reportedAt`, `student_id`) VALUES
+(30, 'john paulmar', 'lontoc', 'manjac', '0000-00-00', 2024, 'Male', '12', 'Drucker', 'maria an busilig', '', NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'john paulmar', 'lontoc', 'manjac', '0000-00-00', 2024, 'Male', '12', 'Drucker', 'maria an busilig', '', NULL, '', '', '', '', '', '', '', '', '', '', '', '2024-10-09 02:23:13', 240256);
+
 -- --------------------------------------------------------
 
 --
@@ -195,25 +203,6 @@ INSERT INTO `fathers` (`parent_id`, `student_id`, `name`, `contact_number`, `ema
 -- --------------------------------------------------------
 
 --
--- Table structure for table `grades`
---
-
-CREATE TABLE `grades` (
-  `id` int(11) NOT NULL,
-  `grade_name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `grades`
---
-
-INSERT INTO `grades` (`id`, `grade_name`) VALUES
-(1, 'Grade 11'),
-(2, 'Grade 12');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `guards`
 --
 
@@ -229,9 +218,15 @@ CREATE TABLE `guards` (
   `birthdate` date DEFAULT NULL,
   `sex` varchar(10) DEFAULT NULL,
   `contact_number` varchar(20) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `school_year` varchar(9) NOT NULL
+  `address` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `guards`
+--
+
+INSERT INTO `guards` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `position`, `birthdate`, `sex`, `contact_number`, `address`) VALUES
+(15, 'senior', '1234', 'Senior', NULL, 'Pilato', NULL, 'Guard', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -309,7 +304,9 @@ CREATE TABLE `school_year` (
 --
 
 INSERT INTO `school_year` (`id`, `year_start`, `year_end`, `active`) VALUES
-(1, 2023, 2024, 0);
+(1, 2023, 2024, 0),
+(2, 2024, 2025, 0),
+(3, 2025, 2026, 0);
 
 -- --------------------------------------------------------
 
@@ -319,19 +316,48 @@ INSERT INTO `school_year` (`id`, `year_start`, `year_end`, `active`) VALUES
 
 CREATE TABLE `sections` (
   `id` int(11) NOT NULL,
-  `section_name` varchar(10) NOT NULL,
-  `grade_id` int(11) DEFAULT NULL,
+  `section_name` varchar(120) DEFAULT NULL,
   `teacher_id` int(11) DEFAULT NULL,
   `strand_id` int(11) DEFAULT NULL,
-  `school_year` varchar(9) DEFAULT NULL
+  `grade_level` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sections`
 --
 
-INSERT INTO `sections` (`id`, `section_name`, `grade_id`, `teacher_id`, `strand_id`, `school_year`) VALUES
-(22, 'Euclid', 2, NULL, 7, '2023-2024');
+INSERT INTO `sections` (`id`, `section_name`, `teacher_id`, `strand_id`, `grade_level`) VALUES
+(30, 'Euclid', 46, 7, '12'),
+(31, 'Pythagoras', 48, 7, '12'),
+(32, 'Drucker', 49, 8, '12'),
+(33, 'fayol', 50, 8, '12'),
+(34, 'aristotle', 51, 9, '12'),
+(35, 'confucius', 52, 9, '12'),
+(36, 'commercial', 57, 10, '12'),
+(37, 'cookery 12', 58, 10, '12'),
+(38, 'computer p', 59, 11, '12'),
+(39, 'galileo', 60, 11, '11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `section_assignment`
+--
+
+CREATE TABLE `section_assignment` (
+  `id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  `section_id` int(11) NOT NULL,
+  `school_year_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `section_assignment`
+--
+
+INSERT INTO `section_assignment` (`id`, `student_id`, `teacher_id`, `section_id`, `school_year_id`) VALUES
+(72, 240256, 49, 32, 1);
 
 -- --------------------------------------------------------
 
@@ -341,16 +367,19 @@ INSERT INTO `sections` (`id`, `section_name`, `grade_id`, `teacher_id`, `strand_
 
 CREATE TABLE `strands` (
   `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `grade_id` int(11) DEFAULT NULL
+  `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `strands`
 --
 
-INSERT INTO `strands` (`id`, `name`, `grade_id`) VALUES
-(7, 'STEM', NULL);
+INSERT INTO `strands` (`id`, `name`) VALUES
+(8, 'ABM'),
+(9, 'HUMSS'),
+(7, 'STEM'),
+(10, 'TVL-HE'),
+(11, 'TVL-ICT');
 
 -- --------------------------------------------------------
 
@@ -376,6 +405,13 @@ CREATE TABLE `students` (
   `strand_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `students`
+--
+
+INSERT INTO `students` (`id`, `first_name`, `middle_name`, `last_name`, `age`, `sex`, `section_id`, `contact_number`, `religion`, `birthdate`, `user_id`, `school_year_id`, `lrn`, `barangay`, `strand_id`) VALUES
+(240256, 'john paulmar', 'lontoc', 'manjac', 0, 'Male', 32, '', '', '0000-00-00', 240314, NULL, '', '', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -395,19 +431,28 @@ CREATE TABLE `teachers` (
   `sex` varchar(10) DEFAULT NULL,
   `contact_number` varchar(20) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
-  `school_year` varchar(9) NOT NULL
+  `section_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `teachers`
 --
 
-INSERT INTO `teachers` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `position`, `birthdate`, `sex`, `contact_number`, `address`, `school_year`) VALUES
-(34, 'fritch', 'fritch', 'Fritch ', NULL, 'Cortez', NULL, 'Teacher', NULL, NULL, NULL, NULL, '2023-2024'),
-(35, 'eron', 'eron', 'eron', NULL, 'pangilinan', NULL, 'Teacher', NULL, NULL, NULL, NULL, '2023-2024'),
-(36, 'mariaan', 'mariaan', 'maria an', NULL, 'busilig', NULL, 'Teacher', NULL, NULL, NULL, NULL, '2023-2024'),
-(37, 'fritz', 'fritz', 'fritz gerald', NULL, 'buenviaje', NULL, 'Teacher', NULL, NULL, NULL, NULL, '2023-2024'),
-(38, 'norecel', 'norecel', 'norecel', NULL, 'gaa', NULL, 'Teacher', NULL, NULL, NULL, NULL, '2023-2024');
+INSERT INTO `teachers` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `position`, `birthdate`, `sex`, `contact_number`, `address`, `section_id`) VALUES
+(46, 'fritch', 'fritch', 'fritch', NULL, 'cortez', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(48, 'eron', 'eron', 'eron', NULL, 'pangilinan', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(49, 'maria', 'maria', 'maria an', NULL, 'busilig', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(50, 'fritz', 'fritz', 'fritz', NULL, 'buenviaje', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(51, 'nore', 'nore', 'norecel', NULL, 'gaa', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(52, 'teresa', 'teresa', 'maria teresa', NULL, 'descallar', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(53, 'cath', 'cath', 'catherene', NULL, 'veroya', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(54, 'diji', 'diji', 'dijinirah', NULL, 'guyagon', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(55, 'berna', 'berna', 'bernadette', NULL, 'digno', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(56, 'ally', 'ally', 'allyson', NULL, 'montealegre', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(57, 'markj', 'markj', 'mark jhun', NULL, 'atienza', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(58, 'andria', 'andria', 'andria', NULL, 'zafra', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(59, 'grace', 'grace', 'gracele', NULL, 'cabrera', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(60, 'lyze', 'lyze', 'lyzette', NULL, 'landicho', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -427,7 +472,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`) VALUES
-(240239, '1', '', '1jd');
+(240314, 'paulmar', '', '1234');
 
 -- --------------------------------------------------------
 
@@ -443,6 +488,18 @@ CREATE TABLE `violations` (
   `teacher_id` int(11) DEFAULT NULL,
   `violation_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `violations`
+--
+
+INSERT INTO `violations` (`id`, `student_id`, `reported_at`, `guard_id`, `teacher_id`, `violation_id`) VALUES
+(58, 240256, '2024-10-09 00:36:15', 15, NULL, 16),
+(59, 240256, '2024-10-09 02:12:45', 15, NULL, 13),
+(60, 240256, '2024-10-09 02:33:34', 15, NULL, 16),
+(61, 240256, '2024-10-09 02:33:37', 15, NULL, 10),
+(62, 240256, '2024-10-09 02:33:41', 15, NULL, 1),
+(63, 240256, '2024-10-09 02:33:45', 15, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -508,12 +565,6 @@ ALTER TABLE `fathers`
   ADD KEY `student_id` (`student_id`);
 
 --
--- Indexes for table `grades`
---
-ALTER TABLE `grades`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `guards`
 --
 ALTER TABLE `guards`
@@ -554,16 +605,24 @@ ALTER TABLE `school_year`
 --
 ALTER TABLE `sections`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `grade_id` (`grade_id`),
-  ADD KEY `fk_strand` (`strand_id`);
+  ADD KEY `strand_id` (`strand_id`);
+
+--
+-- Indexes for table `section_assignment`
+--
+ALTER TABLE `section_assignment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `teacher_id` (`teacher_id`),
+  ADD KEY `section_id` (`section_id`),
+  ADD KEY `school_year_id` (`school_year_id`),
+  ADD KEY `section_assignment_ibfk_1` (`student_id`);
 
 --
 -- Indexes for table `strands`
 --
 ALTER TABLE `strands`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD KEY `fk_strands_grade_id` (`grade_id`);
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `students`
@@ -579,13 +638,15 @@ ALTER TABLE `students`
 --
 ALTER TABLE `teachers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `fk_section` (`section_id`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_username` (`username`);
 
 --
 -- Indexes for table `violations`
@@ -618,13 +679,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `complaints_student`
 --
 ALTER TABLE `complaints_student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `fathers`
@@ -633,16 +694,10 @@ ALTER TABLE `fathers`
   MODIFY `parent_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24005;
 
 --
--- AUTO_INCREMENT for table `grades`
---
-ALTER TABLE `grades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `guards`
 --
 ALTER TABLE `guards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `mothers`
@@ -666,43 +721,49 @@ ALTER TABLE `schedules`
 -- AUTO_INCREMENT for table `school_year`
 --
 ALTER TABLE `school_year`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sections`
 --
 ALTER TABLE `sections`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT for table `section_assignment`
+--
+ALTER TABLE `section_assignment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `strands`
 --
 ALTER TABLE `strands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240183;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240257;
 
 --
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240240;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240315;
 
 --
 -- AUTO_INCREMENT for table `violations`
 --
 ALTER TABLE `violations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `violation_list`
@@ -744,13 +805,17 @@ ALTER TABLE `schedules`
 --
 ALTER TABLE `sections`
   ADD CONSTRAINT `fk_strand` FOREIGN KEY (`strand_id`) REFERENCES `strands` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `sections_ibfk_1` FOREIGN KEY (`grade_id`) REFERENCES `grades` (`id`);
+  ADD CONSTRAINT `sections_ibfk_1` FOREIGN KEY (`strand_id`) REFERENCES `strands` (`id`),
+  ADD CONSTRAINT `sections_ibfk_2` FOREIGN KEY (`strand_id`) REFERENCES `strands` (`id`);
 
 --
--- Constraints for table `strands`
+-- Constraints for table `section_assignment`
 --
-ALTER TABLE `strands`
-  ADD CONSTRAINT `fk_strands_grade_id` FOREIGN KEY (`grade_id`) REFERENCES `grades` (`id`) ON DELETE CASCADE;
+ALTER TABLE `section_assignment`
+  ADD CONSTRAINT `section_assignment_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `section_assignment_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`),
+  ADD CONSTRAINT `section_assignment_ibfk_3` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`),
+  ADD CONSTRAINT `section_assignment_ibfk_4` FOREIGN KEY (`school_year_id`) REFERENCES `school_year` (`id`);
 
 --
 -- Constraints for table `students`
@@ -758,7 +823,13 @@ ALTER TABLE `strands`
 ALTER TABLE `students`
   ADD CONSTRAINT `fk_students_school_year` FOREIGN KEY (`school_year_id`) REFERENCES `school_year` (`id`),
   ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`),
-  ADD CONSTRAINT `students_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `students_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `teachers`
+--
+ALTER TABLE `teachers`
+  ADD CONSTRAINT `fk_section` FOREIGN KEY (`section_id`) REFERENCES `sections` (`id`);
 
 --
 -- Constraints for table `violations`
