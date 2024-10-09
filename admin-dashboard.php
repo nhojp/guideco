@@ -24,14 +24,13 @@ $query = "SELECT v.id, v.student_id, v.reported_at, v.guard_id, v.teacher_id, v.
           FROM violations v
           JOIN students s ON v.student_id = s.id
           JOIN sections sec ON s.section_id = sec.id
-          JOIN grades g ON sec.grade_id = g.id
           WHERE v.reported_at BETWEEN '$startDate' AND '$endDate'";
 
 if ($violationType) {
     $query .= " AND v.violation_id = '$violationType'";
 }
 if ($grade) {
-    $query .= " AND g.id = '$grade'";
+    $query .= " AND sec.grade_level = '$grade'";
 }
 if ($section) {
     $query .= " AND sec.id = '$section'";
@@ -46,9 +45,6 @@ $violations = mysqli_fetch_all($result, MYSQLI_ASSOC);
 // Fetch filters data
 $violationListResult = mysqli_query($conn, "SELECT * FROM violation_list");
 $violationList = mysqli_fetch_all($violationListResult, MYSQLI_ASSOC);
-
-$gradesResult = mysqli_query($conn, "SELECT * FROM grades");
-$grades = mysqli_fetch_all($gradesResult, MYSQLI_ASSOC);
 
 $sectionsResult = mysqli_query($conn, "SELECT * FROM sections");
 $sections = mysqli_fetch_all($sectionsResult, MYSQLI_ASSOC);
@@ -100,7 +96,6 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
 <html>
 
 <head>
-    <title>Dashboard</title>
     <!-- Include Bootstrap from head.php -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -123,7 +118,6 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
                     <div class="container-fluid p-2">
                         <h3><strong>DASHBOARD</strong></h3>
                     </div>
-                    <a href="admin-schedule.php" class="btn btn-outline-success">Schedules</a>
                 </div>
             </div>
 
@@ -134,7 +128,7 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
                     <form id="filterForm" class="mb-4">
                         <div class="form-row p-2 rounded border">
                             <div class="form-group" style="width:100%">
-                                <label for="violationType">Violation Type</label>
+                                <label for="violationType">Types of Violation</label>
                                 <select class="form-control" id="violationType" name="violationType">
                                     <option value="">All</option>
                                     <?php foreach ($violationList as $violation) : ?>
@@ -150,14 +144,12 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
                                 <label for="grade">Grade</label>
                                 <select class="form-control" id="grade" name="grade">
                                     <option value="">All</option>
-                                    <?php foreach ($grades as $gradeItem) : ?>
-                                        <option value="<?= $gradeItem['id'] ?>" <?= $gradeItem['id'] == $grade ? 'selected' : '' ?>>
-                                            <?= ucwords($gradeItem['grade_name']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
+                                    <option value="11" <?= $grade == 11 ? 'selected' : '' ?>>Grade 11</option>
+                                    <option value="12" <?= $grade == 12 ? 'selected' : '' ?>>Grade 12</option>
                                 </select>
                             </div>
                         </div>
+
                         <div class="form-row p-2 rounded mt-2 border">
                             <div class="form-group" style="width:100%">
                                 <label for="section">Section</label>
@@ -205,13 +197,13 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
 
                     <div class="row mb-4">
                         <div class="col-md-8">
-                            <h4>Violations by Type</h4>
+                            <h4>Types of Violation</h4>
                             <div class="container p-2 rounded border">
                                 <canvas id="violationsBarChart"></canvas>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <h4>Gender of Violators</h4>
+                            <h4>Violator by Sex</h4>
                             <div class="container p-2 rounded border">
                                 <canvas id="violationsPieChart"></canvas>
                             </div>
@@ -253,19 +245,7 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
                                 <?php } ?>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <h4>Top Violators</h4>
-                            <ul class="list-group">
-                                <?php foreach ($topViolators as $violator) : ?>
-                                    <li class="list-group-item">
-                                        <?= ucwords(htmlspecialchars($violator['first_name'] . ' ' . $violator['last_name'])) ?> - <?= $violator['violation_count'] ?> Violations
-                                    </li>
-                                <?php endforeach; ?>
-                                <?php if (empty($topViolators)) : ?>
-                                    <li class="list-group-item">No top violators found.</li>
-                                <?php endif; ?>
-                            </ul>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -284,7 +264,7 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
                     var barChart = new Chart(ctxBar, {
                         type: 'bar',
                         data: {
-                            labels: <?= json_encode(array_map(fn ($id) => ucwords($violationList[array_search($id, array_column($violationList, 'id'))]['violation_description']), array_keys($violationsByType))) ?>,
+                            labels: <?= json_encode(array_map(fn($id) => ucwords($violationList[array_search($id, array_column($violationList, 'id'))]['violation_description']), array_keys($violationsByType))) ?>,
                             datasets: [{
                                 label: 'Violations',
                                 data: <?= json_encode(array_values($violationsByType)) ?>,

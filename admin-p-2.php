@@ -39,14 +39,20 @@ if ($result_person->num_rows > 0) {
 }
 
 // Fetch all students with their related section and grade
-$sql_students = "SELECT s.id, s.first_name, s.last_name, sec.section_name, g.grade_name
+$sql_students = "SELECT s.id, s.first_name, s.last_name, sec.section_name, sec.grade_level as grade
                  FROM students s
-                 INNER JOIN sections sec ON s.section_id = sec.id
-                 INNER JOIN grades g ON sec.grade_id = g.id";
+                 INNER JOIN sections sec ON s.section_id = sec.id";
 $result_students = $conn->query($sql_students);
 
 include "admin-nav.php";
 ?>
+
+<style>
+    .thead-custom {
+        background-color: #0C2D0B;
+        color: white;
+    }
+</style>
 
 <main class="flex-fill mt-5">
     <div class="container mt-4">
@@ -61,12 +67,12 @@ include "admin-nav.php";
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                        <input class="form-control" type="text" id="searchInput" placeholder="Search a name or section...">
                     </div>
                 </div>
 
                 <table class="table table-hover mt-4 border">
-                    <thead class="thead-dark">
+                    <thead class="thead-custom">
                         <tr>
                             <th style="width: 40%;">Full Name</th>
                             <th style="width: 25%;">Grade</th>
@@ -79,7 +85,7 @@ include "admin-nav.php";
                             <?php while ($student = $result_students->fetch_assoc()) : ?>
                                 <tr>
                                     <td><?php echo ucwords($student['first_name']) . " " . ucwords($student['last_name']); ?></td>
-                                    <td><?php echo ucwords($student['grade_name']); ?></td>
+                                    <td><?php echo ucwords($student['grade']); ?></td>
                                     <td><?php echo ucwords($student['section_name']); ?></td>
                                     <td>
                                         <form action="admin-p-3.php" method="get">

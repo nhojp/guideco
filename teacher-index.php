@@ -16,10 +16,9 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['teacher'])) {
 // SQL query to fetch students data
 $query = "
     SELECT students.id, students.first_name, students.middle_name, students.last_name, 
-           students.age, students.sex, sections.id as section_id, sections.section_name, grades.id as grade_id, grades.grade_name
+           students.age, students.sex, sections.id as section_id, sections.section_name, sections.grade_level
     FROM students
     JOIN sections ON students.section_id = sections.id
-    JOIN grades ON sections.grade_id = grades.id
 ";
 
 $result = mysqli_query($conn, $query);
@@ -28,21 +27,18 @@ if (!$result) {
     die("Query failed: " . mysqli_error($conn));
 }
 
-// SQL query to fetch sections data
-$sections_query = "SELECT id, section_name FROM sections";
+// SQL query to fetch sections data (only grades 11 and 12)
+$sections_query = "
+    SELECT id, section_name, grade_level FROM sections WHERE grade_level IN ('11', '12')
+";
 $sections_result = mysqli_query($conn, $sections_query);
 
 if (!$sections_result) {
     die("Query failed: " . mysqli_error($conn));
 }
 
-// SQL query to fetch grades data
-$grades_query = "SELECT id, grade_name FROM grades";
-$grades_result = mysqli_query($conn, $grades_query);
-
-if (!$grades_result) {
-    die("Query failed: " . mysqli_error($conn));
-}
+// Fetch grades directly from the sections
+$grades = ['11', '12']; // Hardcoded since we are filtering only grades 11 and 12
 
 // SQL query to fetch violations data
 $violations_query = "SELECT violation_description FROM violation_list";
@@ -87,9 +83,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Reset result set pointers
 mysqli_data_seek($sections_result, 0);
-mysqli_data_seek($grades_result, 0);
 mysqli_data_seek($violations_result, 0);
 ?>
+
+<style>
+    .btn-custom {
+        background-color: #1F5F1E; 
+        color: white; 
+        border: none; 
+    }
+
+    .btn-custom:hover {
+        background-color: #389434; 
+        color: white; 
+    }
+
+    .btn-custom:focus, .btn-custom:active {
+        box-shadow: none; 
+        outline: none; 
+    }
+
+    .thead-custom {
+        background-color: #0C2D0B;
+        color: white;
+    }
+
+    .btn-circle {
+        width: 35px;   
+        height: 35px;  
+        border-radius: 50%; 
+        display: flex;
+        justify-content: center; 
+        align-items: center;      
+        padding: 0;
+    }
+
+    .table-container {
+        max-height: 400px; 
+        overflow-y: auto; 
+    }
+</style>
 
 <main class="flex-fill mt-5">
     <div class="container mt-4">
@@ -125,9 +158,9 @@ mysqli_data_seek($violations_result, 0);
                                 <label for="filter_grade">Filter by Grade:</label>
                                 <select class="form-control" id="filter_grade" name="filter_grade">
                                     <option value="">All Grades</option>
-                                    <?php while ($grade_row = mysqli_fetch_assoc($grades_result)) : ?>
-                                        <option value="<?php echo $grade_row['id']; ?>"><?php echo ucfirst($grade_row['grade_name']); ?></option>
-                                    <?php endwhile; ?>
+                                    <?php foreach ($grades as $grade) : ?>
+                                        <option value="<?php echo $grade; ?>"><?php echo ucfirst($grade); ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -144,112 +177,122 @@ mysqli_data_seek($violations_result, 0);
                         </div>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover mt-4 border">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th style="width:40%;">Full Name</th>
-                                    <th style="width:25%;">Grade</th>
-                                    <th style="width:25%;">Section</th>
-                                    <th style="width:10%;">Report</th>
-                                </tr>
-                            </thead>
-                            <tbody id="students_table">
-                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                    <tr data-section-id="<?php echo $row['section_id']; ?>" data-grade-id="<?php echo $row['grade_id']; ?>">
-                                        <td><?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?></td>
-                                        <td><?php echo ucfirst($row['grade_name']); ?></td>
-                                        <td><?php echo ucfirst($row['section_name']); ?></td>
-                                        <td class="text-center">
-                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal" data-id="<?php echo $row['id']; ?>" data-fullname="<?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?>" data-section="<?php echo ucfirst($row['section_name']); ?>">Report</button>
-                                        </td>
+                    <div class="table-container">
+                        <div class="table-responsive">
+                            <table class="table table-hover mt-4 border">
+                                <thead class="thead-custom">
+                                    <tr>
+                                        <th style="width:40%;">Full Name</th>
+                                        <th style="width:25%;">Grade</th>
+                                        <th style="width:25%;">Section</th>
+                                        <th style="width:10%;">Report</th>
                                     </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Report Modal -->
-                <div class="modal fade modal-custom" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true" data-backdrop="false">
-                    <div class="modal-dialog modal-custom" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header bg-guideco text-white">
-                                <h5 class="modal-title" id="reportModalLabel">Report Violation</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <form action="" method="POST">
-                                <div class="modal-body">
-                                    <input type="hidden" name="student_id" id="student_id">
-                                    <div class="form-group">
-                                        <label for="full_name">Full Name</label>
-                                        <input type="text" class="form-control" id="full_name" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="section">Section</label>
-                                        <input type="text" class="form-control" id="section" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="violation">Violation</label>
-                                        <select class="form-control" id="violation" name="violation">
-                                            <?php while ($violation_row = mysqli_fetch_assoc($violations_result)) : ?>
-                                                <option value="<?php echo htmlspecialchars($violation_row['violation_description']); ?>">
-                                                    <?php echo ucwords(htmlspecialchars($violation_row['violation_description'])); ?>
-                                                </option>
-                                            <?php endwhile; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success">Send Report</button>
-                                </div>
-                            </form>
+                                </thead>
+                                <tbody id="students_table">
+                                    <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                                        <tr data-section-id="<?php echo $row['section_id']; ?>" data-grade-id="<?php echo $row['grade_level']; ?>">
+                                            <td><?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?></td>
+                                            <td><?php echo ucfirst($row['grade_level']); ?></td>
+                                            <td><?php echo ucfirst($row['section_name']); ?></td>
+                                            <td class="text-center">
+                                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal" data-id="<?php echo $row['id']; ?>" data-fullname="<?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?>" data-section="<?php echo ucfirst($row['section_name']); ?>">Report</button>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                
+                    <!-- Report Modal -->
+                    <div class="modal fade modal-custom" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true" data-backdrop="false">
+                        <div class="modal-dialog modal-custom" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-white" style="background-color: #1F5F1E;">
+                                    <h5 class="modal-title" id="reportModalLabel">Report Violation</h5>
+                                    <button type="button" class="btn-danger btn btn btn-circle" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="" method="POST">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="student_id" id="student_id">
+                                        <div class="form-group">
+                                            <label for="full_name">Full Name</label>
+                                            <input type="text" class="form-control" id="full_name" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="violation">Select Violation</label>
+                                            <select class="form-control" name="violation" id="violation">
+                                                <?php while ($violation_row = mysqli_fetch_assoc($violations_result)) : ?>
+                                                    <option value="<?php echo $violation_row['violation_description']; ?>"><?php echo ucfirst($violation_row['violation_description']); ?></option>
+                                                <?php endwhile; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-danger">Report Violation</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Report Modal -->
                 </div>
             </div>
         </div>
     </div>
 </main>
-<?php
-include 'footer.php';
-?>
+
 <script>
-    $('#reportModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var studentId = button.data('id');
-        var fullName = button.data('fullname');
-        var section = button.data('section');
+    // Filter functionality for the students table
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const filterGrade = document.getElementById("filter_grade");
+        const filterSection = document.getElementById("filter_section");
+        const studentsTable = document.getElementById("students_table");
 
-        var modal = $(this);
-        modal.find('#student_id').val(studentId);
-        modal.find('#full_name').val(fullName);
-        modal.find('#section').val(section);
-    });
+        function filterTable() {
+            const searchValue = searchInput.value.toLowerCase();
+            const gradeValue = filterGrade.value;
+            const sectionValue = filterSection.value;
 
-    // Search functionality
-    $('#searchInput').on('keyup', function() {
-        var value = $(this).val().toLowerCase();
-        $("#students_table tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-        });
-    });
+            Array.from(studentsTable.getElementsByTagName("tr")).forEach(row => {
+                const name = row.children[0].textContent.toLowerCase();
+                const grade = row.dataset.gradeId;
+                const section = row.dataset.sectionId;
 
-    // Filter functionality
-    $('#filter_grade, #filter_section').on('change', function() {
-        var gradeId = $('#filter_grade').val();
-        var sectionId = $('#filter_section').val();
+                const matchesSearch = name.includes(searchValue);
+                const matchesGrade = gradeValue === "" || grade === gradeValue;
+                const matchesSection = sectionValue === "" || section === sectionValue;
 
-        $("#students_table tr").each(function() {
-            var rowGradeId = $(this).data('grade-id');
-            var rowSectionId = $(this).data('section-id');
+                if (matchesSearch && matchesGrade && matchesSection) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
 
-            $(this).toggle(
-                (gradeId === "" || gradeId == rowGradeId) &&
-                (sectionId === "" || sectionId == rowSectionId)
-            );
+        searchInput.addEventListener("input", filterTable);
+        filterGrade.addEventListener("change", filterTable);
+        filterSection.addEventListener("change", filterTable);
+
+        // Fill the modal with student details
+        $('#reportModal').on('show.bs.modal', function (event) {
+            const button = $(event.relatedTarget); // Button that triggered the modal
+            const studentId = button.data('id'); // Extract info from data-* attributes
+            const fullName = button.data('fullname');
+            const sectionName = button.data('section');
+
+            const modal = $(this);
+            modal.find('#student_id').val(studentId);
+            modal.find('#full_name').val(fullName);
         });
     });
 </script>
+
+<?php
+include 'footer.php';
+?>

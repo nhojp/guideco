@@ -1,21 +1,19 @@
 <?php
 include 'conn.php'; // Database connection
 include 'head.php'; // Include head section
-
 include 'admin-nav.php';
 
 // Get student ID from URL
 $student_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Fetch student data
-$query = "SELECT s.*, sec.section_name, g.grade_name, m.name AS mother_name, f.name AS father_name, 
+$query = "SELECT s.*, sec.section_name, sec.grade_level, m.name AS mother_name, f.name AS father_name, 
                  m.contact_number AS mother_contact, f.contact_number AS father_contact, 
                  m.email AS mother_email, f.email AS father_email, 
                  m.occupation AS mother_occupation, f.occupation AS father_occupation, 
                  m.address AS mother_address, f.address AS father_address
           FROM students s
           JOIN sections sec ON s.section_id = sec.id
-          JOIN grades g ON sec.grade_id = g.id
           LEFT JOIN mothers m ON s.id = m.student_id
           LEFT JOIN fathers f ON s.id = f.student_id
           WHERE s.id = ?";
@@ -37,6 +35,7 @@ $violation_stmt = $conn->prepare($violation_query);
 $violation_stmt->bind_param("i", $student_id);
 $violation_stmt->execute();
 $violations = $violation_stmt->get_result();
+$violation_count = $violations->num_rows; // Count the number of violations
 ?>
 <style>
     .scrollable-content {
@@ -53,30 +52,34 @@ $violations = $violation_stmt->get_result();
                     <div class="col-md-9">
                         <div class="container-fluid p-2">
                             <?php if ($student) : ?>
-                                <h3><strong><span class="text-success"><?php echo ucwords(htmlspecialchars($student['first_name'] . ' ' . $student['last_name'])); ?></span> from <span class="text-success"><?php echo ucwords(htmlspecialchars($student['grade_name'])); ?> - <?php echo ucwords(htmlspecialchars($student['section_name'])); ?></span></strong></h3>
+                                <h3><strong><span class="text-success"><?php echo ucwords(htmlspecialchars($student['first_name'] . ' ' . $student['last_name'])); ?></span> from <span class="text-success"><?php echo ucwords(htmlspecialchars($student['grade_level'])); ?> - <?php echo ucwords(htmlspecialchars($student['section_name'])); ?></span></strong></h3>
                             <?php endif; ?>
                         </div>
                     </div>
                     <div class="col-md-3 text-right">
-                        <a href="admin-contact.php?id=<?php echo urlencode($student['id']); ?>" class="btn btn-success btn-block">
-                            <i class="fas fa-envelope"></i> Contact Parents
-                        </a>
-                        <a href="goodmoral.php?id=<?php echo urlencode($student['id']); ?>" class="btn btn-primary btn-block">
-                            <i class="fas fa-print"></i> Good Moral
-                        </a>
+                        <!-- Conditionally render the button based on the violation count -->
+                        <?php if ($violation_count > 5): ?>
+                            <button class="btn btn-secondary btn-block" disabled>
+                                <i class="fas fa-ban"></i> Good Moral (Disabled)
+                            </button>
+                        <?php else: ?>
+                            <a href="goodmoral.php?id=<?php echo urlencode($student['id']); ?>" class="btn btn-primary btn-block">
+                                <i class="fas fa-print"></i> Good Moral
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <hr>
                 <?php if ($student) : ?>
                     <div class="row">
                         <!-- Personal Information and Violations -->
-                        <div class="col-md-6">
+                        <div class="col-md-6">  
                             <h3 class="text-center"><strong>Personal Information</strong></h3>
                             <ul class="list-group">
                                 <li class="list-group-item"><strong>Age:</strong> <?php echo ucwords(htmlspecialchars($student['age'])); ?></li>
                                 <li class="list-group-item"><strong>Sex:</strong> <?php echo ucwords(htmlspecialchars($student['sex'])); ?></li>
                                 <li class="list-group-item"><strong>Section:</strong> <?php echo ucwords(htmlspecialchars($student['section_name'])); ?></li>
-                                <li class="list-group-item"><strong>Grade:</strong> <?php echo ucwords(htmlspecialchars($student['grade_name'])); ?></li>
+                                <li class="list-group-item"><strong>Grade:</strong> <?php echo ucwords(htmlspecialchars($student['grade_level'])); ?></li>
                                 <li class="list-group-item"><strong>Contact Number:</strong> <?php echo ucwords(htmlspecialchars($student['contact_number'])); ?></li>
                                 <li class="list-group-item"><strong>Religion:</strong> <?php echo ucwords(htmlspecialchars($student['religion'])); ?></li>
                                 <li class="list-group-item"><strong>Birthdate:</strong> <?php echo ucwords(htmlspecialchars($student['birthdate'])); ?></li>

@@ -101,20 +101,7 @@ if ($role && $role_id) {
                     ?>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                             <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="username"><strong>Username</strong></label>
-                                        <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="password"><strong>Password</strong></label>
-                                        <input type="password" class="form-control" id="password" name="password" value="<?php echo htmlspecialchars($user['password']); ?>" required>
-                                    </div>
-                                </div>
-                            </div>
+                           
 
                             <div class="form-row">
                                 <div class="col-md-4">
@@ -133,6 +120,21 @@ if ($role && $role_id) {
                                     <div class="form-group">
                                         <label for="last_name"><strong>Last Name</strong></label>
                                         <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="username"><strong>Username</strong></label>
+                                        <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="password"><strong>Password</strong></label>
+                                        <input type="password" class="form-control" id="password" name="password" value="<?php echo htmlspecialchars($user['password']); ?>" required>
                                     </div>
                                 </div>
                             </div>
@@ -185,7 +187,7 @@ if ($role && $role_id) {
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-success" name="update">Save</button>
+                            <button type="submit" class="btn btn-success" name="update" style="width: 100%;">Save</button>
                         </form>
                     <?php } ?>
                 </div>

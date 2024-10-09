@@ -44,7 +44,7 @@ $sql_student_teacher = "SELECT s.first_name AS student_first_name,
                             s.last_name AS student_last_name, 
                               s.birthdate, s.sex,
                               sec.section_name, 
-                              g.grade_name, 
+                              sec.grade_level, 
                               t.first_name AS teacher_first_name, 
                               t.last_name AS teacher_last_name,
                               m.name as mother_name, 
@@ -57,7 +57,6 @@ $sql_student_teacher = "SELECT s.first_name AS student_first_name,
                               f.address AS father_address
                        FROM students s
                        INNER JOIN sections sec ON s.section_id = sec.id
-                       INNER JOIN grades g ON sec.grade_id = g.id
                        INNER JOIN teachers t ON sec.teacher_id = t.id
                        left JOIN mothers m ON s.id = m.student_id
                        left JOIN fathers f ON s.id = f.student_id
@@ -78,7 +77,7 @@ if ($result_student_teacher === false) {
     $birthdate = $row['birthdate'] ?? '';
     $sex = $row['sex'] ?? '';
     $section_name = $row['section_name'] ?? '';
-    $grade_name = $row['grade_name'] ?? '';
+    $grade_name = $row['grade_level'] ?? '';
     $teacher_name = ($row['teacher_first_name'] ?? '') . " " . ($row['teacher_last_name'] ?? '');
     $mother_name = $row['mother_name'] ?? '';
     $mother_occupation = $row['mother_occupation'] ?? '';
@@ -133,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $birthdate = $row['birthdate'] ?? '';
     $sex = $row['sex'] ?? '';
     $section_name = $row['section_name'] ?? '';
-    $grade_name = $row['grade_name'] ?? '';
+    $grade_name = $row['grade_level'] ?? '';
     $teacher_name = ($row['teacher_first_name'] ?? '') . " " . ($row['teacher_last_name'] ?? '');
     $mother_name = $row['mother_name'] ?? '';
     $mother_occupation = $row['mother_occupation'] ?? '';
@@ -298,6 +297,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include "admin-nav.php";
 ?>
+
+<style> 
+    .bg-custom {
+            background-color: #0C2D0B;
+            color: #fff; 
+        }
+
+        
+</style>
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -314,7 +322,7 @@ include "admin-nav.php";
 
             <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
                 <form action="" method="post">
-                    <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Victim Details</b></h5>
+                    <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Victim Details</b></h5>
                     <?php if ($result_student_teacher->num_rows > 0) : ?>
                         <?php $row = $result_student_teacher->fetch_assoc(); ?>
                         <div class="form-row mt-3">
@@ -405,7 +413,7 @@ include "admin-nav.php";
             </div>
 
             <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Offender Details</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Offender Details</b></h5>
                 <?php if (isset($person)) : ?>
 
                     <div class="form-row mt-3">
@@ -454,7 +462,7 @@ include "admin-nav.php";
 
             </div>
             <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Complainant Details</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Complainant Details</b></h5>
                 <div class="form-row mt-3">
                     <div class="form-group col-md-4">
                         <label for="complainantFirstName"><strong>First Name:</strong></label>
@@ -486,23 +494,23 @@ include "admin-nav.php";
             </div>
 
             <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Details of the Case</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Details of the Case</b></h5>
 
                 <div class="form-group">
                     <textarea class="form-control" id="caseDetails" name="caseDetails" rows="5" placeholder="Enter the Details of the case..."></textarea>
                 </div>
 
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Action Taken</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Action Taken</b></h5>
                 <div class="form-group">
                     <textarea class="form-control" id="actionTaken" name="actionTaken" rows="5" placeholder="Enter the Details of the action taken by the school..."></textarea>
                 </div>
 
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Recommendations</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Recommendations</b></h5>
                 <div class="form-group">
                     <textarea class="form-control" id="recommendations" name="recommendations" rows="5" placeholder="Enter the recommendation of the school..."></textarea>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success">Finish</button>
+            <button type="submit" class="btn btn-success" style="width: 100%; margin: 5px">Finish</button>
 
             </form>
         </div>

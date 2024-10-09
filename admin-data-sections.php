@@ -87,6 +87,48 @@ $grades = getAllGradeNames($conn);
 $teachers = getAllTeachers($conn);
 ?>
 
+
+<style>
+        
+        .btn-custom {
+            background-color: #1F5F1E; 
+            color: white; 
+            border: none; 
+        }
+
+        .btn-custom:hover {
+            background-color: #389434; 
+            color: white; 
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            box-shadow: none; 
+            outline: none; 
+        }
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+        .btn-circle {
+            width: 35px;   
+            height: 35px;  
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;      
+            padding: 0;
+        }
+        
+       
+
+
+        
+
+      
+    </style>
+
 <div class="container-fluid mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
         <div class="row pt-3">
@@ -95,17 +137,18 @@ $teachers = getAllTeachers($conn);
                     <h3><strong>Section List</strong></h3>
                 </div>
             </div>
+            <div class="col-md-5">
+                <input class="form-control" type="text" id="searchInput" placeholder="Search a section name...">
+            </div>
             <div class="col-md-1">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addSectionModal">
-                        +
+                    <button type="button" class="btn btn-custom" data-toggle="modal" data-target="#addSectionModal">
+                        Add
                     </button>
                 </div>
             </div>
 
-            <div class="col-md-5">
-                <input class="form-control" type="text" id="searchInput" placeholder="Search a section name...">
-            </div>
+           
 
         </div>
 
@@ -127,9 +170,9 @@ $teachers = getAllTeachers($conn);
         <div class="modal fade" id="addSectionModal" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-header bg-guideco text-white">
+                    <div class="modal-header text-white" style="background-color: #0C2D0B;">
                         <h5 class="modal-title" id="addSectionModalLabel">Add Section</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -157,7 +200,7 @@ $teachers = getAllTeachers($conn);
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-success">Add Section</button>
+                            <button type="submit" class="btn btn-success" style="width: 100%">Add Section</button>
                         </form>
                     </div>
                 </div>
@@ -165,7 +208,7 @@ $teachers = getAllTeachers($conn);
         </div>
 
         <table class="table table-hover mt-4 border">
-            <thead class="thead-dark">
+            <thead class="thead-custom">
                 <tr>
                     <th style="width: 30%;">Section Name</th>
                     <th style="width: 20%;">
@@ -203,9 +246,9 @@ $teachers = getAllTeachers($conn);
                             <div class="modal fade" id="editSectionModal<?php echo $section['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="editSectionModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header bg-guideco text-white">
+                                        <div class="modal-header text-white" style="background-color: #0C2D0B;">
                                             <h5 class="modal-title" id="editSectionModalLabel">Edit Section</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -227,7 +270,7 @@ $teachers = getAllTeachers($conn);
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
-                                                <button type="submit" class="btn btn-success">Save</button>
+                                                <button type="submit" class="btn btn-success" style="width: 100%">Save</button>
                                             </form>
                                         </div>
                                     </div>

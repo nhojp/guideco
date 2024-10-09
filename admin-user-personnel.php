@@ -12,6 +12,7 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin'])) {
 include 'head.php'; // Include head section
 include 'admin-nav.php'; // Include navbar
 ?>
+
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <?php include "admin-personnel.php"; ?>

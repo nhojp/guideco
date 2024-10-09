@@ -19,10 +19,9 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin_id'])) {
 $student_id = isset($_GET['student_id']) ? intval($_GET['student_id']) : 0;
 
 // Fetch details of the selected student
-$sql_selected_student = "SELECT s.id, s.first_name, s.last_name, sec.section_name, g.grade_name
+$sql_selected_student = "SELECT s.id, s.first_name, s.last_name, sec.section_name, sec.grade_level
                          FROM students s
                          INNER JOIN sections sec ON s.section_id = sec.id
-                         INNER JOIN grades g ON sec.grade_id = g.id
                          WHERE s.id = ?";
 $stmt = $conn->prepare($sql_selected_student);
 $stmt->bind_param("i", $student_id);
@@ -37,10 +36,9 @@ if (!$selected_student) {
 }
 
 // Fetch all students for victim selection
-$sql_all_students = "SELECT s.id, s.first_name, s.last_name, sec.section_name, g.grade_name
+$sql_all_students = "SELECT s.id, s.first_name, s.last_name, sec.section_name, sec.grade_level
                      FROM students s
-                     INNER JOIN sections sec ON s.section_id = sec.id
-                     INNER JOIN grades g ON sec.grade_id = g.id";
+                     INNER JOIN sections sec ON s.section_id = sec.id";
 $result_all_students = $conn->query($sql_all_students);
 
 // Check for query error
@@ -52,6 +50,15 @@ if ($result_all_students === false) {
 include "admin-nav.php";
 ?>
 
+<style> 
+    .thead-custom {
+            background-color: #0C2D0B;
+            color: #fff; 
+        }
+
+        
+</style>
+
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -61,7 +68,7 @@ include "admin-nav.php";
                         <div class="container-fluid p-2">
                             <h4>
                                 <strong>Victim of <span class="text-danger">
-                                    <?php echo htmlspecialchars(ucwords($selected_student['first_name']) . " " . ucwords($selected_student['last_name']) . " of " . ucwords($selected_student['grade_name']) . " - " . ucwords($selected_student['section_name'])); ?>
+                                    <?php echo htmlspecialchars(ucwords($selected_student['first_name']) . " " . ucwords($selected_student['last_name']) . " of " . ucwords($selected_student['grade_level']) . " - " . ucwords($selected_student['section_name'])); ?>
                                 </span></strong>
                             </h4>
                         </div>
@@ -72,7 +79,7 @@ include "admin-nav.php";
                 </div>
 
                 <table class="table table-hover mt-4 border">
-                    <thead class="thead-dark">
+                    <thead class="thead-custom">
                         <tr>
                             <th style="width: 50%;">Full Name</th>
                             <th style="width: 20%;">Grade</th>
@@ -85,7 +92,7 @@ include "admin-nav.php";
                             <?php while ($student = $result_all_students->fetch_assoc()) : ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars(ucwords($student['first_name']) . " " . ucwords($student['last_name'])); ?></td>
-                                    <td><?php echo htmlspecialchars(ucwords($student['grade_name'])); ?></td>
+                                    <td><?php echo htmlspecialchars(ucwords($student['grade_level'])); ?></td>
                                     <td><?php echo htmlspecialchars(ucwords($student['section_name'])); ?></td>
                                     <td>
                                         <form action="admin-s-3.php" method="GET">

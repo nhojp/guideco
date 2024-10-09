@@ -99,6 +99,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['edit_id'])) {
 
 $admins = fetchAdmins($conn);
 ?>
+
+
+<style> 
+    .btn-custom {
+            background-color: #1F5F1E; 
+            color: white; 
+            border: none; 
+        }
+
+        .btn-custom:hover {
+            background-color: #389434; 
+            color: white; 
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            box-shadow: none; 
+            outline: none; 
+        }
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+        .btn-circle {
+            width: 35px;   
+            height: 35px;  
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;      
+            padding: 0;
+        }
+
+        .table-container {
+        max-height: 400px; 
+        overflow-y: auto; 
+        }
+</style>
+
+
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -109,17 +150,18 @@ $admins = fetchAdmins($conn);
                             <h3><strong>Admin List</strong></h3>
                         </div>
                     </div>
+                    <div class="col-md-5">
+                        <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                    </div>
                     <div class="col-md-1">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addAdminModal">
-                                +
+                            <button type="button" class="btn btn-custom" data-toggle="modal" data-target="#addAdminModal">
+                                Add
                             </button>
                         </div>
                     </div>
 
-                    <div class="col-md-5">
-                        <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
-                    </div>
+                    
                 </div>
 
                 <?php if ($successMessage) : ?>
@@ -131,9 +173,9 @@ $admins = fetchAdmins($conn);
                         <?php echo $errorMessage; ?>
                     </div>
                 <?php endif; ?>
-
+            <div class="table-container">
                 <table class="table table-hover mt-4 border">
-                    <thead class="thead-dark">
+                    <thead class="thead-custom">
                         <tr>
                             <th style="width:20%;">Full Name</th>
                             <th style="width:15%;">Position</th>
@@ -166,13 +208,14 @@ $admins = fetchAdmins($conn);
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
                 <!-- Modal for Adding an Admin -->
                 <div class="modal fade" id="addAdminModal" tabindex="-1" role="dialog" aria-labelledby="addAdminModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <div class="modal-header bg-guideco text-white">
+                            <div class="modal-header text-white" style="background-color: #0C2D0B;">
                                 <h5 class="modal-title" id="addAdminModalLabel">Add Admin</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -201,7 +244,7 @@ $admins = fetchAdmins($conn);
                                         <label for="position">Position:</label>
                                         <input type="text" id="position" name="position" class="form-control">
                                     </div>
-                                    <button type="submit" class="btn btn-success">Add Admin</button>
+                                    <button type="submit" class="btn btn-success" style="width: 100%;">Add Admin</button>
                                 </form>
                             </div>
                         </div>
@@ -212,9 +255,9 @@ $admins = fetchAdmins($conn);
                     <div class="modal fade" id="editModal<?php echo urlencode($admin['id']); ?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<?php echo urlencode($admin['id']); ?>" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
-                                <div class="modal-header bg-guideco text-white">
+                                <div class="modal-header text-white" style="background-color: #0C2D0B;">
                                     <h5 class="modal-title" id="editModalLabel<?php echo urlencode($admin['id']); ?>">Edit Admin</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -225,7 +268,7 @@ $admins = fetchAdmins($conn);
                                             <label for="position">Position:</label>
                                             <input type="text" id="position" name="position" class="form-control" value="<?php echo htmlspecialchars($admin['position']); ?>">
                                         </div>
-                                        <button type="submit" class="btn btn-success">Save</button>
+                                        <button type="submit" class="btn btn-success" style="width: 100%;">Save</button>
                                     </form>
                                 </div>
                             </div>
@@ -238,9 +281,9 @@ $admins = fetchAdmins($conn);
                     <div class="modal fade" id="deleteModal<?php echo urlencode($admin['id']); ?>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel<?php echo urlencode($admin['id']); ?>" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
-                                <div class="modal-header bg-guideco text-white">
+                                <div class="modal-header text-white" style="background-color: #0C2D0B;">
                                     <h5 class="modal-title" id="deleteModalLabel<?php echo urlencode($admin['id']); ?>">Delete Admin</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -251,7 +294,7 @@ $admins = fetchAdmins($conn);
                                 <div class="modal-footer">
                                     <form method="POST" action="">
                                         <input type="hidden" name="delete_id" value="<?php echo htmlspecialchars($admin['id']); ?>">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                        <button type="submit" class="btn btn-danger" style="width: 100%;">Delete</button>
                                     </form>
                                 </div>
                             </div>

@@ -18,6 +18,14 @@ $result_personnel = $conn->query($sql_personnel);
 
 include "admin-nav.php";
 ?>
+
+<style>
+    .thead-custom {
+        background-color: #0C2D0B;
+        color: white;
+    }
+</style>
+
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -33,7 +41,7 @@ include "admin-nav.php";
                     </div>
                 </div>
                 <table class="table table-hover mt-4 border">
-                    <thead class="thead-dark">
+                    <thead class="thead-custom">
                         <tr>
                             <th style="width:45%;">Name</th>
                             <th style="width:45%;">Position</th>

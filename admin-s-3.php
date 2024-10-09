@@ -43,7 +43,7 @@ $sql_victim = "SELECT s.first_name AS victim_first_name,
                       s.birthdate, s.sex,
                       s.contact_number AS contact,
                       sec.section_name, 
-                      g.grade_name, 
+                      sec.grade_level, 
                       t.first_name AS teacher_fname, 
                       t.last_name AS teacher_lname,
                       m.name AS mother_name, 
@@ -56,7 +56,6 @@ $sql_victim = "SELECT s.first_name AS victim_first_name,
                       f.address AS father_address
               FROM students s
               INNER JOIN sections sec ON s.section_id = sec.id
-              INNER JOIN grades g ON sec.grade_id = g.id
               LEFT JOIN teachers t ON sec.teacher_id = t.id
               LEFT JOIN mothers m ON s.id = m.student_id
               LEFT JOIN fathers f ON s.id = f.student_id
@@ -81,7 +80,7 @@ if ($result_victim === false) {
     $victim_contact = $row['contact'] ?? '';
     $victim_section_name = $row['section_name'] ?? '';
     $victim_teacher_name = ($row['teacher_fname'] ?? '') . ' ' . ($row['teacher_lname'] ?? '');
-    $victim_grade_name = $row['grade_name'] ?? '';
+    $victim_grade_name = $row['grade_level'] ?? '';
     $victim_mother_name = $row['mother_name'] ?? '';
     $victim_mother_contact = $row['mother_contact'] ?? '';
     $victim_mother_occupation = $row['mother_occupation'] ?? '';
@@ -102,7 +101,7 @@ $sql_offender = "SELECT s.first_name AS offender_first_name,
                         s.birthdate, s.sex, 
                         s.contact_number AS contact,
                         sec.section_name AS offender_section_name,
-                        g.grade_name AS offender_grade_name,
+                        sec.grade_level AS offender_grade_level,
                         t.first_name AS teacher_fname, 
                         t.last_name AS teacher_lname,
                         m.name AS offender_mother_name, 
@@ -115,7 +114,6 @@ $sql_offender = "SELECT s.first_name AS offender_first_name,
                         f.address AS offender_father_address
                 FROM students s
                 LEFT JOIN sections sec ON s.section_id = sec.id
-                LEFT JOIN grades g ON sec.grade_id = g.id
                 LEFT JOIN teachers t ON sec.teacher_id = t.id
                 LEFT JOIN mothers m ON s.id = m.student_id
                 LEFT JOIN fathers f ON s.id = f.student_id
@@ -138,7 +136,7 @@ if ($result_offender === false) {
     $offender_birthdate = $person['birthdate'] ?? '';
     $offender_sex = $person['sex'] ?? '';
     $offender_contact = $person['contact'] ?? '';
-    $offender_grade_name = $person['offender_grade_name'] ?? '';
+    $offender_grade_level = $person['offender_grade_level'] ?? '';
     $offender_section_name = $person['offender_section_name'] ?? '';
     $offender_teacher_name = ($person['teacher_fname'] ?? '') . ' ' . ($person['teacher_lname'] ?? '');
     $offender_contact = $person['contact_number'] ?? '';
@@ -191,7 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['caseDetails'])) {
     '$victim_mother_name', '$victim_mother_occupation', '$victim_mother_address', '$victim_mother_contact',
     '$victim_father_name', '$victim_father_occupation', '$victim_father_address', '$victim_father_contact',
     '$complainantFirstName', '$complainantMiddleName', '$complainantLastName', '$relationshipToVictim', '$complainantContact', '$complainantAddress',
-    '$offender_first_name', '$offender_middle_name', '$offender_last_name', '$offender_birthdate', '$offenderAge', '$offender_sex', '$offender_grade_name', '$offender_section_name', '$offender_teacher_name', '$offender_contact',
+    '$offender_first_name', '$offender_middle_name', '$offender_last_name', '$offender_birthdate', '$offenderAge', '$offender_sex', '$offender_grade_level', '$offender_section_name', '$offender_teacher_name', '$offender_contact',
     '$offender_mother_name', '$offender_mother_occupation', '$offender_mother_address', '$offender_mother_contact',
     '$offender_father_name', '$offender_father_occupation', '$offender_father_address', '$offender_father_contact',
     '$caseDetails', '$actionTaken', '$recommendations', '$reportedAt', '$offender_id)'
@@ -208,6 +206,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['caseDetails'])) {
 
 include "admin-nav.php";
 ?>
+
+<style> 
+    .bg-custom {
+            background-color: #0C2D0B;
+            color: #fff; 
+        }
+
+        
+</style>
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mb-5">
@@ -223,7 +230,7 @@ include "admin-nav.php";
 
                 <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
                     <form action="" method="post">
-                        <h5 class="text-center bg-dark text-white p-2"><b>Victim Details</b></h5>
+                        <h5 class="text-center bg-custom text-white p-2"><b>Victim Details</b></h5>
                         <input type="hidden" name="reportedAt" value="<?php echo date('Y-m-d H:i:s'); ?>">
 
                         <div class="row mt-3">
@@ -313,7 +320,7 @@ include "admin-nav.php";
 
                 <div class="container-fluid bg-white pt-4 mt-2 rounded-lg">
                     <form action="" method="post">
-                        <h5 class="text-center bg-dark text-white p-2"><b>Offender Details</b></h5>
+                        <h5 class="text-center bg-custom text-white p-2"><b>Offender Details</b></h5>
                         <div class="row mt-3">
                             <div class="col-md-4">
                                 <strong>First Name:</strong>
@@ -342,7 +349,7 @@ include "admin-nav.php";
 
                         <div class="row mt-3 pb-4">
                             <div class="col-md-3"><strong>Grade:</strong>
-                                <input type="text" class="form-control" value="<?php echo ucwords(htmlspecialchars($offender_grade_name)); ?>" readonly>
+                                <input type="text" class="form-control" value="<?php echo ucwords(htmlspecialchars($offender_grade_level)); ?>" readonly>
                             </div>
                             <div class="col-md-3"><strong>Section:</strong>
                                 <input type="text" class="form-control" value="<?php echo ucwords(htmlspecialchars($offender_section_name)); ?>" readonly>
@@ -402,7 +409,7 @@ include "admin-nav.php";
                 </div>
 
                 <div class="container-fluid bg-white p-4 rounded-lg mt-4">
-                <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Complainant Details</b></h5>
+                <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Complainant Details</b></h5>
                 <div class="form-row mt-3">
 
                         <div class="form-group col-md-4">
@@ -436,24 +443,24 @@ include "admin-nav.php";
                 <div class="container-fluid bg-white p-4 rounded-lg mt-4">
 
                     <!-- Details of the Case Section -->
-                    <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Details of the Case</b></h5>
+                    <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Details of the Case</b></h5>
                     <div class="form-group">
                         <textarea class="form-control" id="caseDetails" name="caseDetails" rows="5"></textarea>
                     </div>
 
                     <!-- Action Taken Section -->
-                    <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Action Taken</b></h5>
+                    <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Action Taken</b></h5>
                     <div class="form-group">
                         <textarea class="form-control" id="actionTaken" name="actionTaken" rows="5"></textarea>
                     </div>
 
                     <!-- Recommendations Section -->
-                    <h5 class="text-center bg-dark text-white p-2 rounded-lg"><b>Recommendations</b></h5>
+                    <h5 class="text-center bg-custom text-white p-2 rounded-lg"><b>Recommendations</b></h5>
                     <div class="form-group">
                         <textarea class="form-control" id="recommendations" name="recommendations" rows="5"></textarea>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success">Finish</button>
+                <button type="submit" class="btn btn-success" style="width: 100%; margin: 10px">Finish</button>
 
                 </form>
             </div>

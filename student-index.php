@@ -19,22 +19,22 @@ $grade = "Unknown";
 $section = "Unknown";
 $violation_count = 0; // Initialize violation count
 
-$student_id = $_SESSION['user_id'] ?? null;
+$user_id = $_SESSION['user_id'] ?? null;
 
-if ($student_id) {
-    // Fetch student data based on student_id
+if ($user_id) {
+    // Fetch student ID and data based on user_id
     $sql = "SELECT 
+        s.id AS student_id, 
         s.first_name, 
         s.last_name, 
         sec.section_name, 
-        g.grade_name 
+        sec.grade_level
     FROM students s
     JOIN sections sec ON s.section_id = sec.id
-    JOIN grades g ON sec.grade_id = g.id
-    WHERE s.id = ?";
+    WHERE s.user_id = ?"; // Match the user_id
 
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("i", $student_id);
+        $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -43,8 +43,12 @@ if ($student_id) {
             $row = $result->fetch_assoc();
             $first_name = $row['first_name'];
             $last_name = $row['last_name'];
-            $grade = $row['grade_name'];
+            $grade = $row['grade_level']; // Ensure this field exists
             $section = $row['section_name'];
+            $student_id = $row['student_id']; // Get the student ID
+        } else {
+            // Handle case where no student was found
+            echo "No student found with this user ID.";
         }
 
         $stmt->close();
@@ -53,11 +57,13 @@ if ($student_id) {
         echo "Error preparing the student data query.";
     }
 
-    // Fetch violation count for the student
-    $sql_violations = "SELECT COUNT(*) AS violation_count FROM violations WHERE student_id = ?";
+    // Fetch violation count for the student using student_id
+    $sql_violations = "SELECT COUNT(*) AS violation_count 
+                       FROM violations 
+                       WHERE student_id = ?"; // Use student_id here
 
     if ($stmt = $conn->prepare($sql_violations)) {
-        $stmt->bind_param("i", $student_id);
+        $stmt->bind_param("i", $student_id); // Ensure this matches the right student ID
         $stmt->execute();
         $result_violations = $stmt->get_result();
 
@@ -72,8 +78,8 @@ if ($student_id) {
         echo "Error preparing the violation count query.";
     }
 } else {
-    // Handle case where student ID is not set in session
-    echo "Student ID not set in session.";
+    // Handle case where user ID is not set in session
+    echo "User ID not set in session.";
 }
 
 include 'student-nav.php';
@@ -83,7 +89,7 @@ include 'student-nav.php';
     <div class="container mt-4">
         <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
             <div class="container-fluid p-4">
-                <div class="row" >
+                <div class="row">
                     <div class="col-md-12" id="animate-area">
                         <h2 class="font-weight-bold">
                             <?php echo ucwords($first_name . ' ' . $last_name); ?>

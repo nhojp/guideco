@@ -73,6 +73,40 @@ unset($_SESSION['edit_success']);
 unset($_SESSION['add_success']);
 ?>
 
+<style>
+        
+        .btn-custom {
+            background-color: #1F5F1E; 
+            color: white; 
+            border: none; 
+        }
+
+        .btn-custom:hover {
+            background-color: #389434; 
+            color: white; 
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            box-shadow: none; 
+            outline: none; 
+        }
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+        .btn-circle {
+            width: 35px;   
+            height: 35px;  
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center; 
+            align-items: center;      
+            padding: 0;
+        }
+    </style>
+
 <div class="container-fluid mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
         <div class="row pt-3">
@@ -81,22 +115,23 @@ unset($_SESSION['add_success']);
                     <h3><strong>Violation List</strong></h3>
                 </div>
             </div>
-            <div class="col-md-1">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addViolationModal">
-                        +
-                    </button>
-                </div>
-            </div>
             <div class="col-md-5">
                 <input class="form-control" type="text" id="searchInput" placeholder="Search a violation...">
             </div>
+            <div class="col-md-1">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-custom" data-toggle="modal" data-target="#addViolationModal">
+                        Add
+                    </button>
+                </div>
+            </div>
+           
         </div>
 
         <table class="table table-hover mt-4 border">
-            <thead class="thead-dark">
+            <thead class="thead-custom">
                 <tr>
-                    <th style="width: 85%;">Violation Description</th>
+                    <th style="width: 85%;">Violation</th>
                     <th class="text-center" style="width: 15%;">Actions</th>
                 </tr>
             </thead>
@@ -124,9 +159,9 @@ unset($_SESSION['add_success']);
 <div class="modal fade" id="addViolationModal" tabindex="-1" role="dialog" aria-labelledby="addViolationModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-guideco text-white">
+            <div class="modal-header text-white" style="background-color: #0C2D0B;">
                 <h5 class="modal-title" id="addViolationModalLabel">Add Violation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -138,7 +173,7 @@ unset($_SESSION['add_success']);
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" name="add_violation">Add Violation</button>
+                    <button type="submit" class="btn btn-success" name="add_violation" style="width: 100%;">Add Violation</button>
                 </div>
             </form>
         </div>
@@ -153,22 +188,22 @@ while ($row = mysqli_fetch_assoc($violations_result)) : ?>
     <div class="modal fade" id="editViolationModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="editViolationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header bg-guideco text-white">
+                <div class="modal-header text-white" style="background-color: #0C2D0B;">
                     <h5 class="modal-title" id="editViolationModalLabel">Edit Violation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form action="" method="POST">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="violation_description">Violation Description</label>
+                            <label for="violation_description">Violation</label>
                             <input type="text" class="form-control" id="violation_description" name="violation_description" value="<?php echo htmlspecialchars(ucwords($row['violation_description'])); ?>" required>
                             <input type="hidden" name="violation_id" value="<?php echo $row['id']; ?>">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" name="edit_violation">Save Changes</button>
+                        <button type="submit" class="btn btn-success" name="edit_violation" style="width: 100%;">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -184,9 +219,9 @@ while ($row = mysqli_fetch_assoc($violations_result)) : ?>
     <div class="modal fade" id="deleteViolationModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="deleteViolationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header bg-guideco text-white">
+                <div class="modal-header text-white" style="background-color: #0C2D0B;">
                     <h5 class="modal-title" id="deleteViolationModalLabel">Delete Violation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

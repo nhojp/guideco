@@ -35,11 +35,10 @@ $generated_id = generateId($conn);
 // Get the teacher_id from the session
 $teacher_id = $_SESSION['teacher_id'];
 
-// SQL query to fetch section and grade details for the current teacher
+// SQL query to fetch section details for the current teacher
 $section_query = "
-    SELECT sections.id as section_id, sections.section_name, grades.grade_name
+    SELECT sections.id as section_id, sections.section_name, sections.grade_level
     FROM sections
-    JOIN grades ON sections.grade_id = grades.id
     WHERE sections.teacher_id = ?
 ";
 $section_stmt = $conn->prepare($section_query);
@@ -60,10 +59,9 @@ if (!$section_data) {
 // SQL query to fetch students data for the current section
 $query = "
     SELECT students.id, students.first_name, students.middle_name, students.last_name, 
-           students.age, students.sex, sections.id as section_id, sections.section_name, grades.id as grade_id, grades.grade_name
+           students.age, students.sex, sections.id as section_id, sections.section_name, sections.grade_level
     FROM students
     JOIN sections ON students.section_id = sections.id
-    JOIN grades ON sections.grade_id = grades.id
     WHERE sections.id = ?
 ";
 $student_stmt = $conn->prepare($query);
@@ -112,6 +110,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
     $stmt->close();
 }
 ?>
+<style>
+    .btn-custom {
+        background-color: #1F5F1E; 
+        color: white; 
+        border: none; 
+    }
+
+    .btn-custom:hover {
+        background-color: #389434; 
+        color: white; 
+    }
+
+    .btn-custom:focus, .btn-custom:active {
+        box-shadow: none; 
+        outline: none; 
+    }
+
+    .thead-custom {
+        background-color: #0C2D0B;
+        color: white;
+    }
+
+    .btn-circle {
+        width: 35px;   
+        height: 35px;  
+        border-radius: 50%; 
+        display: flex;
+        justify-content: center; 
+        align-items: center;      
+        padding: 0;
+    }
+
+    .table-container {
+        max-height: 400px; 
+        overflow-y: auto; 
+    }
+</style>
 
 <main class="flex-fill mt-5 mb-5">
     <div class="container mt-4">
@@ -120,125 +155,99 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
                 <div class="col-md-6">
                     <div class="container-fluid p-2">
                         <h3><strong>
-                                <?php echo ucfirst($section_data['grade_name']) . ' - ' . ucfirst($section_data['section_name']); ?>
+                                <?php echo ucfirst($section_data['grade_level']) . ' - ' . ucfirst($section_data['section_name']); ?>
                             </strong>
                         </h3>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+                </div>
                 <div class="col-md-2 text-right">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addStudentModal">
-                        +
-                    </button>
+                    
                     <button id="printButton" type="button" class="btn btn-primary">
                         <i class="fas fa-print"></i>
                     </button>
                 </div>
-                <div class="col-md-4">
-                    <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
-                </div>
-
             </div>
-
-            <div class="table-responsive">
-                <table class="table text-center table-hover" style="width: 100%;">
-                    <thead class="bg-dark text-white">
-                        <tr>
-                            <th style="width:40%;">Full Name</th>
-                            <th style="width:25%;">Grade</th>
-                            <th style="width:25%;">Section</th>
-                            <th style="width:10%;">Report</th>
-                        </tr>
-                    </thead>
-                    <tbody id="students_table">
-                        <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                            <tr data-section-id="<?php echo $row['section_id']; ?>" data-grade-id="<?php echo $row['grade_id']; ?>">
-                                <td><?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['last_name']); ?>
-                                </td>
-                                <td><?php echo ucfirst($row['grade_name']); ?></td>
-                                <td><?php echo ucfirst($row['section_name']); ?></td>
-                                <td><button class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#reportModal" data-id="<?php echo $row['id']; ?>" data-fullname="<?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?>" data-section="<?php echo ucfirst($row['section_name']); ?>">Report</button></td>
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table text-center table-hover" style="width: 100%;">
+                        <thead class="thead-custom">
+                            <tr>
+                                <th style="width:40%;">Full Name</th>
+                                <th style="width:25%;">Grade</th>
+                                <th style="width:25%;">Section</th>
+                                <th style="width:10%;">Report</th>
                             </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="students_table">
+                            <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                                <tr data-section-id="<?php echo $row['section_id']; ?>" data-grade-level="<?php echo $row['grade_level']; ?>">
+                                    <td><?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['last_name']); ?>
+                                    </td>
+                                    <td><?php echo ucfirst($row['grade_level']); ?></td>
+                                    <td><?php echo ucfirst($row['section_name']); ?></td>
+                                    <td><button class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#reportModal" data-id="<?php echo $row['id']; ?>" data-fullname="<?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?>" data-section="<?php echo ucfirst($row['section_name']); ?>">Report</button></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </main>
 
-<!-- Add Student Modal -->
-<div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+<!-- Report Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-guideco text-white">
-                <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                <h5 class="modal-title" id="reportModalLabel">Report Student</h5>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="">
+                <form method="POST" action="report.php">
                     <div class="form-group">
-                        <label for="generated_username">ID:</label>
-                        <input type="text" id="generated_username" name="generated_username" class="form-control" value="<?php echo htmlspecialchars($generated_id); ?>" readonly>
+                        <label for="reported_student_id">Student ID:</label>
+                        <input type="text" id="reported_student_id" name="reported_student_id" class="form-control" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="first_name">First Name:</label>
-                        <input type="text" id="first_name" name="first_name" class="form-control" required>
+                        <label for="violation">Violation:</label>
+                        <select id="violation" name="violation" class="form-control" required>
+                            <?php foreach ($violation_list as $violation) : ?>
+                                <option value="<?php echo $violation['id']; ?>"><?php echo $violation['violation_description']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="last_name">Last Name:</label>
-                        <input type="text" id="last_name" name="last_name" class="form-control" required>
+                        <label for="details">Details:</label>
+                        <textarea id="details" name="details" class="form-control" rows="3" required></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="section_id">Section:</label>
-                        <input type="text" id="section_id" name="section_id" class="form-control" value="<?php echo htmlspecialchars($section_data['section_name']); ?>" readonly>
-                    </div>
-                    <button type="submit" class="btn btn-success">Submit</button>
+                    <button type="submit" class="btn btn-danger">Report</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Report Modal -->
-<div class="modal fade modal-custom" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true" data-backdrop="false">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-guideco text-white">
-                <h5 class="modal-title" id="reportModalLabel">Report Violation</h5>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
-            </div>
-            <form action="" method="POST">
-                <div class="modal-body">
-                    <input type="hidden" name="student_id" id="student_id">
-                    <div class="form-group">
-                        <label for="full_name">Full Name</label>
-                        <input type="text" class="form-control" id="full_name" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="section">Section</label>
-                        <input type="text" class="form-control" id="section" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="violation">Violation</label>
-                        <select class="form-control" id="violation" name="violation">
-                            <?php foreach ($violation_list as $violation) : ?>
-                                <option value="<?php echo htmlspecialchars($violation['id']); ?>">
-                                    <?php echo ucwords(htmlspecialchars($violation['violation_description'])); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Send Report</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 <?php include 'footer.php'; ?>
 
+<script>
+    // Set the full name and ID for the report modal
+    $('#reportModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var studentId = button.data('id');
+        var fullName = button.data('fullname');
+        var section = button.data('section');
+
+        var modal = $(this);
+        modal.find('#reported_student_id').val(studentId);
+        modal.find('#reported_student_fullname').text(fullName);
+        modal.find('#reported_student_section').text(section);
+    });
+</script>
 <script>
     $('#reportModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget)

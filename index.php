@@ -174,57 +174,89 @@ if (isset($_SESSION['loggedin'])) {
 
 <?php include "head.php"; ?>
 
+<?php include "head.php"; ?>
+
 <style>
+
+   
+
     body {
         background: linear-gradient(to right, #2b7d2f 50%, #FFFFFF 50%);
         margin: 0;
         padding: 0;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Montserrat', sans-serif;
+       
     }
 
     .green-section {
-        background-color: #2b7d2f;
-        padding: 60px;
-        min-height: 100vh; /* Adjust height as needed */
-        display: flex;
-        align-items: center;
-        justify-content: center; /* Center content horizontally */
-        text-align: center; /* Center text */
+    position: relative; 
+    background-image: url(img/school.jpg); 
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    text-align: center; 
+    z-index: 1;
     }
 
-    .green-section .content {
-        color: #FFFFFF;
-    }
+.green-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(43, 125, 47, 0.5); 
+    z-index: -1; 
+}
 
-    .green-section h5,
+.green-section .content {
+    color: #FFFFFF;
+    z-index: 2; 
+}
+
+    .green-section h5 {
+        margin-bottom: 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800; 
+
+    }
     .green-section h1 {
         margin-bottom: 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 100; 
     }
 
     .green-section .guide {
         color: #FFFFFF;
-        font-size: 3.5rem;
-        font-weight: bold;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900; 
+        font-size: 100px;
     }
 
     .green-section .co {
-        color: #959722; /* Yellow Co text color */
-        font-size: 3.5rem;
-        font-weight: bold;
+        color: #FFFFFF;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900; 
+        font-size: 100px;
     }
 
     .green-section p {
         font-size: 1.5rem;
         margin-bottom: 40px;
+        font-size: 15px;
     }
 
     .white-section {
+        background-color: #f8f8ff;
         padding: 60px;
-        min-height: 100vh; /* Adjust height as needed */
+        min-height: 100vh; 
         display: flex;
         align-items: center;
-        justify-content: center; /* Center content horizontally */
-        text-align: center; /* Center text */
+        justify-content: center; 
+        text-align: center; 
     }
 
     .login-form {
@@ -232,21 +264,22 @@ if (isset($_SESSION['loggedin'])) {
         padding: 40px;
         border-radius: 8px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        width: 100%; /* Ensure form width is full */
-        max-width: 500px; /* Limit form width for readability */
+        width: 100%; 
+        max-width: 500px; 
     }
 
     .login-form h2 {
-        font-size: 2.5rem;
-        color: #2b7d2f;
-        margin-bottom: 30px;
+       
+        color: #1F5F1E;
+        margin-bottom: 50px;
         text-align: center;
-        font-weight: bold;
+        font-weight: 800;
+        font-size: 30px;
     }
 
     .form-group {
         margin-bottom: 20px;
-        text-align: left; /* Left-align form elements */
+        text-align: left; 
     }
 
     .form-control {
@@ -260,8 +293,8 @@ if (isset($_SESSION['loggedin'])) {
 
     .form-control:focus {
         outline: none;
-        border-color: #2b7d2f; /* Green border color on focus */
-        box-shadow: 0 0 0 0.2rem rgba(43, 125, 47, 0.25); /* Green shadow on focus */
+        border-color: #2b7d2f; 
+        box-shadow: 0 0 0 0.2rem rgba(43, 125, 47, 0.25); 
     }
 
     .input-group-text {
@@ -269,51 +302,85 @@ if (isset($_SESSION['loggedin'])) {
     }
 
     .btn-primary {
-        background-color: #2b7d2f;
+        background-color: #1F5F1E;
         color: #FFFFFF;
         border-color: #2b7d2f;
         padding: 18px;
         font-size: 1.5rem;
         font-weight: bold;
         text-transform: uppercase;
-        width: 100%; /* Full-width button */
+        width: 100%; 
         border-radius: 8px;
         transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
     }
 
     .btn-primary:hover {
-        background-color: #3d984a; /* Darker green on hover */
-        border-color: #3d984a; /* Darker border on hover */
+        background-color: #3d984a; 
     }
 
     .alert-danger {
         margin-top: 20px;
     }
 
+    .logo-container {
+    position: absolute;
+    bottom: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    display: flex;
+    justify-content: center;
+    z-index: 2; 
+    }
+.logo-container img {
+    width: 80px; 
+    height: auto;
+    margin: 0 10px; 
+}
+
+.logo-container .logo2 {
+    width: 65px; 
+    height: 65px;
+}
+
+
+    .green-section, .white-section {
+        min-height: 100vh;
+        position: relative; 
+    }
+
+    .float-right{
+        color: #1F5F1E;
+    }
+
+    .float-right:hover {
+        color: #71C270;
+    }
+    
+
+
     @media (max-width: 720px) {
         body {
-            background: #2b7d2f; /* Green background color */
+            background: #1F5F1E; 
         }
         .login-form {
-            padding: 20px; /* Adjusted padding for smaller screens */
+            padding: 20px; 
         }
 
         .form-group {
-            margin-bottom: 10px; /* Reduced margin bottom for smaller screens */
+            margin-bottom: 10px; 
         }
 
         .login-form h2 {
-            margin-bottom: 20px; /* Adjusted margin bottom for smaller screens */
+            margin-bottom: 20px; 
         }
 
         .white-section {
-            padding: 40px 20px; /* Adjusted padding for smaller screens */
-            margin: 0; /* Remove margin for smaller screens */
+            padding: 40px 20px; 
+            margin: 0; 
         }
 
         .green-section {
-            display: none; /* Hide green-section on smaller screens */
-        }
+            display: none; 
     }
 </style>
 
@@ -328,12 +395,20 @@ if (isset($_SESSION['loggedin'])) {
                 <h1><span class="guide">Guide</span><span class="co">Co</span></h1>
                 <p>Your hub for expert guidance and counseling. Empower your journey to personal growth with our supportive insights and tools.</p>
             </div>
+
+            <!-- Logos Section in Green Section -->
+            <div class="logo-container">
+                <img src="img/GUIDANCE_AND_COUNSELING_INFORMATION_MANAGEMENT_SYSTEM_20240911_214212_0000-removebg-preview (1).png" alt="Logo 1">
+                <img src="img/superi.png" alt="Logo 3">
+                <img src="img/302878890_461445415997910_8949927714948066635_n-removebg-preview.png" alt="Logo 2" class="logo2">
+                
+            </div>
         </div>
 
         <!-- Right Side - White Section -->
         <div class="col-md-6 white-section d-flex align-items-center">
             <div class="login-form">
-                <h2>Login</h2>
+                <h2>Login to your Account</h2>
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                     <div class="form-group">
                         <label for="username">Username</label>
@@ -349,16 +424,15 @@ if (isset($_SESSION['loggedin'])) {
                                 </span>
                             </div>
                         </div>
-                        <small><a href="forgot-password.php" class="float-right mb-5">Forgot password?</a></small> <!-- Adjusted alignment -->
+                        <small><a href="forgot-password.php" class="float-right mb-5">Forgot password?</a></small>
                     </div>
-                    <!-- Optionally add captcha or other fields -->
                     <div class="form-group">
                         <div class="g-recaptcha" data-sitekey="your-site-key"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
+
                 <?php
-                // Display error message if set
                 if (!empty($error_message)) {
                     echo '<div class="alert alert-danger">' . $error_message . '</div>';
                 }
@@ -371,19 +445,20 @@ if (isset($_SESSION['loggedin'])) {
 </body>
 
 <?php include "footer.php"; ?>
- <script>
-        function togglePassword() {
-            var passwordInput = document.getElementById('password');
-            var eyeIcon = document.getElementById('eye-icon');
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
-            }
+<script>
+    function togglePassword() {
+        var passwordInput = document.getElementById('password');
+        var eyeIcon = document.getElementById('eye-icon');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
         }
-    </script>
+    }
+</script>

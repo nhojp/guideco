@@ -14,14 +14,22 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin_id'])) {
 }
 
 // Fetch all students with their related section and grade
-$sql_students = "SELECT s.id, s.first_name, s.last_name, sec.section_name, g.grade_name
+$sql_students = "SELECT s.id, s.first_name, s.last_name, sec.section_name, sec.grade_level
                  FROM students s
-                 INNER JOIN sections sec ON s.section_id = sec.id
-                 INNER JOIN grades g ON sec.grade_id = g.id";
+                 INNER JOIN sections sec ON s.section_id = sec.id";
 $result_students = $conn->query($sql_students);
 
 include "admin-nav.php";
 ?>
+
+<style> 
+    .thead-custom {
+            background-color: #0C2D0B;
+            color: #fff; 
+        }
+
+        
+</style>
 
 <main class="flex-fill mt-5">
     <div class="container mt-4">
@@ -39,7 +47,7 @@ include "admin-nav.php";
                 </div>
 
                 <table class="table table-hover mt-4 border">
-                    <thead class="thead-dark">
+                    <thead class="thead-custom">
                         <tr>
                             <th style="width: 40%;">Name</th>
                             <th style="width: 25%;">Grade</th>
@@ -52,7 +60,7 @@ include "admin-nav.php";
                             <?php while ($student = $result_students->fetch_assoc()) : ?>
                                 <tr>
                                     <td><?php echo ucwords($student['first_name']) . " " . ucwords($student['last_name']); ?></td>
-                                    <td><?php echo ucwords($student['grade_name']); ?></td>
+                                    <td><?php echo ucwords($student['grade_level']); ?></td>
                                     <td><?php echo ucwords($student['section_name']); ?></td>
                                     <td>
                                         <form action="admin-s-2.php" method="get">

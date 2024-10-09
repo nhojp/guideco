@@ -16,10 +16,9 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['guard'])) {
 // SQL query to fetch students data
 $query = "
     SELECT students.id, students.first_name, students.middle_name, students.last_name, 
-           students.age, students.sex, sections.id as section_id, sections.section_name, grades.id as grade_id, grades.grade_name
+           students.age, students.sex, sections.id as section_id, sections.section_name, sections.grade_level
     FROM students
     JOIN sections ON students.section_id = sections.id
-    JOIN grades ON sections.grade_id = grades.id
 ";
 
 $result = mysqli_query($conn, $query);
@@ -33,14 +32,6 @@ $sections_query = "SELECT id, section_name FROM sections";
 $sections_result = mysqli_query($conn, $sections_query);
 
 if (!$sections_result) {
-    die("Query failed: " . mysqli_error($conn));
-}
-
-// SQL query to fetch grades data
-$grades_query = "SELECT id, grade_name FROM grades";
-$grades_result = mysqli_query($conn, $grades_query);
-
-if (!$grades_result) {
     die("Query failed: " . mysqli_error($conn));
 }
 
@@ -87,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Reset result set pointers
 mysqli_data_seek($sections_result, 0);
-mysqli_data_seek($grades_result, 0);
 mysqli_data_seek($violations_result, 0);
 ?>
 
@@ -131,12 +121,12 @@ mysqli_data_seek($violations_result, 0);
                             </thead>
                             <tbody id="personnelTable">
                                 <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                    <tr data-section-id="<?php echo $row['section_id']; ?>" data-grade-id="<?php echo $row['grade_id']; ?>">
+                                    <tr data-section-id="<?php echo $row['section_id']; ?>" data-grade-level="<?php echo $row['grade_level']; ?>">
                                         <td><?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?></td>
-                                        <td><?php echo ucfirst($row['grade_name']); ?></td>
+                                        <td><?php echo ucfirst($row['grade_level']); ?></td> <!-- Displaying grade_level from sections table -->
                                         <td><?php echo ucfirst($row['section_name']); ?></td>
                                         <td class="text-center">
-                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal" data-id="<?php echo $row['id']; ?>" data-fullname="<?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?>" data-section="<?php echo ucfirst($row['section_name']); ?>">Report</button>
+                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal" data-id="<?php echo $row['id']; ?>" data-fullname="<?php echo ucfirst($row['first_name']) . ' ' . ucfirst($row['middle_name']) . ' ' . ucfirst($row['last_name']); ?>" data-section="<?php echo ucfirst($row['section_name']); ?>">Report</button>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
@@ -232,4 +222,3 @@ include 'footer.php';
         });
     });
 </script>
-
