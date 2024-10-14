@@ -49,7 +49,10 @@ $violation_count = $violations->num_rows; // Count the number of violations
         <div class="container-fluid mb-5">
             <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
                 <div class="row pt-3">
-                    <div class="col-md-9">
+                    <div class="col-md-1">
+                        <button onclick="window.location.href='admin-user-student.php'">back</button>
+                    </div>
+                    <div class="col-md-8">
                         <div class="container-fluid p-2">
                             <?php if ($student) : ?>
                                 <h3><strong><span class="text-success"><?php echo ucwords(htmlspecialchars($student['first_name'] . ' ' . $student['last_name'])); ?></span> from <span class="text-success"><?php echo ucwords(htmlspecialchars($student['grade_level'])); ?> - <?php echo ucwords(htmlspecialchars($student['section_name'])); ?></span></strong></h3>

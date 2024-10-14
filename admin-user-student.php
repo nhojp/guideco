@@ -14,7 +14,7 @@ include 'admin-nav.php'; // Include navbar
 ?>
 <main class="flex-fill mt-5">
     <div class="container mt-4">
-        <?php include "admin-student.php"; ?>
+        <?php include "a-student.php"; ?>
     </div>
 </main>
 <?php include 'footer.php'; // Include footer section 

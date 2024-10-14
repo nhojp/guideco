@@ -89,59 +89,144 @@ $school_years = $school_years_result->fetch_all(MYSQLI_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Add Student</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+     
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        
+        .container {
+            margin-top: 20px;
+        }
+
+        .thead-custom {
+            background-color: #0C2D0B;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #1F5F1E;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #145214;
+        }
+
+
+        .modal-header {
+        background-color: #1F5F1E;
+        color: white;
+    }
+
+    .btn-circle {
+            width: 35px;   
+            height: 35px;  
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center;  
+            align-items: center;      
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Add Student</h1>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="text" name="first_name" placeholder="First Name" required>
-        <input type="text" name="last_name" placeholder="Last Name" required>
-        
-        <label for="section_id">Select Section:</label>
-        <select name="section_id" id="section_id" required>
-            <?php foreach ($sections as $section): ?>
-                <option value="<?php echo $section['id']; ?>"><?php echo $section['section_display']; ?></option>
-            <?php endforeach; ?>
-        </select>
+    <div class="container">
+        <div class="bg-white p-4 rounded-lg border">
+            <h1>Add Student</h1>
+            
+            <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#addStudentModal">
+                Add Student
+            </button>
 
-        <label for="school_year_id">Select School Year:</label>
-        <select name="school_year_id" id="school_year_id" required>
-            <?php foreach ($school_years as $year): ?>
-                <option value="<?php echo $year['id']; ?>"><?php echo $year['year_display']; ?></option>
-            <?php endforeach; ?>
-        </select>
-        
-        <button type="submit">Add Student</button>
-    </form>
+       
+            <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                            <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" id="studentForm">
+                                <div class="form-group">
+                                    <input type="text" name="username" placeholder="Username" required class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" name="password" placeholder="Password" required class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="first_name" placeholder="First Name" required class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="last_name" placeholder="Last Name" required class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="section_id">Select Section:</label>
+                                    <select name="section_id" id="section_id" required class="form-control">
+                                        <?php foreach ($sections as $section): ?>
+                                            <option value="<?php echo $section['id']; ?>"><?php echo $section['section_display']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="school_year_id">Select School Year:</label>
+                                    <select name="school_year_id" id="school_year_id" required class="form-control">
+                                        <?php foreach ($school_years as $year): ?>
+                                            <option value="<?php echo $year['id']; ?>"><?php echo $year['year_display']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">Add Student</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <h2>Existing Students</h2>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Strand</th>
-            <th>Section</th>
-            <th>Grade</th>
-            <th>School Year</th>
-            <th>Teacher</th>
-        </tr>
-        <?php foreach ($students as $student): ?>
-        <tr>
-            <td><?php echo $student['id']; ?></td>
-            <td><?php echo $student['username']; ?></td>
-            <td><?php echo $student['first_name']; ?></td>
-            <td><?php echo $student['last_name']; ?></td>
-            <td><?php echo $student['strand_name']; ?></td>
-            <td><?php echo $student['section_name']; ?></td>
-            <td><?php echo $student['grade_level']; ?></td>
-            <td><?php echo $student['school_year_display']; ?></td>
-            <td><?php echo $student['teacher_name']; ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
+            <div class="table-responsive">
+                <table class="table table-hover mt-4">
+                    <thead class="thead-custom">
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Strand</th>
+                            <th>Section</th>
+                            <th>Grade</th>
+                            <th>School Year</th>
+                            <th>Teacher</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($students as $student): ?>
+                        <tr>
+                            <td><?php echo $student['id']; ?></td>
+                            <td><?php echo $student['username']; ?></td>
+                            <td><?php echo $student['first_name']; ?></td>
+                            <td><?php echo $student['last_name']; ?></td>
+                            <td><?php echo $student['strand_name']; ?></td>
+                            <td><?php echo $student['section_name']; ?></td>
+                            <td><?php echo $student['grade_level']; ?></td>
+                            <td><?php echo $student['school_year_display']; ?></td>
+                            <td><?php echo $student['teacher_name']; ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
+    
 </body>
 </html>

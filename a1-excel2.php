@@ -10,7 +10,7 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin'])) {
 }
 
 include 'head.php'; // Include head section
-include 'admin-nav.php'; // Include navbar
+//include 'admin-nav.php'; // Include navbar
 require 'vendor/autoload.php'; // Include the PhpSpreadsheet autoload file
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -91,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->close();
 
                     // Insert into the students table
-                    $stmt = $conn->prepare("INSERT INTO students (user_id, first_name, last_name) VALUES (?, ?, ?)");
-                    $stmt->bind_param("iss", $user_id, $first_name, $last_name);
+                    $stmt = $conn->prepare("INSERT INTO students (user_id, first_name, last_name, section_id) VALUES (?, ?, ?, ?)");
+                    $stmt->bind_param("issi", $user_id, $first_name, $last_name, $section_id);
                     $stmt->execute();
                     $student_id = $stmt->insert_id; // Get the last inserted student ID
                     $stmt->close();
@@ -100,6 +100,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Insert into the section_assignment table
                     $stmt = $conn->prepare("INSERT INTO section_assignment (student_id, teacher_id, section_id, school_year_id) VALUES (?, ?, ?, ?)");
                     $stmt->bind_param("iiii", $student_id, $teacher_id, $section_id, $school_year_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    // Insert into mothers table
+                    $stmt = $conn->prepare("INSERT INTO mothers (student_id) VALUES (?)");
+                    if (!$stmt) {
+                        throw new Exception("Prepare statement failed: " . $conn->error);
+                    }
+                    $stmt->bind_param("i", $student_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    // Insert into fathers table
+                    $stmt = $conn->prepare("INSERT INTO fathers (student_id) VALUES (?)");
+                    if (!$stmt) {
+                        throw new Exception("Prepare statement failed: " . $conn->error);
+                    }
+                    $stmt->bind_param("i", $student_id);
                     $stmt->execute();
                     $stmt->close();
                 }
@@ -150,40 +168,40 @@ $school_years = $school_years_result->fetch_all(MYSQLI_ASSOC);
 
 <main class="flex-fill mt-5">
     <div class="container mt-4">
-    <h1 class="mb-4">Import Excel</h1>
+        <h1 class="mb-4">Import Excel</h1>
 
-<form method="POST" enctype="multipart/form-data" class="mb-4">
-    <!-- Section Dropdown -->
-    <div class="mb-3">
-        <label for="section_id" class="form-label">Select Section:</label>
-        <select name="section_id" class="form-select" required>
-            <?php foreach ($sections as $section): ?>
-                <option value="<?php echo $section['id']; ?>"><?php echo $section['section_display']; ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+        <form method="POST" enctype="multipart/form-data" class="mb-4">
+            <!-- Section Dropdown -->
+            <div class="mb-3">
+                <label for="section_id" class="form-label">Select Section:</label>
+                <select name="section_id" class="form-select" required>
+                    <?php foreach ($sections as $section): ?>
+                        <option value="<?php echo $section['id']; ?>"><?php echo $section['section_display']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-    <!-- School Year Dropdown -->
-    <div class="mb-3">
-        <label for="school_year_id" class="form-label">Select School Year:</label>
-        <select name="school_year_id" class="form-select" required>
-            <?php foreach ($school_years as $school_year): ?>
-                <option value="<?php echo $school_year['id']; ?>"><?php echo $school_year['year_display']; ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+            <!-- School Year Dropdown -->
+            <div class="mb-3">
+                <label for="school_year_id" class="form-label">Select School Year:</label>
+                <select name="school_year_id" class="form-select" required>
+                    <?php foreach ($school_years as $school_year): ?>
+                        <option value="<?php echo $school_year['id']; ?>"><?php echo $school_year['year_display']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-    <!-- Excel File Upload -->
-    <div class="mb-3">
-        <label for="excel_file" class="form-label">Upload Excel File:</label>
-        <input type="file" name="excel_file" class="form-control" accept=".xls,.xlsx" required>
-    </div>
+            <!-- Excel File Upload -->
+            <div class="mb-3">
+                <label for="excel_file" class="form-label">Upload Excel File:</label>
+                <input type="file" name="excel_file" class="form-control" accept=".xls,.xlsx" required>
+            </div>
 
-    <!-- Submit Button -->
-    <div class="d-grid">
-        <button type="submit" class="btn btn-primary">Import Students</button>
-    </div>
-</form>
+            <!-- Submit Button -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Import Students</button>
+            </div>
+        </form>
 
     </div>
 </main>
