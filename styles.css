@@ -1,0 +1,48 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.font-black {
+    font-weight: 900; 
+}
+
+.font-extrabold {
+    font-weight: 800;
+}
+
+.font-bold {
+    font-weight: 700; 
+}
+
+.font-thin {
+    font-weight: 100;
+}
+
+.bg-guideco {
+    background-color: rgb(55, 150, 52);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+}
+
+footer {
+    background-color: #f8f9fa; 
+    width: 100%;
+    padding: 10px 0; 
+}
+
+.scrollable-content {
+    max-height: 100px; 
+    overflow-y: auto;
+}
