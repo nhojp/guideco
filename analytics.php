@@ -2,7 +2,7 @@
 
 <style>
     body {
-    font-family: 'Montserrat', sans-serif; /* Change to Montserrat */
+    font-family: 'Montserrat', sans-serif; 
 }
 
     .container {
