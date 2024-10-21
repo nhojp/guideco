@@ -149,7 +149,7 @@ $personnelData = getAllPersonnelData($conn);
         <?php endif; ?>
 
         <table class="table table-hover mt-4 border">
-            <thead class="thead-dark">
+            <thead class="thead-custom">
                 <tr>
                     <th style="width:35%;">Full Name</th>
                     <th style="width:10%;" class="text-center">Actions</th>

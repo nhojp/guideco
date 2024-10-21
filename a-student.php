@@ -1,3 +1,111 @@
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 5px;
+        gap: 10px;
+
+
+    }
+
+    .btn-green {
+        background-color: #1F5F1E;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 40px;
+    }
+
+    .btn-green-light {
+        background-color: #38B24C;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 40px;
+    }
+
+    .btn-green-mid {
+        background-color: #63BE77;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 40px;
+    }
+
+    .btn-green-dark {
+        background-color: #3C9140;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 40px;
+    }
+
+    .btn-green-darker {
+        background-color: #206922;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 40px;
+    }
+
+    button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
+    }
+
+
+    .filter-list {
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    .filter-list h4 {
+        margin-bottom: 15px;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 15px;
+    }
+
+    .form-group {
+        flex: 0 0 18%;
+        min-width: 240px;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    .form-control option:hover {
+        background-color: #38B24C;
+        color: white;
+    }
+
+    .btn-secondary {
+        min-width: 120px;
+    }
+
+    .thead-custom {
+        background-color: #0C2D0B;
+        color: white;
+    }
+
+    table tbody td {
+        text-transform: capitalize;
+    }
+
+    .btn-circle {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
+</style>
 <?php
 include 'conn.php';
 
@@ -231,53 +339,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Commit the transaction
             $conn->commit();
             echo "<div class='alert alert-success'>Student added successfully!</div>";
+            echo '<script>
+        window.location.href = "admin-user-student.php"; // Replace with the desired page
+    </script>';
         } catch (Exception $e) {
             $conn->rollback(); // Rollback the transaction on error
             echo "<div class='alert alert-danger'>Error: " . $e->getMessage() . "</div>";
         }
     }
 
-    // Handle Delete Student
-if (isset($_POST['delete_student'])) {
-    $student_id_to_delete = intval($_POST['student_id']);
+    // Handle the edit functionality
+    if (isset($_POST['edit_id'])) {
+        $edit_id = $_POST['edit_id'];
+        $first_name = htmlspecialchars($_POST['first_name']);
+        $last_name = htmlspecialchars($_POST['last_name']);
+        $section_id = $_POST['section_id'];
 
-    // Start a transaction
-    $conn->begin_transaction();
+        // Update the student record
+        $query = "UPDATE students SET first_name = ?, last_name = ?, section_id = ? WHERE id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('ssii', $first_name, $last_name, $section_id, $edit_id);
 
-    try {
-        // Prepare to delete from students table (cascading delete will handle related tables)
-        $stmt = $conn->prepare("DELETE FROM students WHERE id = ?");
-        if (!$stmt) {
-            throw new Exception("Prepare statement failed: " . $conn->error);
+        if ($stmt->execute()) {
+            // Redirect or display a success message
+            echo '<div class="alert alert-success">Student updated successfully!</div>';
+            echo '<script>
+        window.location.href = "admin-user-student.php"; // Replace with the desired page
+    </script>';
+        } else {
+            echo '<div class="alert alert-danger">Failed to update student!</div>';
         }
-        $stmt->bind_param("i", $student_id_to_delete);
-        $stmt->execute();
-        $stmt->close();
-
-        // Prepare to delete from users table
-        $stmt = $conn->prepare("DELETE FROM users WHERE id = (SELECT user_id FROM students WHERE id = ?)");
-        if (!$stmt) {
-            throw new Exception("Prepare statement failed: " . $conn->error);
-        }
-        $stmt->bind_param("i", $student_id_to_delete);
-        $stmt->execute();
-        $stmt->close();
-
-        // Commit the transaction
-        $conn->commit();
-        echo "<div class='alert alert-success'>Student deleted successfully!</div>";
-    } catch (Exception $e) {
-        $conn->rollback(); // Rollback the transaction on error
-        echo "<div class='alert alert-danger'>Error: " . $e->getMessage() . "</div>";
     }
-}
 
+    // Handle the delete functionality
+    if (isset($_POST['delete_id'])) {
+        $delete_id = $_POST['delete_id'];
+
+        // Delete the student record
+        $query = "DELETE FROM students WHERE id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $delete_id);
+
+        if ($stmt->execute()) {
+            // Redirect or display a success message
+            echo '<div class="alert alert-success">Student deleted successfully!</div>';
+            echo '<script>
+        window.location.href = "admin-user-student.php"; // Replace with the desired page
+    </script>';
+        } else {
+            echo '<div class="alert alert-danger">Failed to delete student!</div>';
+        }
+    }
 }
 
 // Display students table
 ?>
-
-
 
 <body>
     <div class="container-fluid mb-5">
@@ -526,7 +642,7 @@ if (isset($_POST['delete_student'])) {
     <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header text-white" style="background-color: #0C2D0B;">
                     <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
                     <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
                         <span>&times;</span>
@@ -563,7 +679,7 @@ if (isset($_POST['delete_student'])) {
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Add Student</button>
+                        <button type="submit" class="btn btn-success" style="width: 100%;">Add Student</button>
                     </form>
                 </div>
             </div>

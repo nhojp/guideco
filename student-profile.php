@@ -140,331 +140,432 @@ if (!empty($students_ids)) {
 
 ?>
 
+<style>
+    .card {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        padding: 15px;
+        background-color: #f8f9fa;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+
+    .mb-3,
+    .mb-4 {
+        margin-bottom: 1.75rem !important;
+    }
+
+
+    strong {
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    h6 {
+        font-family: 'Montserrat', sans-serif;
+        color: #0C2D0B;
+    }
+
+    .btn-success {
+        background-color: #0C2D0B;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+
+    .fa-edit {
+        color: #6c757d;
+        font-size: 1rem;
+    }
+
+    .bg-green {
+        background-color: #0C2D0B;
+        color: white;
+    }
+
+    .card-body .row {
+        display: flex;
+        align-items: center;
+    }
+
+    .card-body .form-control {
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .card-body .form-control[readonly] {
+        color: #555;
+    }
+</style>
+
 <main class="flex-fill mt-5">
     <div class="container mt-4">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card border-success mb-4">
-                        <div class="card-header bg-white border-bottom border-success text-center">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal" class="d-inline-flex align-items-center text-dark text-decoration-none">
-                            <strong>Personal Information</strong>
-                            <i class="fa-solid fa-edit ml-2"></i>
+        <div class="row">
+            <!-- Personal Information -->
+            <div class="col-md-12">
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-green border-bottom border-secondary d-flex justify-content-between align-items-center">
+                        <span><strong>Personal Information</strong></span>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
+                            <i class="fa-solid fa-edit text-white"></i>
                         </a>
-                        </div>
-                        <div class="card-body">
-                            <?php if ($students_data) : ?>
-                                <?php foreach ($students_data as $student) : ?>
-                                    <div class="mb-3">
-                                        <strong>First Name:</strong><br>
-                                        <?php echo ucwords(htmlspecialchars($student['first_name'])) ?: 'N/A'; ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Middle Name:</strong><br>
-                                        <?php echo ucwords(htmlspecialchars($student['middle_name'])) ?: 'N/A'; ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Last Name:</strong><br>
-                                        <?php echo ucwords(htmlspecialchars($student['last_name'])) ?: 'N/A'; ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Birthdate:</strong><br>
-                                        <?php echo htmlspecialchars($student['birthdate']) ?: 'N/A'; ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Age:</strong><br>
-                                        <?php echo htmlspecialchars(calculateAge($student['birthdate'])); ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Sex:</strong><br>
-                                        <?php echo ucwords(htmlspecialchars($student['sex'])) ?: 'N/A'; ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Religion:</strong><br>
-                                        <?php echo ucwords(htmlspecialchars($student['religion'])) ?: 'N/A'; ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Contact Number:</strong><br>
-                                        <?php echo htmlspecialchars($student['contact_number']) ?: 'N/A'; ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <p>No personal information available.</p>
-                            <?php endif; ?>
-                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card border-success mb-4">
-                        <div class="card-header bg-white border-bottom border-success text-center">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#editMotherInfoModal" class="d-inline-flex align-items-center text-dark text-decoration-none">
-                            <strong>Mother's Information</strong>
-                            <i class="fa-solid fa-edit ml-2"></i>
-                        </a>
-                        </div>
-                        <div class="card-body">
 
-                            <?php if ($mothers_data && count($mothers_data) > 0) : ?>
-                                <?php $mother = $mothers_data[0]; // Assuming only one mother record 
-                                ?>
-                                <div class="mb-3">
-                                    <strong>Name:</strong><br>
-                                    <?php echo ucwords(htmlspecialchars($mother['name'])) ?: 'N/A'; ?>
+                    <div class="card-body">
+                        <!-- PHP to dynamically show student's personal information -->
+                        <?php if ($students_data) : ?>
+                            <?php foreach ($students_data as $student) : ?>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <strong>First Name:</strong>
+                                        <input type="text" class="form-control" value="<?php echo ucwords(htmlspecialchars($student['first_name'])) ?: 'N/A'; ?>" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Middle Name:</strong>
+                                        <input type="text" class="form-control" value="<?php echo ucwords(htmlspecialchars($student['middle_name'])) ?: 'N/A'; ?>" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Last Name:</strong>
+                                        <input type="text" class="form-control" value="<?php echo ucwords(htmlspecialchars($student['last_name'])) ?: 'N/A'; ?>" readonly>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <strong>Contact Number:</strong><br>
-                                    <?php echo htmlspecialchars($mother['contact_number']) ?: 'N/A'; ?>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <strong>Birthday:</strong>
+                                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($student['birthdate']) ?: 'N/A'; ?>" readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Age:</strong>
+                                        <input type="text" class="form-control" value="<?php echo htmlspecialchars(calculateAge($student['birthdate'])); ?>" readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <strong>Sex:</strong>
+                                        <input type="text" class="form-control" value="<?php echo ucwords(htmlspecialchars($student['sex'])) ?: 'N/A'; ?>" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Contact Number:</strong>
+                                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($student['contact_number']) ?: 'N/A'; ?>" readonly>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <strong>Email:</strong><br>
-                                    <?php echo htmlspecialchars($mother['email']) ?: 'N/A'; ?>
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Occupation:</strong><br>
-                                    <?php echo ucwords(htmlspecialchars($mother['occupation'])) ?: 'N/A'; ?>
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Address:</strong><br>
-                                    <?php echo ucwords(htmlspecialchars($mother['address'])) ?: 'N/A'; ?>
-                                </div>
-                            <?php else : ?>
-                                <p>No mother's information available.</p>
-                            <?php endif; ?>
-                        </div>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <p>No personal information available.</p>
+                        <?php endif; ?>
                     </div>
+
                 </div>
+            </div>
 
-
-                <div class="col-md-3">
-                    <div class="card border-success mb-4">
-                        <div class="card-header bg-white border-bottom border-success text-center">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#editFatherInfoModal" class="d-inline-flex align-items-center text-dark text-decoration-none">
-                            <strong>Father's Information</strong>
-                            <i class="fa-solid fa-edit ml-2"></i>
+            <!-- Parents Information -->
+            <div class="col-md-12">
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-green border-bottom border-secondary d-flex justify-content-between align-items-center">
+                        <span><strong>Parents Information</strong></span>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#editParentInfoModal">
+                            <i class="fa-solid fa-edit text-white"></i>
                         </a>
-                        </div>
-                        <div class="card-body">
-                            <?php if ($fathers_data && count($fathers_data) > 0) : ?>
-                                <?php $father = $fathers_data[0]; // Assuming only one father record 
-                                ?>
-                                <div class="mb-3">
-                                    <strong>Name:</strong><br>
-                                    <?php echo ucwords(htmlspecialchars($father['name'])) ?: 'N/A'; ?>
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Contact Number:</strong><br>
-                                    <?php echo htmlspecialchars($father['contact_number']) ?: 'N/A'; ?>
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Email:</strong><br>
-                                    <?php echo htmlspecialchars($father['email']) ?: 'N/A'; ?>
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Occupation:</strong><br>
-                                    <?php echo ucwords(htmlspecialchars($father['occupation'])) ?: 'N/A'; ?>
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Address:</strong><br>
-                                    <?php echo ucwords(htmlspecialchars($father['address'])) ?: 'N/A'; ?>
-                                </div>
-                            <?php else : ?>
-                                <p>No father's information available.</p>
-                            <?php endif; ?>
-                        </div>
                     </div>
-                </div>
+                    <div class="row">
 
-                <div class="col-md-3">
-                    <div class="card border-success mb-4">
-                        <div class="card-header bg-white border-bottom border-success text-center">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#editAccountInfoModal" class="d-inline-flex align-items-center text-dark text-decoration-none">
-                            <strong>Account Settings</strong>
-                            <i class="fa-solid fa-edit ml-2"></i>
-                        </a>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Username:</strong><br>
-                                <?php echo htmlspecialchars($user_data['username']); ?>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Email:</strong><br>
-                                <?php echo htmlspecialchars($user_data['email']); ?>
+
+                        <div class="col-md-6">
+                            <div class="card border-success mb-4">
+                                <div class="card-header bg-white border-bottom border-success text-center">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#editMotherInfoModal" class="d-inline-flex align-items-center text-dark text-decoration-none">
+                                        <strong>Mother's Information</strong>
+                                        <i class="fa-solid fa-edit ml-2"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <?php if ($mothers_data && count($mothers_data) > 0) : ?>
+                                        <?php $mother = $mothers_data[0]; // Assuming only one mother record 
+                                        ?>
+                                        <div class="mb-3">
+                                            <strong>Name:</strong><br>
+                                            <?php echo ucwords(htmlspecialchars($mother['name'])) ?: 'N/A'; ?>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Contact Number:</strong><br>
+                                            <?php echo htmlspecialchars($mother['contact_number']) ?: 'N/A'; ?>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Email:</strong><br>
+                                            <?php echo htmlspecialchars($mother['email']) ?: 'N/A'; ?>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Occupation:</strong><br>
+                                            <?php echo ucwords(htmlspecialchars($mother['occupation'])) ?: 'N/A'; ?>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Address:</strong><br>
+                                            <?php echo ucwords(htmlspecialchars($mother['address'])) ?: 'N/A'; ?>
+                                        </div>
+                                    <?php else : ?>
+                                        <p>No mother's information available.</p>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Modals for editing information -->
-            <!-- Modal for editing personal information -->
-            <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editPersonalInfoModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header bg-guideco text-white">
-                            <h5 class="modal-title" id="editPersonalInfoModalLabel">Edit Personal Information</h5>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
+
+                        <div class="col-md-6">
+                            <div class="card border-success mb-4">
+                                <div class="card-header bg-white border-bottom border-success text-center">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#editFatherInfoModal" class="d-inline-flex align-items-center text-dark text-decoration-none">
+                                        <strong>Father's Information</strong>
+                                        <i class="fa-solid fa-edit ml-2"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <?php if ($fathers_data && count($fathers_data) > 0) : ?>
+                                        <?php $father = $fathers_data[0]; // Assuming only one father record 
+                                        ?>
+                                        <div class="mb-3">
+                                            <strong>Name:</strong><br>
+                                            <?php echo ucwords(htmlspecialchars($father['name'])) ?: 'N/A'; ?>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Contact Number:</strong><br>
+                                            <?php echo htmlspecialchars($father['contact_number']) ?: 'N/A'; ?>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Email:</strong><br>
+                                            <?php echo htmlspecialchars($father['email']) ?: 'N/A'; ?>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Occupation:</strong><br>
+                                            <?php echo ucwords(htmlspecialchars($father['occupation'])) ?: 'N/A'; ?>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Address:</strong><br>
+                                            <?php echo ucwords(htmlspecialchars($father['address'])) ?: 'N/A'; ?>
+                                        </div>
+                                    <?php else : ?>
+                                        <p>No father's information available.</p>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                        <div class="modal-body">
-                            <form method="POST" action="">
-                                <?php foreach ($students_data as $student) : ?>
-                                    <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($student['id']); ?>">
-                                    <div class="form-group">
-                                        <label for="first_name">First Name</label>
-                                        <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo htmlspecialchars($student['first_name']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="middle_name">Middle Name</label>
-                                        <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo htmlspecialchars($student['middle_name']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="last_name">Last Name</label>
-                                        <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo htmlspecialchars($student['last_name']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="birthdate">Birthdate</label>
-                                        <input type="date" class="form-control" id="birthdate" name="birthdate" value="<?php echo htmlspecialchars($student['birthdate']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="age">Age</label>
-                                        <input type="number" class="form-control" id="age" name="age" value="<?php echo htmlspecialchars($student['age']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="sex">Sex</label>
-                                        <select class="form-control" id="sex" name="sex">
-                                            <option value="Male" <?php echo ($student['sex'] == 'Male') ? 'selected' : ''; ?>>Male</option>
-                                            <option value="Female" <?php echo ($student['sex'] == 'Female') ? 'selected' : ''; ?>>Female</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="religion">Religion</label>
-                                        <input type="text" class="form-control" id="religion" name="religion" value="<?php echo htmlspecialchars($student['religion']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="contact_number">Contact Number</label>
-                                        <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($student['contact_number']); ?>">
-                                    </div>
-                                <?php endforeach; ?>
-                                <button type="submit" name="update_student" class="btn btn-success">Update</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal for editing mother's information -->
-            <div class="modal fade" id="editMotherInfoModal" tabindex="-1" aria-labelledby="editMotherInfoModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header bg-guideco text-white">
-                            <h5 class="modal-title" id="editMotherInfoModalLabel">Edit Mother's Information</h5>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST" action="">
-                                <?php if ($mothers_data && count($mothers_data) > 0) : ?>
-                                    <?php $mother = $mothers_data[0]; // Assuming only one mother record 
-                                    ?>
-                                    <input type="hidden" name="mother_id" value="<?php echo htmlspecialchars($mother['parent_id']); ?>">
-                                    <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($mother['name']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="contact_number">Contact Number</label>
-                                        <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($mother['contact_number']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($mother['email']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="occupation">Occupation</label>
-                                        <input type="text" class="form-control" id="occupation" name="occupation" value="<?php echo htmlspecialchars($mother['occupation']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="address">Address</label>
-                                        <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($mother['address']); ?>">
-                                    </div>
-                                <?php endif; ?>
-                                <button type="submit" name="update_mother" class="btn btn-success">Update</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal for editing father's information -->
-            <div class="modal fade" id="editFatherInfoModal" tabindex="-1" aria-labelledby="editFatherInfoModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header bg-guideco text-center">
-                            <h5 class="modal-title" id="editFatherInfoModalLabel">Edit Father's Information</h5>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST" action="">
-                                <?php if ($fathers_data && count($fathers_data) > 0) : ?>
-                                    <?php $father = $fathers_data[0]; // Assuming only one father record 
-                                    ?>
-                                    <input type="hidden" name="father_id" value="<?php echo htmlspecialchars($father['parent_id']); ?>">
-                                    <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($father['name']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="contact_number">Contact Number</label>
-                                        <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($father['contact_number']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($father['email']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="occupation">Occupation</label>
-                                        <input type="text" class="form-control" id="occupation" name="occupation" value="<?php echo htmlspecialchars($father['occupation']); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="address">Address</label>
-                                        <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($father['address']); ?>">
-                                    </div>
-                                <?php endif; ?>
-                                <button type="submit" name="update_father" class="btn btn-success">Update</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal for editing account settings -->
-            <div class="modal fade" id="editAccountInfoModal" tabindex="-1" aria-labelledby="editAccountInfoModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header bg-guideco text-center">
-                            <h5 class="modal-title" id="editAccountInfoModalLabel">Edit Account Settings</h5>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST" action="">
-                                <div class="form-group">
-                                    <label for="username">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($user_data['username']); ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password">
-                                    <small class="form-text text-muted">Leave blank to keep current password.</small>
-                                </div>
-                                <button type="submit" name="update_account" class="btn btn-success">Update</button>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <!-- Account Settings -->
+        <div class="col-md-12">
+            <div class="card border-secondary mb-3">
+                <div class="card-header bg-green border-bottom border-secondary d-flex justify-content-between align-items-center">
+                    <span><strong>Account Settings</strong></span>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#editAccountInfoModal">
+                        <i class="fa-solid fa-edit text-white"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <strong>Username:</strong>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($user_data['username']) ?: 'N/A'; ?>" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Email:</strong>
+                            <input type="email" class="form-control" value="<?php echo htmlspecialchars($user_data['email']) ?: 'N/A'; ?>" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Password:</strong>
+                            <input type="password" class="form-control" value="<?php echo htmlspecialchars($user_data['password']) ?: 'N/A'; ?>" readonly>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modals for editing information -->
+    <!-- Modal for editing personal information -->
+    <div class="modal fade" id="editPersonalInfoModal" tabindex="-1" aria-labelledby="editPersonalInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-guideco text-white">
+                    <h5 class="modal-title" id="editPersonalInfoModalLabel">Edit Personal Information</h5>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="">
+                        <?php foreach ($students_data as $student) : ?>
+                            <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($student['id']); ?>">
+                            <div class="form-group">
+                                <label for="first_name">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo htmlspecialchars($student['first_name']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="middle_name">Middle Name</label>
+                                <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo htmlspecialchars($student['middle_name']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo htmlspecialchars($student['last_name']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="birthdate">Birthdate</label>
+                                <input type="date" class="form-control" id="birthdate" name="birthdate" value="<?php echo htmlspecialchars($student['birthdate']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" class="form-control" id="age" name="age" value="<?php echo htmlspecialchars($student['age']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="sex">Sex</label>
+                                <select class="form-control" id="sex" name="sex">
+                                    <option value="Male" <?php echo ($student['sex'] == 'Male') ? 'selected' : ''; ?>>Male</option>
+                                    <option value="Female" <?php echo ($student['sex'] == 'Female') ? 'selected' : ''; ?>>Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="religion">Religion</label>
+                                <input type="text" class="form-control" id="religion" name="religion" value="<?php echo htmlspecialchars($student['religion']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_number">Contact Number</label>
+                                <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($student['contact_number']); ?>">
+                            </div>
+                        <?php endforeach; ?>
+                        <button type="submit" name="update_student" class="btn btn-success">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing mother's information -->
+    <div class="modal fade" id="editMotherInfoModal" tabindex="-1" aria-labelledby="editMotherInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-guideco text-white">
+                    <h5 class="modal-title" id="editMotherInfoModalLabel">Edit Mother's Information</h5>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="">
+                        <?php if ($mothers_data && count($mothers_data) > 0) : ?>
+                            <?php $mother = $mothers_data[0]; // Assuming only one mother record 
+                            ?>
+                            <input type="hidden" name="mother_id" value="<?php echo htmlspecialchars($mother['parent_id']); ?>">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($mother['name']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_number">Contact Number</label>
+                                <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($mother['contact_number']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($mother['email']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="occupation">Occupation</label>
+                                <input type="text" class="form-control" id="occupation" name="occupation" value="<?php echo htmlspecialchars($mother['occupation']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($mother['address']); ?>">
+                            </div>
+                        <?php endif; ?>
+                        <button type="submit" name="update_mother" class="btn btn-success">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing father's information -->
+    <div class="modal fade" id="editFatherInfoModal" tabindex="-1" aria-labelledby="editFatherInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-guideco text-center">
+                    <h5 class="modal-title" id="editFatherInfoModalLabel">Edit Father's Information</h5>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="">
+                        <?php if ($fathers_data && count($fathers_data) > 0) : ?>
+                            <?php $father = $fathers_data[0]; // Assuming only one father record 
+                            ?>
+                            <input type="hidden" name="father_id" value="<?php echo htmlspecialchars($father['parent_id']); ?>">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($father['name']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_number">Contact Number</label>
+                                <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($father['contact_number']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($father['email']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="occupation">Occupation</label>
+                                <input type="text" class="form-control" id="occupation" name="occupation" value="<?php echo htmlspecialchars($father['occupation']); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" class="form-control" id="address" name="address" value="<?php echo htmlspecialchars($father['address']); ?>">
+                            </div>
+                        <?php endif; ?>
+                        <button type="submit" name="update_father" class="btn btn-success">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing account settings -->
+    <div class="modal fade" id="editAccountInfoModal" tabindex="-1" aria-labelledby="editAccountInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-guideco text-center">
+                    <h5 class="modal-title" id="editAccountInfoModalLabel">Edit Account Settings</h5>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($user_data['username']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <small class="form-text text-muted">Leave blank to keep current password.</small>
+                        </div>
+                        <button type="submit" name="update_account" class="btn btn-success">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
     </div>
 </main>
 <?php include 'footer.php' ?>

@@ -66,12 +66,30 @@ $teachers = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
+
 
 <style>
-    /* Custom Styles */
+    
+
+
+    body {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+    }
+
+    .modal-header, .btn, .table, .success-message, .error-message, .table th, .table td {
+        font-family: 'Montserrat', sans-serif;
+    }
+
     .modal-header {
-        background-color: #1F5F1E;
-        color: white;
+            background-color: #1F5F1E;
+            color: white;
     }
 
     .btn-primary {
@@ -105,9 +123,29 @@ $teachers = $result->fetch_all(MYSQLI_ASSOC);
     }
 
     .table-container {
-        max-height: 400px;
-        overflow-y: auto;
-    }
+    max-height: 400px; 
+    overflow-y: auto; 
+    border: 1px solid #ddd; 
+}
+
+.table {
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+.table thead {
+    position: sticky; 
+    top: 0; 
+    background-color: #0C2D0B; 
+    z-index: 1; 
+    color: white; 
+}
+
+.table th, .table td {
+    padding: 15px; 
+    text-align: left; 
+    border-bottom: 1px solid #ddd; 
+}
 
     .btn-circle {
         width: 35px;
@@ -118,17 +156,21 @@ $teachers = $result->fetch_all(MYSQLI_ASSOC);
         align-items: center;
         padding: 0;
     }
+
+    table tbody td {
+    text-transform: capitalize;
+}
 </style>
 
 <div class="container-fluid mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
-        <h1>Manage Teachers</h1>
+        <h3 style="margin-top: 15px;">Manage Teachers</h3>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTeacherModal">
             Add Teacher
         </button>
 
         <div class="table-container">
-            <table class="table table-hover mt-4 border">
+            <table class="table table-hove r border">
                 <thead class="thead-custom">
                     <tr>
                         <th>ID</th>

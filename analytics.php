@@ -1,8 +1,9 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
     body {
-        font-family: 'Roboto', sans-serif;
-        /* Modern font */
-    }
+    font-family: 'Montserrat', sans-serif; 
+}
 
     .container {
         max-width: 90%;
@@ -10,7 +11,6 @@
         margin-top: 10px;
         margin-bottom: 25px;
         background-color: #fff;
-        /* White background */
         border-radius: 20px;
 
     }
@@ -18,38 +18,47 @@
     h1 {
         font-size: 2.5rem;
         color: #333;
-        /* Dark gray heading */
         margin-bottom: 20px;
+        font-weight: 900;
     }
 
     h3 {
         font-size: 1.5rem;
         color: #555;
-        /* Slightly lighter heading */
         margin-bottom: 15px;
+        font-weight: 600;
     }
 
     .feeling-option {
         display: inline-block;
-        margin: 15px;
+        margin: 30px;
         cursor: pointer;
         text-align: center;
         transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
         padding: 10px;
         border-radius: 15px;
         background-color: #f0f0f0;
-        /* Light background */
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        /* Subtle shadow */
+        width: 150px; 
+        height: 170px; 
     }
+
+    .feeling-option img {
+    width: 90px;  
+    height: 90px; 
+    margin-bottom: 10px; 
+}
+
+.feeling-option span {
+    font-size: 1.4rem;
+    color: #555;
+    font-weight: 500;
+}
 
     .feeling-option:hover {
         background-color: #e0e0e0;
-        /* Darken on hover */
         transform: translateY(-5px);
-        /* Lift effect */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        /* Stronger shadow on hover */
     }
 
     .feeling-option input {
@@ -58,30 +67,29 @@
 
     .feeling-option label {
         font-size: 2rem;
-        /* Emoji size */
         color: #555;
-        /* Neutral color */
         display: block;
+        font-weight: 400;
     }
 
-    .feeling-option input:checked+label {
-        transform: scale(1.2);
-        /* Scale up selected emoji */
-        color: #28a745;
-        /* Change color for selected */
-    }
+    .feeling-option input:checked + label {
+    transform: scale(1.2);
+    color: #555; 
+    background-color: #ffeb3b; 
+    border-radius: 15px;
+    zz
+}
 
-    .feeling-option input:checked+label::before {
-        content: '✔️ ';
-        position: relative;
-        font-size: 1.5rem;
-        color: #28a745;
-    }
 
-    .feeling-option input:checked+label {
-        font-weight: bold;
-        color: #28a745;
-    }
+.feeling-option:hover {
+    background-color: #e0e0e0; 
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+}
+
+.feeling-option:hover input:checked + label {
+    background-color: #ffeb3b; 
+}
 
     button[type="submit"] {
         background-color: #007bff;
@@ -96,7 +104,7 @@
     button[type="submit"]:hover {
         background-color: #0056b3;
         box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
-        /* Subtle shadow on hover */
+        
     }
 
     #result {
@@ -190,15 +198,24 @@
             <h3>Physically</h3>
             <div class="feeling-option">
                 <input type="radio" id="sick" name="physical_feeling" value="sick" required>
-                <label for="sick">🤒 Sick</label>
+                <label for="sick">
+                    <img src="img/sick.png" alt="Sick">
+                    <span>Sick</span>
+                </label>
             </div>
             <div class="feeling-option">
                 <input type="radio" id="tired" name="physical_feeling" value="tired" required>
-                <label for="tired">😴 Tired</label>
+                <label for="tired">
+                    <img src="img/tired.png" alt="Tired">
+                    <span>Tired</span>
+                </label>
             </div>
             <div class="feeling-option">
                 <input type="radio" id="energetic" name="physical_feeling" value="energetic" required>
-                <label for="energetic">💪 Energetic</label>
+                <label for="energetic">
+                    <img src="img/laughing.png" alt="Energetic">
+                    <span>Energetic</span>
+                </label>
             </div>
         </div>
 
@@ -206,15 +223,24 @@
             <h3 class="mt-4">Emotionally</h3>
             <div class="feeling-option">
                 <input type="radio" id="happy" name="emotional_feeling" value="happy" required>
-                <label for="happy">😊 Happy</label>
+                <label for="happy">
+                    <img src="img/happy.png" alt="Happy">
+                    <span>Happy</span>
+                </label>
             </div>
             <div class="feeling-option">
                 <input type="radio" id="sad" name="emotional_feeling" value="sad" required>
-                <label for="sad">😢 Sad</label>
+                <label for="sad">
+                    <img src="img/sad.png" alt="Sad">
+                    <span>Sad</span>
+                </label>
             </div>
             <div class="feeling-option">
                 <input type="radio" id="angry" name="emotional_feeling" value="angry" required>
-                <label for="angry">😠 Angry</label>
+                <label for="angry">
+                    <img src="img/angry.png" alt="Angry">
+                    <span>Angry</span>
+                </label>
             </div>
         </div>
 
@@ -222,21 +248,31 @@
             <h3 class="mt-4">Mentally</h3>
             <div class="feeling-option">
                 <input type="radio" id="calm" name="mental_feeling" value="calm" required>
-                <label for="calm">😌 Calm</label>
+                <label for="calm">
+                    <img src="img/calm.png" alt="Calm">
+                    <span>Calm</span>
+                </label>
             </div>
             <div class="feeling-option">
                 <input type="radio" id="stressed" name="mental_feeling" value="stressed" required>
-                <label for="stressed">😩 Stressed</label>
+                <label for="stressed">
+                    <img src="img/hypnotized.png" alt="Stressed">
+                    <span>Stressed</span>
+                </label>
             </div>
             <div class="feeling-option">
                 <input type="radio" id="anxious" name="mental_feeling" value="anxious" required>
-                <label for="anxious">😟 Anxious</label>
+                <label for="anxious">
+                    <img src="img/anxious.png" alt="Anxious">
+                    <span>Anxious</span>
+                </label>
             </div>
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Get Recommendation</button>
     </form>
 </div>
+
 <!-- Modal for Result -->
 <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
     <div class="modal-dialog custom-modal">

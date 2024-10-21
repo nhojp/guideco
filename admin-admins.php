@@ -102,11 +102,7 @@ $admins = fetchAdmins($conn);
 
 
 <style> 
-    .btn-custom {
-            background-color: #1F5F1E; 
-            color: white; 
-            border: none; 
-        }
+     
 
         .btn-custom:hover {
             background-color: #389434; 

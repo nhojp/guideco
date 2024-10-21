@@ -86,6 +86,7 @@ if (!$violations_result) {
         display: flex;
         justify-content: center;
         margin-top: 20px;
+        
     }
 
     .pagination a {
@@ -94,7 +95,8 @@ if (!$violations_result) {
         border: 1px solid #007bff;
         color: #007bff;
         text-decoration: none;
-        border-radius: 4px;
+        border-radius: 50px;
+
     }
 
     .pagination a.active {
@@ -106,6 +108,23 @@ if (!$violations_result) {
         background-color: #0056b3;
         color: white;
     }
+    table tbody td {
+    text-transform: capitalize;
+    }   
+
+    .table th, .table td {
+    padding: 15px; 
+    text-align: left; 
+    border-bottom: 1px solid #ddd; 
+    }
+
+    .table thead {
+    position: sticky; 
+    top: 0; 
+    background-color: #0C2D0B; 
+    z-index: 1; 
+    color: white; 
+}
 </style>
 
 <body style="background-color: #DBD8AE;">
@@ -199,12 +218,12 @@ if (!$violations_result) {
             </div>
 
             <div class="table-scroll">
-                <table id="violations_table" class="table table-hover mt-4 border">
+                <table id="violations_table" class="table table-hover border">
                     <thead class="thead-custom">
                         <tr>
-                            <th style="width:20%;">Name</th>
-                            <th style="width:20%;">Grade</th>
-                            <th style="width:15%;">Violation</th>
+                            <th style="width:30%;">Name</th>
+                            <th style="width:10%;">Grade</th>
+                            <th style="width:20%;">Violation</th>
                             <th style="width:15%;">Reported by</th>
                             <th style="width:15%;">Reported at</th>
                             <th class="text-center" style="width:15%">Action</th>

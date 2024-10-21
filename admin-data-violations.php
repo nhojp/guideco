@@ -29,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         try {
             $stmt->execute();
             echo "<div class='alert alert-success' role='alert'>Violation added successfully.</div>";
+            echo '<script>
+        window.location.href = "admin-nav-violations.php"; // Replace with the desired page
+    </script>';
         } catch (mysqli_sql_exception $e) {
             if ($e->getCode() == 1062) { // Duplicate entry error code
                 echo "<div class='alert alert-danger' role='alert'>Violation already exists.</div>";
@@ -48,6 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($stmt->execute()) {
             echo "<div class='alert alert-success' role='alert'>Violation updated successfully.</div>";
+            echo '<script>
+        window.location.href = "admin-nav-violations.php"; // Replace with the desired page
+    </script>';
         } else {
             echo "<div class='alert alert-danger' role='alert'>Failed to update violation: " . $conn->error . "</div>";
         }
@@ -62,6 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($stmt->execute()) {
             echo "<div class='alert alert-success' role='alert'>Violation deleted successfully.</div>";
+            echo '<script>
+        window.location.href = "admin-nav-violations.php"; // Replace with the desired page
+    </script>';
         } else {
             echo "<div class='alert alert-danger' role='alert'>Failed to delete violation: " . $conn->error . "</div>";
         }
@@ -105,6 +114,39 @@ unset($_SESSION['add_success']);
             align-items: center;      
             padding: 0;
         }
+
+        table tbody td {
+    text-transform: capitalize;
+}
+
+.table th, .table td {
+    padding: 15px; 
+    text-align: left; 
+    border-bottom: 1px solid #ddd; 
+}
+
+.table-hover tbody tr:hover {
+        background-color: #e2e2e2;
+    }
+
+    .table {
+        border-collapse: collapse;
+        background-color: #f9f9f9;
+    }
+
+    .table thead {
+    position: sticky; 
+    top: 0; 
+    background-color: #0C2D0B; 
+    z-index: 1; 
+    color: white; 
+}
+
+.table-container {
+            max-height: 400px; 
+            overflow-y: auto; 
+            border: 1px solid #ddd; 
+        }
     </style>
 
 <div class="container-fluid mb-5">
@@ -127,31 +169,33 @@ unset($_SESSION['add_success']);
             </div>
            
         </div>
-
-        <table class="table table-hover mt-4 border">
-            <thead class="thead-custom">
-                <tr>
-                    <th style="width: 85%;">Violation</th>
-                    <th class="text-center" style="width: 15%;">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="personnelTable">
-                <?php
-                // Fetch data for both table and modals
-                mysqli_data_seek($violations_result, 0); // Reset result pointer to fetch data again
-                while ($row = mysqli_fetch_assoc($violations_result)) : ?>
+    
+        <div class="table-container">
+            <table class="table table-hover border">
+                <thead class="thead-custom">
                     <tr>
-                        <td><?php echo htmlspecialchars(ucwords($row['violation_description'])); ?></td>
-                        <td class="text-center">
-                            <button class="btn btn btn-secondary" data-toggle="modal" data-target="#editViolationModal<?php echo $row['id']; ?>"> <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteViolationModal<?php echo $row['id']; ?>"> <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
+                        <th style="width: 85%;">Violation</th>
+                        <th class="text-center" style="width: 15%;">Actions</th>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="personnelTable">
+                    <?php
+                    // Fetch data for both table and modals
+                    mysqli_data_seek($violations_result, 0); // Reset result pointer to fetch data again
+                    while ($row = mysqli_fetch_assoc($violations_result)) : ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars(ucwords($row['violation_description'])); ?></td>
+                            <td class="text-center">
+                                <button class="btn btn btn-secondary" data-toggle="modal" data-target="#editViolationModal<?php echo $row['id']; ?>"> <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger" data-toggle="modal" data-target="#deleteViolationModal<?php echo $row['id']; ?>"> <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

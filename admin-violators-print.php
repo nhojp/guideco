@@ -6,7 +6,7 @@ include 'head.php';
 // SQL query to fetch violations data
 $violations_query = "
     SELECT violations.id, students.id AS student_id, students.first_name, students.middle_name, students.last_name, 
-    students.age, students.sex, sections.section_name, grades.grade_name, 
+    students.age, students.sex, sections.section_name, sections.grade_level, 
     violation_list.violation_description AS violation, 
     CASE
         WHEN violations.guard_id IS NOT NULL THEN guards.first_name
@@ -22,7 +22,6 @@ $violations_query = "
 FROM violations
 JOIN students ON violations.student_id = students.id
 JOIN sections ON students.section_id = sections.id
-JOIN grades ON sections.grade_id = grades.id
 LEFT JOIN guards ON violations.guard_id = guards.id
 LEFT JOIN teachers ON violations.teacher_id = teachers.id
 JOIN violation_list ON violations.violation_id = violation_list.id
@@ -77,7 +76,7 @@ if (!$violations_result) {
                 <?php while ($row = mysqli_fetch_assoc($violations_result)) : ?>
                     <tr>
                         <td><?php echo ucwords(htmlspecialchars($row['first_name'] . ' ' . $row['last_name'])); ?></td>
-                        <td><?php echo ucwords(htmlspecialchars($row['grade_name'] . ' - ' . $row['section_name'])); ?></td>
+                        <td><?php echo ucwords(htmlspecialchars($row['grade_level'] . ' - ' . $row['section_name'])); ?></td>
                         <td><?php echo ucwords(htmlspecialchars($row['violation'])); ?></td>
                         <td><?php echo ucwords(htmlspecialchars($row['reported_by_name'])); ?></td>
                         <td><?php echo htmlspecialchars($row['reportedAt']); ?></td>
