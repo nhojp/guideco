@@ -151,7 +151,7 @@ $admins = fetchAdmins($conn);
                     </div>
                     <div class="col-md-1">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-custom" data-toggle="modal" data-target="#addAdminModal">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addAdminModal">
                                 Add
                             </button>
                         </div>
