@@ -1,4 +1,7 @@
 <style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
     /* Custom CSS for student navbar */
     .navbar-nav {
         margin-left: auto;

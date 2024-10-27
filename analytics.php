@@ -77,7 +77,6 @@
     color: #555; 
     background-color: #ffeb3b; 
     border-radius: 15px;
-    zz
 }
 
 
@@ -269,7 +268,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Get Recommendation</button>
+        <button type="submit" class="btn btn-success mt-3">Get Recommendation</button>
     </form>
 </div>
 
@@ -278,9 +277,9 @@
     <div class="modal-dialog custom-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="resultModalLabel">Your Recommendation</h5>
+                <h5 class="modal-title" id="resultModalLabel">Guideco Recommends you to</h5>
             </div>
-            <div class="modal-body" id="resultContent">
+            <div class="modal-body font-weight-bold justify-content-center align-items-center" id="resultContent">
                 <!-- Result will be shown here -->
             </div>
             <div class="modal-footer">
