@@ -59,136 +59,75 @@ if (isset($_POST['delete_teacher'])) {
     $delete_stmt->close();
 }
 
-
 // Fetch teachers from the database
 $result = $conn->query("SELECT * FROM teachers");
 $teachers = $result->fetch_all(MYSQLI_ASSOC);
 ?>
-
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-
-
-
 <style>
-    body {
-        font-family: 'Montserrat', sans-serif;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 600;
-    }
-
-    .modal-header, .btn, .table, .success-message, .error-message, .table th, .table td {
-        font-family: 'Montserrat', sans-serif;
-    }
-
-    .modal-header {
-            background-color: #1F5F1E;
-            color: white;
-    }
-
-    .btn-primary {
-        background-color: #1F5F1E;
-        border: none;
-        margin-bottom: 20px;
-    }
-
-    .btn-primary:hover {
-        background-color: #145214;
-    }
-
-    .table {
-        border-collapse: collapse;
-        background-color: #f9f9f9;
-    }
-
-    .table th, .table td {
-        padding: 15px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #e2e2e2;
-    }
-
     .thead-custom {
         background-color: #0C2D0B;
         color: white;
     }
-
-    .table-container {
-    max-height: 400px; 
-    overflow-y: auto; 
-    border: 1px solid #ddd; 
-}
-
-.table {
-    width: 100%; 
-    border-collapse: collapse; 
-}
-
-.table thead {
-    position: sticky; 
-    top: 0; 
-    background-color: #0C2D0B; 
-    z-index: 1; 
-    color: white; 
-}
-
-.table th, .table td {
-    padding: 15px; 
-    text-align: left; 
-    border-bottom: 1px solid #ddd; 
-}
-
-    .btn-circle {
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-    }
-
-    table tbody td {
-    text-transform: capitalize;
-}
 </style>
-
 <div class="container-fluid mb-5">
     <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
-        <h3 style="margin-top: 15px;">Manage Teachers</h3>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTeacherModal">
-            Add Teacher
-        </button>
+        <div class="row pt-3">
+            <div class="col-md-6">
+                <div class="container-fluid p-2">
+                    <h3><strong>Teachers List</strong></h3>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-right mb-2">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addTeacherModal">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <div class="table-container">
-            <table class="table table-hove r border">
+            <table class="table table-hover border text-center">
                 <thead class="thead-custom">
                     <tr>
-                        <th>ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Username</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($teachers as $teacher): ?>
-                    <tr>
-                        <td><?php echo $teacher['id']; ?></td>
-                        <td><?php echo $teacher['first_name']; ?></td>
-                        <td><?php echo $teacher['last_name']; ?></td>
-                        <td><?php echo $teacher['username']; ?></td>
-                        <td>
-                            <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="<?php echo $teacher['id']; ?>" data-toggle="modal" data-target="#confirmDeleteModal">Delete</a>
-                            <button class="btn btn-warning btn-sm edit-btn" data-id="<?php echo $teacher['id']; ?>" data-first_name="<?php echo $teacher['first_name']; ?>" data-last_name="<?php echo $teacher['last_name']; ?>" data-username="<?php echo $teacher['username']; ?>" data-toggle="modal" data-target="#editTeacherModal">Edit</button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><?php echo ucwords(htmlspecialchars($teacher['first_name'])); ?></td>
+                            <td><?php echo ucwords(htmlspecialchars($teacher['last_name'])); ?></td>
+                            <td>
+                                <!-- Edit Button -->
+                                <button class="btn btn-secondary edit-btn"
+                                    data-id="<?php echo $teacher['id']; ?>"
+                                    data-first_name="<?php echo htmlspecialchars(ucwords($teacher['first_name'])); ?>"
+                                    data-last_name="<?php echo htmlspecialchars(ucwords($teacher['last_name'])); ?>"
+                                    data-username="<?php echo htmlspecialchars($teacher['username']); ?>"
+                                    data-toggle="modal"
+                                    data-target="#editTeacherModal"
+                                    data-label-first="First Name"
+                                    data-label-last="Last Name"
+                                    data-label-username="Username">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <!-- Delete Button -->
+                                <button class="btn btn-danger delete-btn"
+                                    data-id="<?php echo $teacher['id']; ?>"
+                                    data-toggle="modal"
+                                    data-target="#confirmDeleteModal">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -202,7 +141,7 @@ $teachers = $result->fetch_all(MYSQLI_ASSOC);
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addTeacherModalLabel">Add Teacher</h5>
-                <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-danger btn btn-circle" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -234,7 +173,7 @@ $teachers = $result->fetch_all(MYSQLI_ASSOC);
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editTeacherModalLabel">Edit Teacher</h5>
-                <button type="button" class="btn-danger btn btn btn-circle" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-danger btn btn-circle" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -284,7 +223,6 @@ $teachers = $result->fetch_all(MYSQLI_ASSOC);
     </div>
 </div>
 
-
 <script>
     // Script to populate the edit modal with current teacher data
     document.querySelectorAll('.edit-btn').forEach(function(button) {
@@ -297,11 +235,10 @@ $teachers = $result->fetch_all(MYSQLI_ASSOC);
     });
 
     // Script for delete confirmation
-document.querySelectorAll('.delete-btn').forEach(function(button) {
-    button.addEventListener('click', function() {
-        var teacherId = this.getAttribute('data-id');
-        document.getElementById('delete_teacher_id').value = teacherId;
+    document.querySelectorAll('.delete-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var teacherId = this.getAttribute('data-id');
+            document.getElementById('delete_teacher_id').value = teacherId;
+        });
     });
-});
-
 </script>
