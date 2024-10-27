@@ -1,5 +1,4 @@
 <?php
-
 include "conn.php";
 include "head.php";
 
@@ -17,7 +16,7 @@ $first_name = "Student";
 $last_name = "";
 $grade = "Unknown";
 $section = "Unknown";
-$violation_count = 0; // Initialize violation count
+$violation_count = 0;
 
 $user_id = $_SESSION['user_id'] ?? null;
 
@@ -31,7 +30,7 @@ if ($user_id) {
         sec.grade_level
     FROM students s
     JOIN sections sec ON s.section_id = sec.id
-    WHERE s.user_id = ?"; // Match the user_id
+    WHERE s.user_id = ?";
 
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("i", $user_id);
@@ -39,31 +38,28 @@ if ($user_id) {
         $result = $stmt->get_result();
 
         if ($result && $result->num_rows == 1) {
-            // Fetch student details
             $row = $result->fetch_assoc();
             $first_name = $row['first_name'];
             $last_name = $row['last_name'];
-            $grade = $row['grade_level']; // Ensure this field exists
+            $grade = $row['grade_level'];
             $section = $row['section_name'];
-            $student_id = $row['student_id']; // Get the student ID
+            $student_id = $row['student_id'];
         } else {
-            // Handle case where no student was found
             echo "No student found with this user ID.";
         }
 
         $stmt->close();
     } else {
-        // Handle query preparation error
         echo "Error preparing the student data query.";
     }
 
-    // Fetch violation count for the student using student_id
+    // Fetch violation count for the student
     $sql_violations = "SELECT COUNT(*) AS violation_count 
                        FROM violations 
-                       WHERE student_id = ?"; // Use student_id here
+                       WHERE student_id = ?";
 
     if ($stmt = $conn->prepare($sql_violations)) {
-        $stmt->bind_param("i", $student_id); // Ensure this matches the right student ID
+        $stmt->bind_param("i", $student_id);
         $stmt->execute();
         $result_violations = $stmt->get_result();
 
@@ -74,17 +70,87 @@ if ($user_id) {
 
         $stmt->close();
     } else {
-        // Handle query preparation error
         echo "Error preparing the violation count query.";
     }
 } else {
-    // Handle case where user ID is not set in session
     echo "User ID not set in session.";
 }
 
-include 'student-nav.php';
-?>
+// Fetch names from teachers, guards, and admin
+$names_sql = "SELECT first_name, last_name, role FROM users WHERE role IN ('teacher', 'guard', 'admin')";
+$names_result = $conn->query($names_sql);
+$names_list = [];
 
+if ($names_result) {
+    while ($row = $names_result->fetch_assoc()) {
+        $names_list[] = $row;
+    }
+}
+
+include 'student-nav.php';
+
+// Initialize an array to store names
+$names_list = [];
+
+// Fetch names from guards table
+$guards_sql = "SELECT first_name, last_name FROM guards";
+$guards_result = $conn->query($guards_sql);
+
+if ($guards_result && $guards_result->num_rows > 0) {
+    while ($row = $guards_result->fetch_assoc()) {
+        $names_list[] = [
+            'first_name' => $row['first_name'],
+            'last_name' => $row['last_name'],
+            'role' => 'Guard'
+        ];
+    }
+}
+
+// Fetch names from teachers table
+$teachers_sql = "SELECT first_name, last_name FROM teachers";
+$teachers_result = $conn->query($teachers_sql);
+
+if ($teachers_result && $teachers_result->num_rows > 0) {
+    while ($row = $teachers_result->fetch_assoc()) {
+        $names_list[] = [
+            'first_name' => $row['first_name'],
+            'last_name' => $row['last_name'],
+            'role' => 'Teacher'
+        ];
+    }
+}
+
+// Fetch names from admin table
+$admin_sql = "SELECT first_name, last_name FROM admin";
+$admin_result = $conn->query($admin_sql);
+
+if ($admin_result && $admin_result->num_rows > 0) {
+    while ($row = $admin_result->fetch_assoc()) {
+        $names_list[] = [
+            'first_name' => $row['first_name'],
+            'last_name' => $row['last_name'],
+            'role' => 'Admin'
+        ];
+    }
+}
+?>
+<style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .card-title {
+        overflow: hidden;
+        /* Hide overflow text */
+        text-overflow: ellipsis;
+        /* Show ellipsis (...) */
+        white-space: nowrap;
+        /* Prevent text from wrapping */
+        max-width: 100%;
+        /* Limit the title width */
+    }
+
+</style>
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
@@ -111,11 +177,56 @@ include 'student-nav.php';
                         </p>
                     </div>
                 </div>
-
-                <div class="bg-light p-4 rounded mt-4">
-                    <h1>Welcome to GuideCo!</h1>
-                    <h2>The Guidance and Counseling System of Nasugbu East Senior High School</h2>
+                <div class="row">
+                    <div class="col-md-12 text-center mb-2 border-top mt-4">
+                        <h1 class="mt-4"><b>Welcome to GuideCo!</b></h1>
+                    </div>
                 </div>
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-md-6">
+                        <p>GuideCo is a guidance and counseling management system specifically designed for Nasugbu East Senior High School. It aims to facilitate the communication between students and their mentors, streamline the management of student records, and provide support for academic and personal development.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <img src="img/logoguideco.jpg" class="card-img-top" alt="GuideCo Image">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <img src="img/st.jpg" class="card-img-top" alt="GuideCo Image">
+                        </div>
+                    </div>
+                    <div class="col-md-6">Nasugbu East Senior High School is dedicated to fostering a nurturing educational environment. Our goal is to equip students with the necessary tools and resources to excel academically and socially.</div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12 text-center mb-2">
+                        <h3><b>School Personnels</b></h3>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <?php if (!empty($names_list)): ?>
+                        <?php foreach ($names_list as $name): ?>
+                            <div class="col-md-2 mb-4">
+                                <div class="card">
+                                    <img src="https://via.placeholder.com/150" alt="Default Profile" style="width: 100%; height: auto;">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title" style="font-size: 14px;"><?php echo htmlspecialchars(ucwords($name['first_name'] . ' ' . $name['last_name'])); ?></h5>
+                                        <p class="card-text" style="font-size: 12px;"><?php echo htmlspecialchars($name['role']); ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No staff members found.</p>
+                    <?php endif; ?>
+                </div>
+
             </div>
         </div>
 
