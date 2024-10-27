@@ -99,6 +99,11 @@ $topViolators = mysqli_fetch_all($topViolatorsResult, MYSQLI_ASSOC);
 $schoolYearsResult = mysqli_query($conn, "SELECT * FROM school_year");
 $schoolYears = mysqli_fetch_all($schoolYearsResult, MYSQLI_ASSOC);
 
+// Count violators by grade
+$violatorsByGrade = [
+    'Grade 11' => 0,
+    'Grade 12' => 0,
+];
 
 ?>
 
@@ -126,7 +131,17 @@ $schoolYears = mysqli_fetch_all($schoolYearsResult, MYSQLI_ASSOC);
             <div class="row pt-3">
                 <div class="col-md-12 d-flex justify-content-between align-items-center">
                     <div class="container-fluid p-2">
-                        <h3><strong>DASHBOARD</strong></h3>
+                        <div class="row">
+
+
+                            <div class="col-md-6">
+                                <h3><strong>DASHBOARD</strong></h3>
+                            </div>
+                            <div class="col-md-6 text-right">
+    <button onclick="location.href='admin-schedule.php'" class="btn btn-success">Schedule</button>
+</div>
+
+                        </div>
                     </div>
                 </div>
             </div>
