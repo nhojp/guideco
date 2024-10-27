@@ -101,38 +101,37 @@ $admins = fetchAdmins($conn);
 ?>
 
 
-<style> 
-     
+<style>
+    .btn-custom:hover {
+        background-color: #389434;
+        color: white;
+    }
 
-        .btn-custom:hover {
-            background-color: #389434; 
-            color: white; 
-        }
+    .btn-custom:focus,
+    .btn-custom:active {
+        box-shadow: none;
+        outline: none;
+    }
 
-        .btn-custom:focus, .btn-custom:active {
-            box-shadow: none; 
-            outline: none; 
-        }
+    .thead-custom {
+        background-color: #0C2D0B;
+        color: white;
+    }
 
-        .thead-custom {
-            background-color: #0C2D0B;
-            color: white;
-        }
+    .btn-circle {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
 
-        .btn-circle {
-            width: 35px;   
-            height: 35px;  
-            border-radius: 50%; 
-            display: flex;
-            justify-content: center; 
-            align-items: center;      
-            padding: 0;
-        }
-
-        .table-container {
-        max-height: 400px; 
-        overflow-y: auto; 
-        }
+    .table-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
 </style>
 
 
@@ -146,18 +145,9 @@ $admins = fetchAdmins($conn);
                             <h3><strong>Admin List</strong></h3>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
                     </div>
-                    <div class="col-md-1">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addAdminModal">
-                                Add
-                            </button>
-                        </div>
-                    </div>
-
-                    
                 </div>
 
                 <?php if ($successMessage) : ?>
@@ -169,42 +159,53 @@ $admins = fetchAdmins($conn);
                         <?php echo $errorMessage; ?>
                     </div>
                 <?php endif; ?>
-            <div class="table-container">
-                <table class="table table-hover mt-4 border">
-                    <thead class="thead-custom">
-                        <tr>
-                            <th style="width:20%;">Full Name</th>
-                            <th style="width:15%;">Position</th>
-                            <th style="width:15%;">Email</th>
-                            <th class="text-center" style="width:15%;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminTableBody">
-                        <?php if (count($admins) > 0) : ?>
-                            <?php foreach ($admins as $admin) : ?>
-                                <tr>
-                                    <td><?php echo ucwords(htmlspecialchars($admin['first_name']))  . ' ' . ucwords(htmlspecialchars($admin['last_name'])); ?></td>
-                                    <td><?php echo ucwords(htmlspecialchars($admin['position'])); ?></td>
-                                    <td><?php echo htmlspecialchars($admin['email']); ?></td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal<?php echo urlencode($admin['id']); ?>">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
 
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo htmlspecialchars($admin['id']); ?>">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6 text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success pr-4 pl-4" data-toggle="modal" data-target="#addAdminModal">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="table table-hover mt-4 border">
+                        <thead class="thead-custom">
                             <tr>
-                                <td colspan="5">No admins found.</td>
+                                <th style="width:20%;">Full Name</th>
+                                <th style="width:15%;">Position</th>
+                                <th style="width:15%;">Email</th>
+                                <th class="text-center" style="width:15%;">Actions</th>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody id="adminTableBody">
+                            <?php if (count($admins) > 0) : ?>
+                                <?php foreach ($admins as $admin) : ?>
+                                    <tr>
+                                        <td><?php echo ucwords(htmlspecialchars($admin['first_name']))  . ' ' . ucwords(htmlspecialchars($admin['last_name'])); ?></td>
+                                        <td><?php echo ucwords(htmlspecialchars($admin['position'])); ?></td>
+                                        <td><?php echo htmlspecialchars($admin['email']); ?></td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal<?php echo urlencode($admin['id']); ?>">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo htmlspecialchars($admin['id']); ?>">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="5">No admins found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
                 <!-- Modal for Adding an Admin -->
                 <div class="modal fade" id="addAdminModal" tabindex="-1" role="dialog" aria-labelledby="addAdminModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
