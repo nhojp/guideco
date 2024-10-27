@@ -111,6 +111,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
 }
 ?>
 <style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
     .btn-custom {
         background-color: #1F5F1E; 
         color: white; 
@@ -160,15 +163,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['first_name'])) {
                         </h3>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <input class="form-control" type="text" id="searchInput" placeholder="Search a name or position...">
                 </div>
-                <div class="col-md-2 text-right">
-                    
-                    <button id="printButton" type="button" class="btn btn-primary">
-                        <i class="fas fa-print"></i>
-                    </button>
-                </div>
+                
             </div>
             <div class="table-container">
                 <div class="table-responsive">

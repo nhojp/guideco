@@ -87,6 +87,9 @@ mysqli_data_seek($violations_result, 0);
 ?>
 
 <style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
     .btn-custom {
         background-color: #1F5F1E; 
         color: white; 

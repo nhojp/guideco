@@ -80,7 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 mysqli_data_seek($sections_result, 0);
 mysqli_data_seek($violations_result, 0);
 ?>
-
+<style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="row">

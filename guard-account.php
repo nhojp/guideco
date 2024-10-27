@@ -72,6 +72,12 @@ if ($role && $role_id) {
     $error_message = "Guard ID not set in session.";
 }
 ?>
+
+    <style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
 <main class="flex-fill mt-5">
     <div class="container mt-4">
         <div class="container-fluid mt-2 mb-5">
