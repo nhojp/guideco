@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin'])) {
 // Function to fetch all personnel data
 function getAllPersonnelData($conn)
 {
-    $sql = "SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, 'Guard' AS position FROM guards";
+    $sql = "SELECT id, first_name, last_name, CONCAT(first_name, ' ', last_name) AS full_name, 'Guard' AS position FROM guards";
     $result = mysqli_query($conn, $sql);
     $personnelData = [];
     while ($row = mysqli_fetch_assoc($result)) {
@@ -26,7 +26,7 @@ $errorMessage = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_personnel'])) {
     $personnelId = intval($_POST['delete_personnel']);
-    
+
     $deleteSql = "DELETE FROM guards WHERE id = ?";
 
     $stmt = mysqli_prepare($conn, $deleteSql);
@@ -67,6 +67,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['guard_first_name']) &&
         } else {
             $errorMessage = 'Error adding guard: ' . mysqli_error($conn);
         }
+    }
+}
+
+// Update Guard functionality
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_guard_first_name']) && isset($_POST['edit_guard_last_name'])) {
+    $guardId = intval($_POST['guard_id']);
+    $editGuardFirstName = $_POST['edit_guard_first_name'];
+    $editGuardLastName = $_POST['edit_guard_last_name'];
+
+    $updateGuardSql = "UPDATE guards SET first_name = ?, last_name = ? WHERE id = ?";
+    
+    $stmt = mysqli_prepare($conn, $updateGuardSql);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'ssi', $editGuardFirstName, $editGuardLastName, $guardId);
+        $success = mysqli_stmt_execute($stmt);
+        
+        if ($success) {
+            $addGuardSuccess = true; // Using the same flag for success messages
+        } else {
+            $errorMessage = 'Error updating guard: ' . mysqli_stmt_error($stmt);
+        }
+        mysqli_stmt_close($stmt);
+    } else {
+        $errorMessage = 'Error preparing update statement: ' . mysqli_error($conn);
     }
 }
 
@@ -124,12 +148,9 @@ $personnelData = getAllPersonnelData($conn);
             </div>
             <div class="col-md-1">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addGuardModal">
                         Add
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" data-toggle="modal" data-target="#addGuardModal">Add a Security Guard</a></li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -161,6 +182,9 @@ $personnelData = getAllPersonnelData($conn);
                         <td><?php echo ucwords(strtolower($person['full_name'])); ?></td>
 
                         <td class="text-center">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal<?php echo $person['id']; ?>">
+                                <i class="fas fa-edit"></i>
+                            </button>
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<?php echo $person['id']; ?>" data-id="<?php echo $person['id']; ?>">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
@@ -188,45 +212,93 @@ $personnelData = getAllPersonnelData($conn);
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editModal<?php echo $person['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<?php echo $person['id']; ?>" aria-hidden="true">
+                                <div class="modal-dialog modal-custom" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-guideco text-white">
+                                            <h5 class="modal-title" id="editModalLabel<?php echo $person['id']; ?>">Edit Guard</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body text-left">
+                                            <form method="POST" action="">
+                                                <input type="hidden" name="guard_id" value="<?php echo $person['id']; ?>">
+                                                <div class="form-group">
+                                                    <label for="edit_guard_first_name">First Name</label>
+                                                    <input type="text" class="form-control" name="edit_guard_first_name" id="edit_guard_first_name" value="<?php echo $person['first_name']; ?>" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="edit_guard_last_name">Last Name</label>
+                                                    <input type="text" class="form-control" name="edit_guard_last_name" id="edit_guard_last_name" value="<?php echo $person['last_name']; ?>" required>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
+</div>
 
-        <!-- Add Guard Modal -->
-        <div class="modal fade" id="addGuardModal" tabindex="-1" role="dialog" aria-labelledby="addGuardModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-custom" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-guideco text-white">
-                        <h5 class="modal-title" id="addGuardModalLabel">Add Security Guard</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+<!-- Add Guard Modal -->
+<div class="modal fade" id="addGuardModal" tabindex="-1" role="dialog" aria-labelledby="addGuardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-guideco text-white">
+                <h5 class="modal-title" id="addGuardModalLabel">Add Guard</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="">
+                    <div class="form-group">
+                        <label for="guard_first_name">First Name</label>
+                        <input type="text" class="form-control" name="guard_first_name" id="guard_first_name" required>
                     </div>
-                    <div class="modal-body">
-                        <form method="POST" action="">
-                            <div class="form-group">
-                                <label for="guardFirstName">First Name:</label>
-                                <input type="text" id="guardFirstName" name="guard_first_name" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="guardLastName">Last Name:</label>
-                                <input type="text" id="guardLastName" name="guard_last_name" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="guardUsername">Username:</label>
-                                <input type="text" id="guardUsername" name="guard_username" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="guardPassword">Password:</label>
-                                <input type="password" id="guardPassword" name="guard_password" class="form-control" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Add Guard</button>
-                        </form>
+                    <div class="form-group">
+                        <label for="guard_last_name">Last Name</label>
+                        <input type="text" class="form-control" name="guard_last_name" id="guard_last_name" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="guard_username">Username</label>
+                        <input type="text" class="form-control" name="guard_username" id="guard_username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guard_password">Password</label>
+                        <input type="password" class="form-control" name="guard_password" id="guard_password" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Guard</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Search filter
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+        var value = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#personnelTable tr');
+
+        rows.forEach(function (row) {
+            var fullName = row.cells[0].textContent.toLowerCase();
+            row.style.display = fullName.includes(value) ? '' : 'none';
+        });
+    });
+</script>
+
