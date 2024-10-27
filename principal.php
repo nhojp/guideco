@@ -36,7 +36,7 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['principal'])) {
         }
 
         // Fetch violations with all filters applied
-        $query = "SELECT v.id, v.student_id, v.reported_at, v.guard_id, v.teacher_id, v.violation_id, s.first_name, s.last_name, s.sex, sec.grade_level
+        $query = "SELECT DISTINCT v.id, v.student_id, v.reported_at, v.guard_id, v.teacher_id, v.violation_id, s.first_name, s.last_name, s.sex, sec.grade_level
                   FROM violations v
                   JOIN students s ON v.student_id = s.id
                   JOIN sections sec ON s.section_id = sec.id
