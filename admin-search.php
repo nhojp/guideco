@@ -149,37 +149,38 @@ include "admin-nav.php";
                             <i class="fas fa-arrow-left"></i>
                         </button>
                     </div>
-                    <div class="col-md-11">
+                    <div class="col-md-6">
                         <h2>Search Results for "<?php echo htmlspecialchars($search_query); ?>"</h2>
-
+                    </div>
+                    <div class="col-md-5">
+                        <form action="admin-search.php" method="GET">
+                            <input type="text" name="search_query" class="form-control" placeholder="Search Students" required>
+                        </form>
                     </div>
                 </div>
-                <div class="row">
-                    <table class="table table-bordered">
-                        <thead>
+
+                <div class="table-container">
+                    <table class="table table-hover mt-4 border text-center">
+                        <thead style="background-color: #0C2D0B; color:white;">
                             <tr>
-                                <th>ID</th>
                                 <th>Username</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Strand</th>
                                 <th>Section</th>
                                 <th>Grade</th>
-                                <th>Teacher</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="studentTable">
                             <?php foreach ($students as $student): ?>
                                 <tr>
-                                    <td><?php echo $student['id']; ?></td>
                                     <td><?php echo htmlspecialchars($student['username']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['first_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['last_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['strand_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['section_name']); ?></td>
+                                    <td><?php echo ucwords(htmlspecialchars($student['first_name'])); ?></td>
+                                    <td><?php echo ucwords(htmlspecialchars($student['last_name'])); ?></td>
+                                    <td><?php echo ucwords(htmlspecialchars($student['strand_name'])); ?></td>
+                                    <td><?php echo ucwords(htmlspecialchars($student['section_name'])); ?></td>
                                     <td><?php echo htmlspecialchars($student['grade']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['teacher_name']); ?></td>
                                     <td>
                                         <button class="btn btn-info " onclick="viewStudent(<?php echo $student['id']; ?>)"><i class="fas fa-eye"></i></button>
 
@@ -285,7 +286,7 @@ include "admin-nav.php";
 </main>
 <script>
     function viewStudent(studentId) {
-            // Redirect to the student detail view page
-            window.location.href = 'admin-student-profile.php?id=' + studentId; // Adjust the page URL as necessary
-        }
+        // Redirect to the student detail view page
+        window.location.href = 'admin-student-profile.php?id=' + studentId; // Adjust the page URL as necessary
+    }
 </script>
