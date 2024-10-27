@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $middle_name = $_POST['middle_name'];
         $last_name = $_POST['last_name'];
         $birthdate = $_POST['birthdate'];
-        $age = $_POST['age'];
         $sex = $_POST['sex'];
         $religion = $_POST['religion'];
         $contact_number = $_POST['contact_number'];
@@ -271,17 +270,12 @@ if (!empty($students_ids)) {
             <!-- Parents Information -->
             <div class="col-md-12">
                 <div class="card border-secondary mb-3">
-                    <div class="card-header bg-green border-bottom border-secondary d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-green  d-flex justify-content-between align-items-center">
                         <span><strong>Parents Information</strong></span>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#editParentInfoModal">
-                            <i class="fa-solid fa-edit text-white"></i>
-                        </a>
                     </div>
                     <div class="row">
-
-
                         <div class="col-md-6">
-                            <div class="card border-success mb-4">
+                            <div class="card m-2">
                                 <div class="card-header bg-white border-bottom border-success text-center">
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#editMotherInfoModal" class="d-inline-flex align-items-center text-dark text-decoration-none">
                                         <strong>Mother's Information</strong>
@@ -321,7 +315,7 @@ if (!empty($students_ids)) {
 
 
                         <div class="col-md-6">
-                            <div class="card border-success mb-4">
+                            <div class="card m-2">
                                 <div class="card-header bg-white border-bottom border-success text-center">
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#editFatherInfoModal" class="d-inline-flex align-items-center text-dark text-decoration-none">
                                         <strong>Father's Information</strong>
@@ -360,37 +354,37 @@ if (!empty($students_ids)) {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
 
-        <!-- Account Settings -->
-        <div class="col-md-12">
-            <div class="card border-secondary mb-3">
-                <div class="card-header bg-green border-bottom border-secondary d-flex justify-content-between align-items-center">
-                    <span><strong>Account Settings</strong></span>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#editAccountInfoModal">
-                        <i class="fa-solid fa-edit text-white"></i>
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <strong>Username:</strong>
-                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($user_data['username']) ?: 'N/A'; ?>" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>Email:</strong>
-                            <input type="email" class="form-control" value="<?php echo htmlspecialchars($user_data['email']) ?: 'N/A'; ?>" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>Password:</strong>
-                            <input type="password" class="form-control" value="<?php echo htmlspecialchars($user_data['password']) ?: 'N/A'; ?>" readonly>
+                <div class="row">
+                    <!-- Account Settings -->
+                    <div class="col-md-12">
+                        <div class="card border-secondary mb-3">
+                            <div class="card-header bg-green border-bottom border-secondary d-flex justify-content-between align-items-center">
+                                <span><strong>Account Settings</strong></span>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#editAccountInfoModal">
+                                    <i class="fa-solid fa-edit text-white"></i>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <strong>Username:</strong>
+                                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($user_data['username']) ?: 'N/A'; ?>" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Email:</strong>
+                                        <input type="email" class="form-control" value="<?php echo htmlspecialchars($user_data['email']) ?: 'N/A'; ?>" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Password:</strong>
+                                        <input type="password" class="form-control" value="<?php echo htmlspecialchars($user_data['password']) ?: 'N/A'; ?>" readonly>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -425,10 +419,7 @@ if (!empty($students_ids)) {
                                 <label for="birthdate">Birthdate</label>
                                 <input type="date" class="form-control" id="birthdate" name="birthdate" value="<?php echo htmlspecialchars($student['birthdate']); ?>">
                             </div>
-                            <div class="form-group">
-                                <label for="age">Age</label>
-                                <input type="number" class="form-control" id="age" name="age" value="<?php echo htmlspecialchars($student['age']); ?>">
-                            </div>
+
                             <div class="form-group">
                                 <label for="sex">Sex</label>
                                 <select class="form-control" id="sex" name="sex">
@@ -568,4 +559,5 @@ if (!empty($students_ids)) {
     </div>
     </div>
 </main>
+
 <?php include 'footer.php' ?>
