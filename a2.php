@@ -71,9 +71,6 @@ $teachers = $result->fetch_all(MYSQLI_ASSOC);
 
 
 <style>
-    
-
-
     body {
         font-family: 'Montserrat', sans-serif;
     }

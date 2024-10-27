@@ -1,111 +1,3 @@
-<style>
-    .button-container {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-        border-radius: 5px;
-        padding: 10px;
-        margin: 10px 5px;
-        gap: 10px;
-
-
-    }
-
-    .btn-green {
-        background-color: #1F5F1E;
-        color: white;
-        border-radius: 5px;
-        padding: 10px 40px;
-    }
-
-    .btn-green-light {
-        background-color: #38B24C;
-        color: white;
-        border-radius: 5px;
-        padding: 10px 40px;
-    }
-
-    .btn-green-mid {
-        background-color: #63BE77;
-        color: white;
-        border-radius: 5px;
-        padding: 10px 40px;
-    }
-
-    .btn-green-dark {
-        background-color: #3C9140;
-        color: white;
-        border-radius: 5px;
-        padding: 10px 40px;
-    }
-
-    .btn-green-darker {
-        background-color: #206922;
-        color: white;
-        border-radius: 5px;
-        padding: 10px 40px;
-    }
-
-    button:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
-    }
-
-
-    .filter-list {
-        margin-top: 20px;
-        border: 1px solid #ccc;
-        padding: 20px;
-        border-radius: 5px;
-    }
-
-    .filter-list h4 {
-        margin-bottom: 15px;
-    }
-
-    .form-row {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 15px;
-    }
-
-    .form-group {
-        flex: 0 0 18%;
-        min-width: 240px;
-    }
-
-    .form-control {
-        width: 100%;
-    }
-
-    .form-control option:hover {
-        background-color: #38B24C;
-        color: white;
-    }
-
-    .btn-secondary {
-        min-width: 120px;
-    }
-
-    .thead-custom {
-        background-color: #0C2D0B;
-        color: white;
-    }
-
-    table tbody td {
-        text-transform: capitalize;
-    }
-
-    .btn-circle {
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-    }
-</style>
 <?php
 include 'conn.php';
 
@@ -141,7 +33,7 @@ $filter_grade = isset($_GET['grade']) ? intval($_GET['grade']) : '';
 $filter_school_year = isset($_GET['school_year']) ? intval($_GET['school_year']) : '';
 
 // Pagination parameters
-$limit = 100;
+$limit = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
@@ -398,35 +290,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container-fluid mb-5">
         <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
-            <!-- Header and Search -->
             <div class="row pt-3">
                 <div class="col-md-6">
                     <div class="container-fluid p-2">
                         <h3><strong>Students</strong></h3>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <input class="form-control" type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search a name, section or strand...">
-                </div>
-            </div>
+                <div class="col-md-5">
+                    <form action="admin-search.php" method="GET">
+                        <input type="text" name="search_query" class="form-control" placeholder="Search Students" required>
+                    </form>
 
-            <!-- Action Buttons -->
-            <div class="mb-3 button-container">
-                <button type="button" class="btn btn-green" data-toggle="modal" data-target="#addStudentModal">
-                    Add Student
-                </button>
-                <button class="btn btn-green-light" onclick="window.location.href='a1-excel2.php';">Import from Excel</button>
-                <button class="btn btn-green-mid" onclick="window.location.href='admin-nav-strands.php?type=strand';">Add Strand</button>
-                <button class="btn btn-green-dark" onclick="window.location.href='admin-nav-sections.php?type=section';">Add Section</button>
-                <button class="btn btn-green-darker" onclick="window.location.href='admin-user-teacher.php?type=teacher';">Add Teacher</button>
+                </div>
+                <div class="col-md-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false">
+                            Add
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" data-toggle="modal" data-target="#addStudentModal">Add a student</a></li>
+                            <li><a class="dropdown-item" href="a1-excel2.php">Import from Excel</a></li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Filter Form -->
             <form method="GET" class="mb-4" id="filterForm">
-                <div class="filter-list">
+                <div class="filter-list mb-4">
                     <div class="form-row d-flex align-items-end">
                         <!-- Strand Filter -->
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label for="strand">Filter by Strand</label>
                             <select name="strand" id="strand" class="form-control" onchange="this.form.submit()">
                                 <option value="">All Strands</option>
@@ -439,20 +334,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <!-- Section Filter -->
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label for="section">Filter by Section</label>
                             <select name="section" id="section" class="form-control" onchange="this.form.submit()">
                                 <option value="">All Sections</option>
                                 <?php foreach ($sections as $section): ?>
                                     <option value="<?php echo $section['id']; ?>" <?php if ($filter_section == $section['id']) echo 'selected'; ?>>
-                                        <?php echo htmlspecialchars($section['section_display']); ?>
+                                        <?php echo htmlspecialchars(ucwords($section['section_display'])); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
                         <!-- Grade Filter -->
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label for="grade">Filter by Grade</label>
                             <select name="grade" id="grade" class="form-control" onchange="this.form.submit()">
                                 <option value="">All Grades</option>
@@ -465,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <!-- School Year Filter -->
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label for="school_year">Filter by School Year</label>
                             <select name="school_year" id="school_year" class="form-control" onchange="this.form.submit()">
                                 <option value="">All School Years</option>
@@ -476,29 +371,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
                     </div>
                 </div>
+
             </form>
-
-            <!-- Feedback Messages -->
-            <?php if (isset($message)): ?>
-                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                    <?php echo htmlspecialchars($message); ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <?php endif; ?>
-
-            <?php if (isset($error)): ?>
-                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                    <?php echo htmlspecialchars($error); ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <?php endif; ?>
             <!-- Display Record Count -->
             <div class="mb-2">
                 <?php
@@ -514,10 +390,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Students Table -->
             <div class="table-container">
-                <table class="table table-hover mt-4 border">
-                    <thead class="thead-custom">
+                <table class="table table-hover mt-4 border text-center">
+                    <thead style="background-color: #0C2D0B; color:white;">
                         <tr>
-                            <th>Username</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Grade & Section</th>
@@ -529,22 +404,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php if (count($students) > 0): ?>
                             <?php foreach ($students as $student): ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($student['username']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['first_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['last_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['section_display']); ?></td>
-                                    <td><?php echo htmlspecialchars($student['teacher_name']); ?></td>
+                                    <td><?php echo htmlspecialchars(ucwords($student['first_name'])); ?></td>
+                                    <td><?php echo htmlspecialchars(ucwords($student['last_name'])); ?></td>
+                                    <td><?php echo htmlspecialchars(ucwords($student['section_display'])); ?></td>
+                                    <td><?php echo htmlspecialchars(ucwords($student['teacher_name'])); ?></td>
                                     <td>
-                                        <button class="btn btn-info btn-sm" onclick="viewStudent(<?php echo $student['id']; ?>)">View</button>
+                                        <button class="btn btn-info " onclick="viewStudent(<?php echo $student['id']; ?>)"><i class="fas fa-eye"></i></button>
 
                                         <!-- Edit Button -->
-                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<?php echo $student['id']; ?>">
-                                            Edit
+                                        <button type="button" class="btn btn-warning " data-toggle="modal" data-target="#editModal<?php echo $student['id']; ?>">
+                                        <i class="fas fa-edit"></i>
                                         </button>
 
                                         <!-- Delete Button -->
-                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal<?php echo $student['id']; ?>">
-                                            Delete
+                                        <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#deleteModal<?php echo $student['id']; ?>">
+                                        <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -667,7 +541,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="section_id">Select Section:</label>
                             <select name="section_id" id="section_id" required class="form-control">
                                 <?php foreach ($sections as $section): ?>
-                                    <option value="<?php echo $section['id']; ?>"><?php echo $section['section_display']; ?></option>
+                                    <option value="<?php echo $section['id']; ?>"><?php echo ucwords($section['section_display']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

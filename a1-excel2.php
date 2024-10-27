@@ -10,7 +10,7 @@ if (!isset($_SESSION['loggedin']) || !isset($_SESSION['admin'])) {
 }
 
 include 'head.php'; // Include head section
-//include 'admin-nav.php'; // Include navbar
+include 'admin-nav.php'; // Include navbar
 require 'vendor/autoload.php'; // Include the PhpSpreadsheet autoload file
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -165,44 +165,57 @@ $sections = $sections_result->fetch_all(MYSQLI_ASSOC);
 $school_years_result = $conn->query("SELECT id, CONCAT(year_start, ' - ', year_end) AS year_display FROM school_year");
 $school_years = $school_years_result->fetch_all(MYSQLI_ASSOC);
 ?>
-
 <main class="flex-fill mt-5">
     <div class="container mt-4">
-        <h1 class="mb-4">Import Excel</h1>
+        <div class="container-fluid mb-5">
+            <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
+                <div class="row pt-3">
+                    <div class="col-md-1">
+                        <button class="btn btn-danger" onclick="window.location.href='admin-user-student.php'">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-11">
+                        <h3 class="font-weight-bold">Import from Excel</h3>
+                    </div>
+                </div>
 
-        <form method="POST" enctype="multipart/form-data" class="mb-4">
-            <!-- Section Dropdown -->
-            <div class="mb-3">
-                <label for="section_id" class="form-label">Select Section:</label>
-                <select name="section_id" class="form-select" required>
-                    <?php foreach ($sections as $section): ?>
-                        <option value="<?php echo $section['id']; ?>"><?php echo $section['section_display']; ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <form method="POST" enctype="multipart/form-data" class="mb-4">
+                    <div class="row pb-2 pt-4">
+                        <div class="col-md-6">
+                            <!-- Section Dropdown -->
+                            <div class="mb-3">
+                                <label for="section_id" class="form-label ">Select Section:</label>
+                                <select name="section_id" class="form-select form-control" required>
+                                    <?php foreach ($sections as $section): ?>
+                                        <option value="<?php echo $section['id']; ?>"><?php echo ucwords($section['section_display']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- School Year Dropdown -->
+                            <div class="mb-3">
+                                <label for="school_year_id" class="form-label">Select School Year:</label>
+                                <select name="school_year_id" class="form-select form-control" required>
+                                    <?php foreach ($school_years as $school_year): ?>
+                                        <option value="<?php echo $school_year['id']; ?>"><?php echo $school_year['year_display']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="file" name="excel_file" class="form-control" accept=".xls,.xlsx" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success btn-block">Import</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <!-- School Year Dropdown -->
-            <div class="mb-3">
-                <label for="school_year_id" class="form-label">Select School Year:</label>
-                <select name="school_year_id" class="form-select" required>
-                    <?php foreach ($school_years as $school_year): ?>
-                        <option value="<?php echo $school_year['id']; ?>"><?php echo $school_year['year_display']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <!-- Excel File Upload -->
-            <div class="mb-3">
-                <label for="excel_file" class="form-label">Upload Excel File:</label>
-                <input type="file" name="excel_file" class="form-control" accept=".xls,.xlsx" required>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Import Students</button>
-            </div>
-        </form>
-
+        </div>
     </div>
 </main>
 <?php include 'footer.php'; // Include footer section 

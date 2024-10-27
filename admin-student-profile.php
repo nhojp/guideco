@@ -50,7 +50,9 @@ $violation_count = $violations->num_rows; // Count the number of violations
             <div class="container-fluid bg-white mt-2 rounded-lg pb-2 border">
                 <div class="row pt-3">
                     <div class="col-md-1">
-                        <button onclick="window.location.href='admin-user-student.php'">back</button>
+                        <button class="btn btn-danger" onclick="window.location.href='admin-user-student.php'">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
                     </div>
                     <div class="col-md-8">
                         <div class="container-fluid p-2">
@@ -76,7 +78,7 @@ $violation_count = $violations->num_rows; // Count the number of violations
                 <?php if ($student) : ?>
                     <div class="row">
                         <!-- Personal Information and Violations -->
-                        <div class="col-md-6">  
+                        <div class="col-md-6">
                             <h3 class="text-center"><strong>Personal Information</strong></h3>
                             <ul class="list-group">
                                 <li class="list-group-item"><strong>Age:</strong> <?php echo ucwords(htmlspecialchars($student['age'])); ?></li>
