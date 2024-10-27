@@ -21,19 +21,15 @@ if ($timePeriod == 'thisDay') {
 
 $schoolYear = $_GET['schoolYear'] ?? '';
 
-$query = "SELECT v.id, v.student_id, v.reported_at, v.guard_id, v.teacher_id, v.violation_id, s.first_name, s.last_name, s.sex 
+$query = "SELECT DISTINCT v.id, v.student_id, v.reported_at, v.guard_id, v.teacher_id, v.violation_id, s.first_name, s.last_name, s.sex 
           FROM violations v
           JOIN students s ON v.student_id = s.id
           JOIN sections sec ON s.section_id = sec.id
           JOIN school_year sy ON YEAR(v.reported_at) BETWEEN sy.year_start AND sy.year_end 
           WHERE v.reported_at BETWEEN '$startDate' AND '$endDate'";
-
 if ($schoolYear) {
     $query .= " AND sy.id = '$schoolYear'";
 }
-
-
-
 if ($violationType) {
     $query .= " AND v.violation_id = '$violationType'";
 }
