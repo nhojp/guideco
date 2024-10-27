@@ -296,24 +296,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h3><strong>Students</strong></h3>
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <form action="admin-search.php" method="GET">
                         <input type="text" name="search_query" class="form-control" placeholder="Search Students" required>
                     </form>
 
                 </div>
-                <div class="col-md-1">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false">
-                            Add
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" data-toggle="modal" data-target="#addStudentModal">Add a student</a></li>
-                            <li><a class="dropdown-item" href="a1-excel2.php">Import from Excel</a></li>
-                        </ul>
-                    </div>
-                </div>
-
             </div>
 
             <!-- Filter Form -->
@@ -377,15 +365,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
             <!-- Display Record Count -->
             <div class="mb-2">
-                <?php
-                $start = $offset + 1;
-                $end = min($offset + $limit, $total_records);
-                if ($total_records > 0) {
-                    echo "Showing $start to $end of $total_records entries.";
-                } else {
-                    echo "No records found.";
-                }
-                ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php
+                        $start = $offset + 1;
+                        $end = min($offset + $limit, $total_records);
+                        if ($total_records > 0) {
+                            echo "Showing $start to $end of $total_records entries.";
+                        } else {
+                            echo "No records found.";
+                        }
+                        ?>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success pr-4 pl-4" data-bs-toggle="dropdown" aria-expanded="false">
+                                Add
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" data-toggle="modal" data-target="#addStudentModal">Add a student</a></li>
+                                <li><a class="dropdown-item" href="a1-excel2.php">Import from Excel</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Students Table -->
@@ -413,12 +416,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                         <!-- Edit Button -->
                                         <button type="button" class="btn btn-warning " data-toggle="modal" data-target="#editModal<?php echo $student['id']; ?>">
-                                        <i class="fas fa-edit"></i>
+                                            <i class="fas fa-edit"></i>
                                         </button>
 
                                         <!-- Delete Button -->
                                         <button type="button" class="btn btn-danger " data-toggle="modal" data-target="#deleteModal<?php echo $student['id']; ?>">
-                                        <i class="fas fa-trash"></i>
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
